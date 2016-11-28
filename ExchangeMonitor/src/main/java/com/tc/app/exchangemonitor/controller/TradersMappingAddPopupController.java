@@ -9,13 +9,9 @@ import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 import com.tc.app.exchangemonitor.model.IctsUser;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
-import com.tc.app.exchangemonitor.util.HibernateUtil;
 import com.tc.app.exchangemonitor.util.ReferenceDataCache;
 
 import javafx.application.Platform;
@@ -26,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -37,20 +32,20 @@ import javafx.stage.Stage;
 public class TradersMappingAddPopupController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger(TradersMappingAddPopupController.class);
-	private static final String TRADER_MAPPING_TYPE = "T";
-
 	@FXML
 	private Label titleLabel;
 	@FXML
 	private TextField externalSourceTraderTextField;
 	@FXML
 	private ComboBox<IctsUser> ictsTraderComboBox;
+	//private ComboBox<String> ictsTraderComboBox;
 	@FXML
 	private Button saveButton;
 	@FXML
 	private Button cancelButton;
 
 	private final ObservableList<IctsUser> observableIctsTradersList = FXCollections.observableArrayList();
+	//private final ObservableList<String> observableIctsTradersList = FXCollections.observableArrayList();
 
 	/* (non-Javadoc)
 	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
@@ -96,10 +91,18 @@ public class TradersMappingAddPopupController implements Initializable
 		this.observableIctsTradersList.clear();
 		this.observableIctsTradersList.addAll(ReferenceDataCache.fetchAllActiveIctsUsers().values());
 
-		//CayenneHelper.getCayenneServerRuntime()
-		//final List<com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser> users = ObjectSelect.query(com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		//users.stream().forEach(System.out::println);
-		//System.out.println(users);
+		/*this.observableIctsTradersList.clear();
+		final List<com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser> users = ObjectSelect.query(com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		final List<UserJobTitle> userJobTitleList = users.stream().map(IctsUser::getUserJobTitle).collect(Collectors.toList());
+		final List<String> usernames = new ArrayList();
+		for(final UserJobTitle anUserJobTitle : userJobTitleList)
+		{
+			//anUserJobTitle.get
+			//usernames.add(aUser.getUserLogonId());
+		}
+		this.observableIctsTradersList.addAll(usernames);
+		this.observableIctsTradersList.stream().forEach(System.out::println);
+		 */
 
 		/*
 		final Session session = HibernateUtil.beginTransaction();
@@ -115,6 +118,7 @@ public class TradersMappingAddPopupController implements Initializable
 		 */
 	}
 
+	/*
 	private void saveTraderMapping()
 	{
 		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
@@ -159,6 +163,7 @@ public class TradersMappingAddPopupController implements Initializable
 			}
 		}
 	}
+	 */
 
 	/*
 	private boolean doesTraderMappingExistsAlready(final Integer externalTradeSourceOid, final String externalSourceTrader, final String ictsTrader)
@@ -186,15 +191,10 @@ public class TradersMappingAddPopupController implements Initializable
 	}
 	 */
 
-	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
-	{
-		return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
-	}
-
 	@FXML
 	private void handleSaveButtonClick()
 	{
-		this.saveTraderMapping();
+		//this.saveTraderMapping();
 	}
 
 	@FXML

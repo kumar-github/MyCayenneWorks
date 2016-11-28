@@ -12,7 +12,7 @@
 <BorderPane.margin><Insets bottom="5.0" left="0.0" right="5.0" top="5.0" /></BorderPane.margin>
 <padding><Insets bottom="2.0" left="2.0" right="2.0" top="2.0" /></padding>
 <children>
-	<HBox alignment="CENTER_RIGHT" prefWidth="400.0" spacing="10.0">
+	<HBox spacing="10.0">
 	<children>
 		<Button text="Add" fx:id="addMappingButton" onAction="#handleAddMapingButtonClick"/>
 		<Button disable="true" text="Delete" fx:id="deleteMappingButton"/>

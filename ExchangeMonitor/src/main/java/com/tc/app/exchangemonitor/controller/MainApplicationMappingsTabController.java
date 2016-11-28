@@ -18,8 +18,8 @@ import com.tc.app.exchangemonitor.view.java.ExternalMappingBrokersView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingCompaniesView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingCurrenciesView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingPortfoliosView;
+import com.tc.app.exchangemonitor.view.java.ExternalMappingTemplateTradesView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingTradersView;
-import com.tc.app.exchangemonitor.view.java.ExternalMappingTradesView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingTradingPeriodsView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingUOMConversionsView;
 
@@ -52,7 +52,7 @@ public class MainApplicationMappingsTabController implements Initializable
 	@FXML
 	private Button portfoliosMappingButton;
 	@FXML
-	private Button tradesMappingButton;
+	private Button templateTradesMappingButton;
 	@FXML
 	private Button accountsMappingButton;
 	@FXML
@@ -110,7 +110,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		this.companiesMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
 		this.currenciesMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
 		this.portfoliosMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
-		this.tradesMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
+		this.templateTradesMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
 		this.accountsMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
 		this.uomConversionsMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
 		this.tradingPeriodsMappingButton.disableProperty().bind(ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().isNull());
@@ -173,7 +173,7 @@ public class MainApplicationMappingsTabController implements Initializable
 					break;
 
 				case "tradesMappingVBox":
-					ApplicationHelper.controllersMap.getInstance(ExternalMappingTradesController.class).updateFilter(anExternalSourcePredicate);
+					ApplicationHelper.controllersMap.getInstance(ExternalMappingTemplateTradesController.class).updateFilter(anExternalSourcePredicate);
 					break;
 
 				case "accountsMappingVBox":
@@ -244,7 +244,7 @@ public class MainApplicationMappingsTabController implements Initializable
 	private void handleTradesMappingButtonClick()
 	{
 		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradesView().getView());
+		this.mappingsWindowBorderPane.setCenter(new ExternalMappingTemplateTradesView().getView());
 		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
 	}
 

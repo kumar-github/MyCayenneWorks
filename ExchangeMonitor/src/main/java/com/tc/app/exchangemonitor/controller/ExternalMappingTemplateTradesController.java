@@ -24,9 +24,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class ExternalMappingTradesController implements Initializable
+public class ExternalMappingTemplateTradesController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTradesController.class);
+	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTemplateTradesController.class);
 
 	@FXML
 	private TableView<IExternalMappingEntity> externalMappingTradesTableView;
@@ -61,7 +61,7 @@ public class ExternalMappingTradesController implements Initializable
 
 	private void addThisControllerToControllersMap()
 	{
-		ApplicationHelper.controllersMap.putInstance(ExternalMappingTradesController.class, this);
+		ApplicationHelper.controllersMap.putInstance(ExternalMappingTemplateTradesController.class, this);
 	}
 
 	private void doAssertion()
