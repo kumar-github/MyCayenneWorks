@@ -10,6 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import com.tc.app.exchangemonitor.controller.IctsUomCellFactory?>
+<?import com.tc.app.exchangemonitor.controller.IctsUomButtonCell?>
+
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.UOMConversionsMappingAddPopupController">
 <children>
 	<Label text="Add UOM Conversions Mapping" fx:id="titleLabel">
@@ -18,7 +21,10 @@
 	<TextField promptText="External Source Commodity" fx:id="externalSourceCommodityTextField">
 	<font><Font name="Calibri Bold" size="15.0" /></font>
 	</TextField>
-	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="To UOM Code" fx:id="toUOMCodeComboBox" />
+	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="To UOM Code" fx:id="toUOMCodeComboBox">
+    <cellFactory><IctsUomCellFactory/></cellFactory>
+    <buttonCell><IctsUomButtonCell/></buttonCell>
+	</ComboBox>
 	<TextField promptText="To UOM Conv. Rate" fx:id="toUOMConvRateTextField">
 	<font><Font name="Calibri Bold" size="15.0" /></font>
 	</TextField>

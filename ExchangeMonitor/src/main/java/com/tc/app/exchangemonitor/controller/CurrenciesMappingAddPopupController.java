@@ -10,9 +10,9 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.model.Commodity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Commodity;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -38,7 +38,6 @@ public class CurrenciesMappingAddPopupController implements Initializable
 	private TextField externalSourceCurrencyTextField;
 	@FXML
 	private ComboBox<Commodity> ictsCurrencyComboBox;
-	//private ComboBox<String> ictsCurrencyComboBox;
 	@FXML
 	private Label titleLabel;
 	@FXML
@@ -46,7 +45,6 @@ public class CurrenciesMappingAddPopupController implements Initializable
 	@FXML
 	private Button cancelButton;
 
-	//private final ObservableList<String> observableIctsCurrencyList = FXCollections.observableArrayList();
 	private final ObservableList<Commodity> observableIctsCurrencyList = FXCollections.observableArrayList();
 
 	/* (non-Javadoc)
@@ -92,7 +90,8 @@ public class CurrenciesMappingAddPopupController implements Initializable
 	private void fetchIctsCurrencies()
 	{
 		this.observableIctsCurrencyList.clear();
-		this.observableIctsCurrencyList.addAll(ReferenceDataCache.fetchAllActiveCommodities().values());
+		this.observableIctsCurrencyList.addAll(CayenneReferenceDataCache.fetchAllActiveCommodities().values());
+		LOGGER.debug("Currencies Count : " + this.observableIctsCurrencyList.size());
 	}
 
 	@FXML

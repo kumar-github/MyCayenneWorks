@@ -16,7 +16,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.*;
  */
 public abstract class _Account extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String ACCT_NUM_PK_COLUMN = "acct_num";

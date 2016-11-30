@@ -10,15 +10,14 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.model.IctsUser;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -29,23 +28,22 @@ import javafx.stage.Stage;
  * @author Saravana Kumar M
  *
  */
-public class TradersMappingAddPopupController implements Initializable
+public class TradersMappingAddPopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger(TradersMappingAddPopupController.class);
+
 	@FXML
 	private Label titleLabel;
 	@FXML
 	private TextField externalSourceTraderTextField;
 	@FXML
 	private ComboBox<IctsUser> ictsTraderComboBox;
-	//private ComboBox<String> ictsTraderComboBox;
 	@FXML
 	private Button saveButton;
 	@FXML
 	private Button cancelButton;
 
 	private final ObservableList<IctsUser> observableIctsTradersList = FXCollections.observableArrayList();
-	//private final ObservableList<String> observableIctsTradersList = FXCollections.observableArrayList();
 
 	/* (non-Javadoc)
 	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
@@ -60,49 +58,58 @@ public class TradersMappingAddPopupController implements Initializable
 		this.setAnyUIComponentStateIfNeeded();
 	}
 
-	private void addThisControllerToControllersMap()
+	@Override
+	public void addThisControllerToControllersMap()
 	{
 		ApplicationHelper.controllersMap.putInstance(TradersMappingAddPopupController.class, this);
 	}
 
-	private void doAssertion()
+	@Override
+	public void doAssertion()
 	{
 		assert this.externalSourceTraderTextField != null : "fx:id=\"externalSourceTraderTextField\" was not injected. Check your FXML file TradersMappingAddPopupView.fxml";
 	}
 
-	private void doInitialDataBinding()
+	@Override
+	public void doInitialDataBinding()
 	{
 		this.ictsTraderComboBox.setItems(this.observableIctsTradersList);
 		this.saveButton.disableProperty().bind(this.externalSourceTraderTextField.textProperty().isEmpty().or(this.ictsTraderComboBox.valueProperty().isNull()));
 	}
 
-	private void initializeGUI()
+	@Override
+	public void initializeGUI()
 	{
 		this.fetchIctsTraders();
 	}
 
-	private void setAnyUIComponentStateIfNeeded()
+	@Override
+	public void setAnyUIComponentStateIfNeeded()
 	{
+		/* Actually, the focus should be set on the first input field so that user can start typing the data. But, we set the "Prompt Text" on the text fields and
+		 * if the focus is set then the prompt text won't be visible and user should move to some other field and come back to know what text field is this.
+		 */
 		Platform.runLater(() -> this.titleLabel.requestFocus());
+	}
+
+	@Override
+	public void createListeners()
+	{
+	}
+
+	@Override
+	public void attachListeners()
+	{
 	}
 
 	private void fetchIctsTraders()
 	{
-		this.observableIctsTradersList.clear();
-		this.observableIctsTradersList.addAll(ReferenceDataCache.fetchAllActiveIctsUsers().values());
+		//this.observableIctsTradersList.clear();
+		//this.observableIctsTradersList.addAll(ReferenceDataCache.fetchAllActiveIctsUsers().values());
 
-		/*this.observableIctsTradersList.clear();
-		final List<com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser> users = ObjectSelect.query(com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		final List<UserJobTitle> userJobTitleList = users.stream().map(IctsUser::getUserJobTitle).collect(Collectors.toList());
-		final List<String> usernames = new ArrayList();
-		for(final UserJobTitle anUserJobTitle : userJobTitleList)
-		{
-			//anUserJobTitle.get
-			//usernames.add(aUser.getUserLogonId());
-		}
-		this.observableIctsTradersList.addAll(usernames);
-		this.observableIctsTradersList.stream().forEach(System.out::println);
-		 */
+		this.observableIctsTradersList.clear();
+		this.observableIctsTradersList.addAll(this.filter(CayenneReferenceDataCache.fetchAllActiveIctsUsers().values(), (final IctsUser anIctsUser) -> anIctsUser.getUserJobTitle().getUserJobTitle().trim().equals("TRADER")));
+		LOGGER.debug("Traders Count : " + this.observableIctsTradersList.size());
 
 		/*
 		final Session session = HibernateUtil.beginTransaction();

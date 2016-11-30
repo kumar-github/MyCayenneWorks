@@ -12,8 +12,9 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 
-import com.tc.app.exchangemonitor.model.Account;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.util.HibernateUtil;
 import com.tc.app.exchangemonitor.util.ReferenceDataCache;
@@ -128,7 +129,7 @@ public class BrokersMappingAddPopupController implements Initializable
 			LOGGER.debug("Before Applying any Predicate : " + this.filteredBrokersList.size());
 			this.filteredBrokersList.setPredicate(null);
 			LOGGER.debug("After Clearing Existing Predicate : " + this.filteredBrokersList.size());
-			this.filteredBrokersList.setPredicate((anAccount) -> anAccount.getAcctTypeCode().getAcctTypeCode().equals("EXCHBRKR") || anAccount.getAcctTypeCode().getAcctTypeCode().equals("FLRBRKR"));
+			this.filteredBrokersList.setPredicate((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("EXCHBRKR") || anAccount.getAccountType().getAccountTypeCode().trim().equals("FLRBRKR"));
 			LOGGER.debug("After Applying new Predicate : " + this.filteredBrokersList.size());
 		}
 		else if(newValue.equals("OTC"))
@@ -136,7 +137,7 @@ public class BrokersMappingAddPopupController implements Initializable
 			LOGGER.debug("Before Applying any Predicate : " + this.filteredBrokersList.size());
 			this.filteredBrokersList.setPredicate(null);
 			LOGGER.debug("After Clearing Existing Predicate : " + this.filteredBrokersList.size());
-			this.filteredBrokersList.setPredicate((anAccount) -> anAccount.getAcctTypeCode().getAcctTypeCode().trim().equals("BROKER"));
+			this.filteredBrokersList.setPredicate((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("BROKER"));
 			LOGGER.debug("After Applying new Predicate : " + this.filteredBrokersList.size());
 		}
 		else if(newValue.equals("CLEARING"))
@@ -144,15 +145,19 @@ public class BrokersMappingAddPopupController implements Initializable
 			LOGGER.debug("Before Applying any Predicate : " + this.filteredBrokersList.size());
 			this.filteredBrokersList.setPredicate(null);
 			LOGGER.debug("After Clearing Existing Predicate : " + this.filteredBrokersList.size());
-			this.filteredBrokersList.setPredicate((anAccount) -> anAccount.getAcctTypeCode().getAcctTypeCode().equals("EXCHBRKR"));
+			this.filteredBrokersList.setPredicate((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("EXCHBRKR"));
 			LOGGER.debug("After Applying new Predicate : " + this.filteredBrokersList.size());
 		}
 	}
 
 	private void fetchIctsBrokers()
 	{
+		//this.observableBrokersList.clear();
+		//this.observableBrokersList.addAll(ReferenceDataCache.fetchAllActiveAccounts().values());
+
 		this.observableBrokersList.clear();
-		this.observableBrokersList.addAll(ReferenceDataCache.fetchAllActiveAccounts().values());
+		this.observableBrokersList.addAll(CayenneReferenceDataCache.fetchAllActiveAccounts().values());
+		LOGGER.debug("Brokers Count : " + this.observableBrokersList.size());
 		/*
 		final Session session = HibernateUtil.beginTransaction();
 		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Account.class);

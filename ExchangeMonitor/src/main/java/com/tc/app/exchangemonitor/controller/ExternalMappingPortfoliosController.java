@@ -12,6 +12,7 @@ import com.tc.app.exchangemonitor.model.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.view.java.PortfoliosMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,10 +21,14 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class ExternalMappingPortfoliosController implements Initializable
 {
@@ -130,5 +135,19 @@ public class ExternalMappingPortfoliosController implements Initializable
 	@FXML
 	private void handleAddMapingButtonClick()
 	{
+		this.showAddPortfoliosMappingView();
+	}
+
+	private void showAddPortfoliosMappingView()
+	{
+		final Stage tempStage = new Stage(StageStyle.TRANSPARENT);
+		/* To make this stage appears on top of the application window. Else, if the application is displayed in the secondary monitor the child stage will still visible on the primary monitor. */
+		tempStage.initOwner(this.addMappingButton.getScene().getWindow());
+		tempStage.initModality(Modality.APPLICATION_MODAL);
+		tempStage.setScene(new Scene(new PortfoliosMappingAddPopupView().getView()));
+		tempStage.showAndWait();
+
+		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
+		System.out.println("Stage Operation Completed.");
 	}
 }

@@ -257,6 +257,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		 */
 		this.doInitialDataBinding();
 
+		this.setAnyUIComponentStateIfNeeded();
+
 		/* This will initialize the user interface ensuring all UI controls are loaded with the proper data. We need to fetch data from DB and construct checkboxes, buttons etc... and display on the UI. */
 		this.initializeGUI();
 
@@ -295,7 +297,7 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 				final MenuItem addMenuItem = new MenuItem("Add");
 				final MenuItem updateMenuItem = new MenuItem("Update");
 				final MenuItem deleteMenuItem = new MenuItem("Delete");
-		
+
 				//return Collections.singletonList(addMenuItem);
 				return Arrays.asList(addMenuItem, updateMenuItem, deleteMenuItem);
 			}
@@ -381,6 +383,11 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		this.externalTradeAccountsListView.setItems(this.externalTradeAccountObservableList);
 
 		this.externalTradesSortedList.comparatorProperty().bind(this.externalTradesTableView.comparatorProperty());
+	}
+
+	@Override
+	public void setAnyUIComponentStateIfNeeded()
+	{
 	}
 
 	@Override

@@ -10,6 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import com.tc.app.exchangemonitor.controller.IctsTemplateTradeCellFactory?>
+<?import com.tc.app.exchangemonitor.controller.IctsTemplateTradeButtonCell?>
+
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.TemplateTradesMappingAddPopupController">
 <children>
 	<Label text="Add Template Trade Mapping" fx:id="titleLabel">
@@ -18,7 +21,10 @@
 	<TextField promptText="External Source Commodity" fx:id="externalSourceCommodityTextField">
 	<font><Font name="Calibri Bold" size="15.0" /></font>
 	</TextField>
-	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Template Trade" fx:id="ictsTemplateTradeComboBox" />
+	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Template Trade" fx:id="ictsTemplateTradeComboBox">
+    <cellFactory><IctsTemplateTradeCellFactory/></cellFactory>
+    <buttonCell><IctsTemplateTradeButtonCell/></buttonCell>
+	</ComboBox>
 	<HBox alignment="CENTER_RIGHT" spacing="10.0">
 	<children>
 		<Button defaultButton="true" text="Save" fx:id="saveButton" onAction="#handleSaveButtonClick"/>

@@ -10,10 +10,10 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.model.Account;
-import com.tc.app.exchangemonitor.model.Country;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Country;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -128,7 +128,7 @@ public class CompaniesMappingAddPopupController implements Initializable
 			LOGGER.debug("Before Applying any Predicate : " + this.filteredIctsCompaniesList.size());
 			this.filteredIctsCompaniesList.setPredicate(null);
 			LOGGER.debug("After Clearing Existing Predicate : " + this.filteredIctsCompaniesList.size());
-			this.filteredIctsCompaniesList.setPredicate((anAccount) -> anAccount.getAcctTypeCode().getAcctTypeCode().equals("CUSTOMER"));
+			this.filteredIctsCompaniesList.setPredicate((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("CUSTOMER"));
 			LOGGER.debug("After Applying new Predicate : " + this.filteredIctsCompaniesList.size());
 		}
 		else if(newValue.equals("BOOKING COMPANY"))
@@ -136,7 +136,7 @@ public class CompaniesMappingAddPopupController implements Initializable
 			LOGGER.debug("Before Applying any Predicate : " + this.filteredIctsCompaniesList.size());
 			this.filteredIctsCompaniesList.setPredicate(null);
 			LOGGER.debug("After Clearing Existing Predicate : " + this.filteredIctsCompaniesList.size());
-			this.filteredIctsCompaniesList.setPredicate((anAccount) -> anAccount.getAcctTypeCode().getAcctTypeCode().trim().equals("PEICOMP"));
+			this.filteredIctsCompaniesList.setPredicate((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("PEICOMP"));
 			LOGGER.debug("After Applying new Predicate : " + this.filteredIctsCompaniesList.size());
 		}
 	}
@@ -144,7 +144,9 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private void fetchCountries()
 	{
 		this.observableCompanyCountriesList.clear();
-		this.observableCompanyCountriesList.addAll(ReferenceDataCache.fetchAllActiveCountries().values());
+		this.observableCompanyCountriesList.addAll(CayenneReferenceDataCache.fetchAllActiveCountries().values());
+		LOGGER.debug("Countries Count : " + this.observableCompanyCountriesList.size());
+
 		/*
 		final Session session = HibernateUtil.beginTransaction();
 		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Country.class);
@@ -163,7 +165,9 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private void fetchCompanies()
 	{
 		this.observableIctsCompaniesList.clear();
-		this.observableIctsCompaniesList.addAll(ReferenceDataCache.fetchAllActiveAccounts().values());
+		this.observableIctsCompaniesList.addAll(CayenneReferenceDataCache.fetchAllActiveAccounts().values());
+		LOGGER.debug("Companies Count : " + this.observableIctsCompaniesList.size());
+
 		/*
 		final Session session = HibernateUtil.beginTransaction();
 		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Account.class);
@@ -259,7 +263,6 @@ public class CompaniesMappingAddPopupController implements Initializable
 	@FXML
 	private void handleSaveButtonClick()
 	{
-		//this.saveBrokerMapping();
 	}
 
 	@FXML

@@ -44,8 +44,6 @@ public class AccountsMappingAddPopupController implements Initializable
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		//ictsTraderComboBox.cell
-
 		this.addThisControllerToControllersMap();
 		this.doAssertion();
 		this.doInitialDataBinding();

@@ -10,6 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import com.tc.app.exchangemonitor.controller.IctsPortfolioButtonCell?>
+<?import com.tc.app.exchangemonitor.controller.IctsPortfolioCellFactory?>
+
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.PortfoliosMappingAddPopupController">
 <children>
 	<Label text="Add Portfolio Mapping" fx:id="titleLabel">
@@ -27,7 +30,10 @@
 	<TextField layoutX="20.0" layoutY="124.0" promptText="External Source Account" fx:id="externalSourceAccountTextField" >
 	<font><Font name="Calibri Bold" size="15.0" /></font>
 	</TextField>
-	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Portfolio" fx:id="ictsPortfolioComboBox" />
+	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Portfolio" fx:id="ictsPortfolioComboBox">
+	<cellFactory><IctsPortfolioCellFactory/></cellFactory>
+	<buttonCell><IctsPortfolioButtonCell/></buttonCell>
+	</ComboBox>
 	<HBox alignment="CENTER_RIGHT" spacing="10.0">
 	<children>
 		<Button defaultButton="true" text="Save" fx:id="saveButton" onAction="#handleSaveButtonClick"/>

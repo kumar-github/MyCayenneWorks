@@ -238,11 +238,6 @@ public class IctsUser implements Serializable
 		return true;
 	}
 
-	public String getTest()
-	{
-		return "123";
-	}
-
 	@Override
 	public String toString()
 	{

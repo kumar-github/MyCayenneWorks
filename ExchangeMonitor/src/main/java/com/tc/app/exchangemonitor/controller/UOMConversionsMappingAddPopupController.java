@@ -10,8 +10,9 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.model.Uom;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Uom;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -91,7 +92,7 @@ public class UOMConversionsMappingAddPopupController implements Initializable
 	private void fetchIctsUoms()
 	{
 		this.observableUomsList.clear();
-		this.observableUomsList.addAll();
+		this.observableUomsList.addAll(CayenneReferenceDataCache.fetchAllActiveUoms().values());
 	}
 
 	@FXML

@@ -1,6 +1,6 @@
 package com.tc.app.exchangemonitor.controller;
 
-import com.tc.app.exchangemonitor.model.IctsUser;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -14,10 +14,8 @@ public class IctsUserCellFactory implements Callback<ListView<IctsUser>, ListCel
 	@Override
 	public ListCell<IctsUser> call(final ListView<IctsUser> param)
 	{
-		return new ListCell<IctsUser>(){
-			/* (non-Javadoc)
-			 * @see javafx.scene.control.Cell#updateItem(java.lang.Object, boolean)
-			 */
+		return new IctsUserButtonCell();
+		/*return new ListCell<IctsUser>(){
 			@Override
 			protected void updateItem(final IctsUser item, final boolean empty)
 			{
@@ -32,6 +30,6 @@ public class IctsUserCellFactory implements Callback<ListView<IctsUser>, ListCel
 					this.setText(item.getUserInit());
 				}
 			}
-		};
+		};*/
 	}
 }

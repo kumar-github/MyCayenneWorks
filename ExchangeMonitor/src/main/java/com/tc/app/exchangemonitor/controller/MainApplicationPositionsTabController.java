@@ -390,7 +390,8 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		this.externalTradeAccountObservableList.addAll(this.externalTradeAccounts);
 	}
 
-	private void setAnyUIComponentStateIfNeeded()
+	@Override
+	public void setAnyUIComponentStateIfNeeded()
 	{
 		//externalTradeSourcesListView.setCellFactory(new ExternalTradeSourceRadioButtonCellFactory());
 		//externalTradeSourcesListView.setCellFactory((param) -> new ExternalTradeSourceRadioCell());

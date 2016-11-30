@@ -1,11 +1,10 @@
 package com.tc.app.exchangemonitor.controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import org.apache.poi.ss.formula.functions.T;
 
 import javafx.fxml.Initializable;
 
@@ -22,6 +21,11 @@ public interface IGenericController extends Initializable
 	 */
 	public abstract void doInitialDataBinding();
 
+	/*
+	 * This is to set the initial state of the components if required. Ex: setting the focus, or expand or collapse components.
+	 */
+	public void setAnyUIComponentStateIfNeeded();
+
 	/* This will initialize the user interface ensuring all UI controls are loaded with the proper data. We need to fetch data from DB and construct checkboxes, buttons etc... and display on the UI. */
 	public abstract void initializeGUI();
 
@@ -32,10 +36,18 @@ public interface IGenericController extends Initializable
 	public abstract void attachListeners();
 
 	/* This is an utility method which is used to filter any given list with the given predicate. */
-	public static final Predicate<T> isNotNull = Objects::nonNull;
-	public default List<T> filter(final List<T> listToFilter, final Predicate<T> conditionToFilter)
+	//public static final Predicate<T> isNotNull = Objects::nonNull;
+	public default <T> List<T> filter(final List<T> listToFilter, final Predicate<T> conditionToFilter)
 	{
+		final Predicate<T> isNotNull = Objects::nonNull;
 		final Predicate<T> fullConditionToFilter = conditionToFilter.and(isNotNull);
 		return listToFilter.stream().filter(fullConditionToFilter).collect(Collectors.toList());
+	}
+
+	public default <T> List<T> filter(final Collection<T> collectionToFilter, final Predicate<T> conditionToFilter)
+	{
+		final Predicate<T> isNotNull = Objects::nonNull;
+		final Predicate<T> fullConditionToFilter = conditionToFilter.and(isNotNull);
+		return collectionToFilter.stream().filter(fullConditionToFilter).collect(Collectors.toList());
 	}
 }

@@ -11,7 +11,7 @@ import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.ReferenceDataCache;
-import com.tc.app.exchangemonitor.view.java.TradersMappingAddPopupView;
+import com.tc.app.exchangemonitor.view.java.CurrenciesMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -129,7 +129,7 @@ public class ExternalMappingCurrenciesController implements Initializable
 		/* To make this stage appears on top of the application window. Else, if the application is displayed in the secondary monitor the child stage will still visible on the primary monitor. */
 		tempStage.initOwner(this.addMappingButton.getScene().getWindow());
 		tempStage.initModality(Modality.APPLICATION_MODAL);
-		tempStage.setScene(new Scene(new TradersMappingAddPopupView().getView()));
+		tempStage.setScene(new Scene(new CurrenciesMappingAddPopupView().getView()));
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */

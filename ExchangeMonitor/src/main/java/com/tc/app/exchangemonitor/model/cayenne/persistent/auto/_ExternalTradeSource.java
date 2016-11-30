@@ -20,122 +20,121 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeType;
  */
 public abstract class _ExternalTradeSource extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String OID_PK_COLUMN = "oid";
 
-	public static final Property<String> EXTERNAL_TRADE_SRC_NAME = new Property<String>("externalTradeSrcName");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<AliasSource> ALIAS_SOURCE = new Property<AliasSource>("aliasSource");
-	public static final Property<List<ExtTradeLoadingSched>> EXT_TRADE_LOADING_SCHEDS = new Property<List<ExtTradeLoadingSched>>("extTradeLoadingScheds");
-	public static final Property<List<ExternalMapping>> EXTERNAL_MAPPINGS = new Property<List<ExternalMapping>>("externalMappings");
-	public static final Property<ExternalTradeSystem> EXTERNAL_TRADE_SYSTEM_O = new Property<ExternalTradeSystem>("externalTradeSystemO");
-	public static final Property<List<ExternalTradeType>> EXTERNAL_TRADE_TYPES = new Property<List<ExternalTradeType>>("externalTradeTypes");
-	public static final Property<List<ExternalTrade>> EXTERNAL_TRADES = new Property<List<ExternalTrade>>("externalTrades");
+	public static final Property<String> EXTERNAL_TRADE_SRC_NAME = new Property<>("externalTradeSrcName");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<AliasSource> ALIAS_SOURCE = new Property<>("aliasSource");
+	public static final Property<List<ExtTradeLoadingSched>> EXT_TRADE_LOADING_SCHEDS = new Property<>("extTradeLoadingScheds");
+	public static final Property<List<ExternalMapping>> EXTERNAL_MAPPINGS = new Property<>("externalMappings");
+	public static final Property<ExternalTradeSystem> EXTERNAL_TRADE_SYSTEM_O = new Property<>("externalTradeSystemO");
+	public static final Property<List<ExternalTradeType>> EXTERNAL_TRADE_TYPES = new Property<>("externalTradeTypes");
+	public static final Property<List<ExternalTrade>> EXTERNAL_TRADES = new Property<>("externalTrades");
 
-	public void setExternalTradeSrcName(String externalTradeSrcName)
+	public void setExternalTradeSrcName(final String externalTradeSrcName)
 	{
-		writeProperty("externalTradeSrcName", externalTradeSrcName);
+		this.writeProperty("externalTradeSrcName", externalTradeSrcName);
 	}
 
 	public String getExternalTradeSrcName()
 	{
-		return (String) readProperty("externalTradeSrcName");
+		return (String) this.readProperty("externalTradeSrcName");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setAliasSource(AliasSource aliasSource)
+	public void setAliasSource(final AliasSource aliasSource)
 	{
-		setToOneTarget("aliasSource", aliasSource, true);
+		this.setToOneTarget("aliasSource", aliasSource, true);
 	}
 
 	public AliasSource getAliasSource()
 	{
-		return (AliasSource) readProperty("aliasSource");
+		return (AliasSource) this.readProperty("aliasSource");
 	}
 
-	public void addToExtTradeLoadingScheds(ExtTradeLoadingSched obj)
+	public void addToExtTradeLoadingScheds(final ExtTradeLoadingSched obj)
 	{
-		addToManyTarget("extTradeLoadingScheds", obj, true);
+		this.addToManyTarget("extTradeLoadingScheds", obj, true);
 	}
 
-	public void removeFromExtTradeLoadingScheds(ExtTradeLoadingSched obj)
+	public void removeFromExtTradeLoadingScheds(final ExtTradeLoadingSched obj)
 	{
-		removeToManyTarget("extTradeLoadingScheds", obj, true);
+		this.removeToManyTarget("extTradeLoadingScheds", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ExtTradeLoadingSched> getExtTradeLoadingScheds()
 	{
-		return (List<ExtTradeLoadingSched>) readProperty("extTradeLoadingScheds");
+		return (List<ExtTradeLoadingSched>) this.readProperty("extTradeLoadingScheds");
 	}
 
-	public void addToExternalMappings(ExternalMapping obj)
+	public void addToExternalMappings(final ExternalMapping obj)
 	{
-		addToManyTarget("externalMappings", obj, true);
+		this.addToManyTarget("externalMappings", obj, true);
 	}
 
-	public void removeFromExternalMappings(ExternalMapping obj)
+	public void removeFromExternalMappings(final ExternalMapping obj)
 	{
-		removeToManyTarget("externalMappings", obj, true);
+		this.removeToManyTarget("externalMappings", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ExternalMapping> getExternalMappings()
 	{
-		return (List<ExternalMapping>) readProperty("externalMappings");
+		return (List<ExternalMapping>) this.readProperty("externalMappings");
 	}
 
-	public void setExternalTradeSystemO(ExternalTradeSystem externalTradeSystemO)
+	public void setExternalTradeSystemO(final ExternalTradeSystem externalTradeSystemO)
 	{
-		setToOneTarget("externalTradeSystemO", externalTradeSystemO, true);
+		this.setToOneTarget("externalTradeSystemO", externalTradeSystemO, true);
 	}
 
 	public ExternalTradeSystem getExternalTradeSystemO()
 	{
-		return (ExternalTradeSystem) readProperty("externalTradeSystemO");
+		return (ExternalTradeSystem) this.readProperty("externalTradeSystemO");
 	}
 
-	public void addToExternalTradeTypes(ExternalTradeType obj)
+	public void addToExternalTradeTypes(final ExternalTradeType obj)
 	{
-		addToManyTarget("externalTradeTypes", obj, true);
+		this.addToManyTarget("externalTradeTypes", obj, true);
 	}
 
-	public void removeFromExternalTradeTypes(ExternalTradeType obj)
+	public void removeFromExternalTradeTypes(final ExternalTradeType obj)
 	{
-		removeToManyTarget("externalTradeTypes", obj, true);
+		this.removeToManyTarget("externalTradeTypes", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ExternalTradeType> getExternalTradeTypes()
 	{
-		return (List<ExternalTradeType>) readProperty("externalTradeTypes");
+		return (List<ExternalTradeType>) this.readProperty("externalTradeTypes");
 	}
 
-	public void addToExternalTrades(ExternalTrade obj)
+	public void addToExternalTrades(final ExternalTrade obj)
 	{
-		addToManyTarget("externalTrades", obj, true);
+		this.addToManyTarget("externalTrades", obj, true);
 	}
 
-	public void removeFromExternalTrades(ExternalTrade obj)
+	public void removeFromExternalTrades(final ExternalTrade obj)
 	{
-		removeToManyTarget("externalTrades", obj, true);
+		this.removeToManyTarget("externalTrades", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ExternalTrade> getExternalTrades()
 	{
-		return (List<ExternalTrade>) readProperty("externalTrades");
+		return (List<ExternalTrade>) this.readProperty("externalTrades");
 	}
 
 }

@@ -99,8 +99,7 @@ public class MainWindowController implements Initializable
 	@Inject
 	private String APPLICATION_TITLE;
 
-	@Inject
-	private String APPLICATION_TITLE_WITH_USERNAME;
+
 
 	/**
 	 * ============================================================================================================================================================================
@@ -127,15 +126,15 @@ public class MainWindowController implements Initializable
 	 */
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		addThisControllerToControllersMap();
-		doAssertion();
-		doInitialDataBinding();
-		setComponentToolTipIfNeeded();
-		initializeGUI();
-		createListeners();
-		attachListeners();
+		this.addThisControllerToControllersMap();
+		this.doAssertion();
+		this.doInitialDataBinding();
+		this.setComponentToolTipIfNeeded();
+		this.initializeGUI();
+		this.createListeners();
+		this.attachListeners();
 	}
 
 	private void addThisControllerToControllersMap()
@@ -145,28 +144,28 @@ public class MainWindowController implements Initializable
 
 	private void doAssertion()
 	{
-		assert homeImageView != null : "fx:id=\"homeImageView\" was not injected. Check your FXML file MainWindowView.fxml";
+		assert this.homeImageView != null : "fx:id=\"homeImageView\" was not injected. Check your FXML file MainWindowView.fxml";
 	}
 
 	private void doInitialDataBinding()
 	{
-		monitorStatusButton.textProperty().bind(Bindings.format("%s", Bindings.when(isRunningProperty()).then("Monitor Running").otherwise("Monitor Not Running")));
-		allTradesCountButton.textProperty().bind(allTradesCountProperty().asString());
-		pendingTradesCountButton.textProperty().bind(pendingTradesCountProperty().asString());
-		completedTradesCountButton.textProperty().bind(completedTradesCountProperty().asString());
-		failedTradesCountButton.textProperty().bind(failedTradesCountProperty().asString());
-		skippedTradesCountButton.textProperty().bind(skippedTradesCountProperty().asString());
+		this.monitorStatusButton.textProperty().bind(Bindings.format("%s", Bindings.when(this.isRunningProperty()).then("Monitor Running").otherwise("Monitor Not Running")));
+		this.allTradesCountButton.textProperty().bind(this.allTradesCountProperty().asString());
+		this.pendingTradesCountButton.textProperty().bind(this.pendingTradesCountProperty().asString());
+		this.completedTradesCountButton.textProperty().bind(this.completedTradesCountProperty().asString());
+		this.failedTradesCountButton.textProperty().bind(this.failedTradesCountProperty().asString());
+		this.skippedTradesCountButton.textProperty().bind(this.skippedTradesCountProperty().asString());
 
-		mainWindowStatusBar.textProperty().bind(statusMessagesProperty());
-		mainWindowStatusBar.progressProperty().bind(progressStatusesProperty());
+		this.mainWindowStatusBar.textProperty().bind(this.statusMessagesProperty());
+		this.mainWindowStatusBar.progressProperty().bind(this.progressStatusesProperty());
 	}
 
 	private void setComponentToolTipIfNeeded()
 	{
-		Tooltip.install(homeImageView, new Tooltip("Home"));
-		Tooltip.install(minimizeImageView, new Tooltip("Minimize"));
-		Tooltip.install(maximizeOrRestoreImageView, new Tooltip("Maximize"));
-		Tooltip.install(closeImageView, new Tooltip("Close"));
+		Tooltip.install(this.homeImageView, new Tooltip("Home"));
+		Tooltip.install(this.minimizeImageView, new Tooltip("Minimize"));
+		Tooltip.install(this.maximizeOrRestoreImageView, new Tooltip("Maximize"));
+		Tooltip.install(this.closeImageView, new Tooltip("Close"));
 	}
 
 	private void initializeGUI()
@@ -175,14 +174,14 @@ public class MainWindowController implements Initializable
 
 	private void createListeners()
 	{
-		mainWindowTabPaneChangeListener = (observableValue, oldValue, newValue) -> {
-			handleMainWindowTabPaneTabChange(oldValue, newValue);
+		this.mainWindowTabPaneChangeListener = (observableValue, oldValue, newValue) -> {
+			this.handleMainWindowTabPaneTabChange(oldValue, newValue);
 		};
 	}
 
 	private void attachListeners()
 	{
-		mainWindowTabPane.getSelectionModel().selectedItemProperty().addListener(mainWindowTabPaneChangeListener);
+		this.mainWindowTabPane.getSelectionModel().selectedItemProperty().addListener(this.mainWindowTabPaneChangeListener);
 	}
 
 	/**
@@ -192,62 +191,64 @@ public class MainWindowController implements Initializable
 	 */
 
 	@FXML
-	private void handleHomeImageViewClick(MouseEvent mouseEvent)
+	private void handleHomeImageViewClick(final MouseEvent mouseEvent)
 	{
 		if(mouseEvent.getButton() == MouseButton.PRIMARY)
-			showPreferencesPopOver();
+		{
+			this.showPreferencesPopOver();
+		}
 	}
 
 	@FXML
-	private void handleTitleBarHBoxClick(MouseEvent mouseEvent)
+	private void handleTitleBarHBoxClick(final MouseEvent mouseEvent)
 	{
 		if(mouseEvent.getClickCount() > 1)
 		{
-			handleMaximizeOrRestoreImageViewClick(mouseEvent);
+			this.handleMaximizeOrRestoreImageViewClick(mouseEvent);
 		}
 	}
 
 	@FXML
 	private void handleMinimizeImageViewClick()
 	{
-		minimizeStage();
+		this.minimizeStage();
 	}
 
 	@FXML
-	private void handleMaximizeOrRestoreImageViewClick(MouseEvent mouseEvent)
+	private void handleMaximizeOrRestoreImageViewClick(final MouseEvent mouseEvent)
 	{
 		/* We may be here bcoz user clicked maximize of restore. so first find out. */
-		if(isInMaximizedState)
+		if(this.isInMaximizedState)
 		{
 			/* do restore stuff. */
-			restoreStage();
-			removeCSSStyleFromNode(maximizeOrRestoreImageView, "mainWindowViewRestoreImageViewStyle");
-			addCSSStyleToNode(maximizeOrRestoreImageView, "mainWindowViewMaximizeImageViewStyle");
-			Tooltip.install(maximizeOrRestoreImageView, new Tooltip("Maximize"));
+			this.restoreStage();
+			this.removeCSSStyleFromNode(this.maximizeOrRestoreImageView, "mainWindowViewRestoreImageViewStyle");
+			this.addCSSStyleToNode(this.maximizeOrRestoreImageView, "mainWindowViewMaximizeImageViewStyle");
+			Tooltip.install(this.maximizeOrRestoreImageView, new Tooltip("Maximize"));
 
-			isInRestoredState = true;
-			isInMaximizedState = false;
+			this.isInRestoredState = true;
+			this.isInMaximizedState = false;
 		}
-		else if(isInRestoredState)
+		else if(this.isInRestoredState)
 		{
 			/* do maximize stuff. */
-			saveStageBounds();
-			maximizeStage();
+			this.saveStageBounds();
+			this.maximizeStage();
 
-			removeCSSStyleFromNode(maximizeOrRestoreImageView, "mainWindowViewMaximizeImageViewStyle");
-			addCSSStyleToNode(maximizeOrRestoreImageView, "mainWindowViewRestoreImageViewStyle");
-			Tooltip.install(maximizeOrRestoreImageView, new Tooltip("Restore"));
+			this.removeCSSStyleFromNode(this.maximizeOrRestoreImageView, "mainWindowViewMaximizeImageViewStyle");
+			this.addCSSStyleToNode(this.maximizeOrRestoreImageView, "mainWindowViewRestoreImageViewStyle");
+			Tooltip.install(this.maximizeOrRestoreImageView, new Tooltip("Restore"));
 
-			isInMaximizedState = true;
-			isInRestoredState = false;
+			this.isInMaximizedState = true;
+			this.isInRestoredState = false;
 		}
 	}
 
 	@FXML
-	private void handleCloseImageViewClick(MouseEvent mouseEvent)
+	private void handleCloseImageViewClick(final MouseEvent mouseEvent)
 	{
 		/* don't close the stage by yourself, instead just raise a close request event and leave it. we will handle it somewhere. */
-		Stage primaryStage = (Stage) (mainWindowBorderPane.getScene().getWindow());
+		final Stage primaryStage = (Stage) (this.mainWindowBorderPane.getScene().getWindow());
 		Platform.runLater(() -> {
 			primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
@@ -265,19 +266,19 @@ public class MainWindowController implements Initializable
 	 * ============================================================================================================================================================================
 	 */
 
-	private void handleMainWindowTabPaneTabChange(Tab previousTab, Tab currentTab)
+	private void handleMainWindowTabPaneTabChange(final Tab previousTab, final Tab currentTab)
 	{
-		shouldShowStatusBarButtons(currentTab.getText().equals("Monitor") ? true : false);
+		this.shouldShowStatusBarButtons(currentTab.getText().equals("Monitor") ? true : false);
 	}
 
-	private void shouldShowStatusBarButtons(boolean shouldShow)
+	private void shouldShowStatusBarButtons(final boolean shouldShow)
 	{
-		allTradesCountButton.setVisible(shouldShow);
-		completedTradesCountButton.setVisible(shouldShow);
-		pendingTradesCountButton.setVisible(shouldShow);
-		failedTradesCountButton.setVisible(shouldShow);
-		skippedTradesCountButton.setVisible(shouldShow);
-		leftSeparator.setVisible(shouldShow);
+		this.allTradesCountButton.setVisible(shouldShow);
+		this.completedTradesCountButton.setVisible(shouldShow);
+		this.pendingTradesCountButton.setVisible(shouldShow);
+		this.failedTradesCountButton.setVisible(shouldShow);
+		this.skippedTradesCountButton.setVisible(shouldShow);
+		this.leftSeparator.setVisible(shouldShow);
 	}
 
 	/**
@@ -296,7 +297,7 @@ public class MainWindowController implements Initializable
 
 	private void showPreferencesPopOver()
 	{
-		PopOver preferencesPopOver = new PopOver();
+		final PopOver preferencesPopOver = new PopOver();
 		preferencesPopOver.setTitle("Preferences");
 		preferencesPopOver.setDetached(true);
 		preferencesPopOver.setArrowLocation(ArrowLocation.TOP_LEFT);
@@ -305,87 +306,87 @@ public class MainWindowController implements Initializable
 		preferencesPopOver.setHideOnEscape(true);
 		preferencesPopOver.setCornerRadius(4);
 		//popOver.setContentNode(new PreferencesView().getView());
-		preferencesPopOver.setContentNode(preferencesVbox);
-		preferencesPopOver.show(homeImageView);
+		preferencesPopOver.setContentNode(this.preferencesVbox);
+		preferencesPopOver.show(this.homeImageView);
 	}
 
 	public void minimizeStage()
 	{
 		if(!Platform.isFxApplicationThread())
 		{
-			Platform.runLater(() -> _minimize());
+			Platform.runLater(() -> this._minimize());
 		}
 		else
 		{
-			_minimize();
+			this._minimize();
 		}
 	}
 
-	/* According to my code convention, methods starts with underscore (_) are very low level methods. so avoid calling them directly. there will be a helper method 
+	/* According to my code convention, methods starts with underscore (_) are very low level methods. so avoid calling them directly. there will be a helper method
 	 * available with same name without underscore (_) try using that.  */
 	private void _minimize()
 	{
 		//BorderPane mainApplicationBorderPane = ApplicationHelper.controllersMap.getInstance(MainApplicationController.class).getMainApplicationBorderPane();
 		//((Stage)(mainApplicationBorderPane.getScene().getWindow())).setIconified(true);
-		((Stage) mainWindowBorderPane.getScene().getWindow()).setIconified(true);
+		((Stage) this.mainWindowBorderPane.getScene().getWindow()).setIconified(true);
 	}
 
 	public void restoreStage()
 	{
 		if(!Platform.isFxApplicationThread())
 		{
-			Platform.runLater(() -> _restore());
+			Platform.runLater(() -> this._restore());
 		}
 		else
 		{
-			_restore();
+			this._restore();
 		}
 	}
 
 	private void _restore()
 	{
-		if(!isInRestoredState)
+		if(!this.isInRestoredState)
 		{
 			//primaryStage.setMaximized(true); /* Technically this should work but it is not bcoz of undecoration. */
 
 			//BorderPane mainApplicationBorderPane = ApplicationHelper.controllersMap.getInstance(MainApplicationController.class).getMainApplicationBorderPane();
-			Stage primaryStage = ((Stage) (mainWindowBorderPane.getScene().getWindow()));
-			primaryStage.setX(savedBounds.getMinX());
-			primaryStage.setY(savedBounds.getMinY());
-			primaryStage.setWidth(savedBounds.getWidth());
-			primaryStage.setHeight(savedBounds.getHeight());
+			final Stage primaryStage = ((Stage) (this.mainWindowBorderPane.getScene().getWindow()));
+			primaryStage.setX(this.savedBounds.getMinX());
+			primaryStage.setY(this.savedBounds.getMinY());
+			primaryStage.setWidth(this.savedBounds.getWidth());
+			primaryStage.setHeight(this.savedBounds.getHeight());
 		}
 	}
 
 	public void maximizeStage()
 	{
-		/* If we are here, then user maximized the application. Since the app is initially loaded in the restore mode, the maximize button will be visible and it should be 
+		/* If we are here, then user maximized the application. Since the app is initially loaded in the restore mode, the maximize button will be visible and it should be
 		 * toggled back and forth from maximize image to restore image as the user clicks maximize and restore buttons.
-		 * Here we remove the old css style and set the new css style. In this case remove the "applicationMainWindowMaximizeImageViewStyle" css style which shows a maximize image and set the 
+		 * Here we remove the old css style and set the new css style. In this case remove the "applicationMainWindowMaximizeImageViewStyle" css style which shows a maximize image and set the
 		 * "applicationMainWindowRestoreImageViewStyle" css style which shows a restore image.
 		 */
 		if(!Platform.isFxApplicationThread())
 		{
-			Platform.runLater(() -> _maximize());
+			Platform.runLater(() -> this._maximize());
 		}
 		else
 		{
-			_maximize();
+			this._maximize();
 		}
 	}
 
 	private void _maximize()
 	{
-		if(!isInMaximizedState)
+		if(!this.isInMaximizedState)
 		{
 			//primaryStage.setMaximized(true); /* Technically this should work but it is not bcoz of undecoration. */
 
 			//BorderPane mainApplicationBorderPane = ApplicationHelper.controllersMap.getInstance(MainApplicationController.class).getMainApplicationBorderPane();
 
 			//Get current screen of the stage
-			Stage primaryStage = ((Stage) (mainWindowBorderPane.getScene().getWindow()));
-			ObservableList<Screen> screens = Screen.getScreensForRectangle(primaryStage.getX(), primaryStage.getY(), primaryStage.getWidth(), primaryStage.getHeight());
-			Rectangle2D bounds = screens.get(0).getVisualBounds();
+			final Stage primaryStage = ((Stage) (this.mainWindowBorderPane.getScene().getWindow()));
+			final ObservableList<Screen> screens = Screen.getScreensForRectangle(primaryStage.getX(), primaryStage.getY(), primaryStage.getWidth(), primaryStage.getHeight());
+			final Rectangle2D bounds = screens.get(0).getVisualBounds();
 			primaryStage.setX(bounds.getMinX());
 			primaryStage.setY(bounds.getMinY());
 			primaryStage.setWidth(bounds.getWidth());
@@ -393,12 +394,12 @@ public class MainWindowController implements Initializable
 		}
 	}
 
-	private void addCSSStyleToNode(Node aNode, String cssStyle)
+	private void addCSSStyleToNode(final Node aNode, final String cssStyle)
 	{
 		aNode.getStyleClass().add(cssStyle);
 	}
 
-	private void removeCSSStyleFromNode(Node aNode, String cssStyle)
+	private void removeCSSStyleFromNode(final Node aNode, final String cssStyle)
 	{
 		aNode.getStyleClass().remove(cssStyle);
 	}
@@ -406,20 +407,20 @@ public class MainWindowController implements Initializable
 	private void saveStageBounds()
 	{
 		//BorderPane mainApplicationBorderPane = ApplicationHelper.controllersMap.getInstance(MainApplicationController.class).getMainApplicationBorderPane();
-		Stage primaryStage = ((Stage) (mainWindowBorderPane.getScene().getWindow()));
-		savedBounds = new BoundingBox(primaryStage.getX(), primaryStage.getY(), primaryStage.getWidth(), primaryStage.getHeight());
+		final Stage primaryStage = ((Stage) (this.mainWindowBorderPane.getScene().getWindow()));
+		this.savedBounds = new BoundingBox(primaryStage.getX(), primaryStage.getY(), primaryStage.getWidth(), primaryStage.getHeight());
 	}
 
 	public String getAPPLICATION_TITLE()
 	{
-		return APPLICATION_TITLE;
+		return this.APPLICATION_TITLE;
 	}
 
 	public String getAPPLICATION_TITLE_WITH_USERNAME()
 	{
 		//return APPLICATION_TITLE_WITH_USERNAME;
 		//return System.getenv("username") + " @ " + getAPPLICATION_TITLE();
-		return String.join(" ", System.getenv("username"), "@", getAPPLICATION_TITLE());
+		return String.join(" ", System.getenv("username"), "@", this.getAPPLICATION_TITLE());
 	}
 
 	/**
@@ -433,11 +434,11 @@ public class MainWindowController implements Initializable
 	//private StringProperty statusMessagesProperty()
 	public StringProperty statusMessagesProperty()
 	{
-		if(statusMessagesProperty == null)
+		if(this.statusMessagesProperty == null)
 		{
-			statusMessagesProperty = new SimpleStringProperty();
+			this.statusMessagesProperty = new SimpleStringProperty();
 		}
-		return statusMessagesProperty;
+		return this.statusMessagesProperty;
 	}
 
 	private DoubleProperty progressStatusesProperty = null;
@@ -445,77 +446,77 @@ public class MainWindowController implements Initializable
 	//private DoubleProperty progressStatusesProperty()
 	public DoubleProperty progressStatusesProperty()
 	{
-		if(progressStatusesProperty == null)
+		if(this.progressStatusesProperty == null)
 		{
-			progressStatusesProperty = new SimpleDoubleProperty();
+			this.progressStatusesProperty = new SimpleDoubleProperty();
 		}
-		return progressStatusesProperty;
+		return this.progressStatusesProperty;
 	}
 
 	private BooleanProperty isRunningProperty = null;
 
 	public BooleanProperty isRunningProperty()
 	{
-		if(isRunningProperty == null)
+		if(this.isRunningProperty == null)
 		{
-			isRunningProperty = new SimpleBooleanProperty();
+			this.isRunningProperty = new SimpleBooleanProperty();
 		}
-		return isRunningProperty;
+		return this.isRunningProperty;
 	}
 
 	private IntegerProperty allTradesCountProperty = null;
 
 	public IntegerProperty allTradesCountProperty()
 	{
-		if(allTradesCountProperty == null)
+		if(this.allTradesCountProperty == null)
 		{
-			allTradesCountProperty = new SimpleIntegerProperty();
+			this.allTradesCountProperty = new SimpleIntegerProperty();
 		}
-		return allTradesCountProperty;
+		return this.allTradesCountProperty;
 	}
 
 	private IntegerProperty pendingTradesCountProperty = null;
 
 	public IntegerProperty pendingTradesCountProperty()
 	{
-		if(pendingTradesCountProperty == null)
+		if(this.pendingTradesCountProperty == null)
 		{
-			pendingTradesCountProperty = new SimpleIntegerProperty();
+			this.pendingTradesCountProperty = new SimpleIntegerProperty();
 		}
-		return pendingTradesCountProperty;
+		return this.pendingTradesCountProperty;
 	}
 
 	private IntegerProperty completedTradesCountProperty = null;
 
 	public IntegerProperty completedTradesCountProperty()
 	{
-		if(completedTradesCountProperty == null)
+		if(this.completedTradesCountProperty == null)
 		{
-			completedTradesCountProperty = new SimpleIntegerProperty();
+			this.completedTradesCountProperty = new SimpleIntegerProperty();
 		}
-		return completedTradesCountProperty;
+		return this.completedTradesCountProperty;
 	}
 
 	private IntegerProperty failedTradesCountProperty = null;
 
 	public IntegerProperty failedTradesCountProperty()
 	{
-		if(failedTradesCountProperty == null)
+		if(this.failedTradesCountProperty == null)
 		{
-			failedTradesCountProperty = new SimpleIntegerProperty();
+			this.failedTradesCountProperty = new SimpleIntegerProperty();
 		}
-		return failedTradesCountProperty;
+		return this.failedTradesCountProperty;
 	}
 
 	private IntegerProperty skippedTradesCountProperty = null;
 
 	public IntegerProperty skippedTradesCountProperty()
 	{
-		if(skippedTradesCountProperty == null)
+		if(this.skippedTradesCountProperty == null)
 		{
-			skippedTradesCountProperty = new SimpleIntegerProperty();
+			this.skippedTradesCountProperty = new SimpleIntegerProperty();
 		}
-		return skippedTradesCountProperty;
+		return this.skippedTradesCountProperty;
 	}
 }
 

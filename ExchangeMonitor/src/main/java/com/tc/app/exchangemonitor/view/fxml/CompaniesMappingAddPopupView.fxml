@@ -13,6 +13,12 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
+<?import com.tc.app.exchangemonitor.controller.IctsAccountButtonCell?>
+<?import com.tc.app.exchangemonitor.controller.IctsCountryButtonCell?>
+
+<?import com.tc.app.exchangemonitor.controller.IctsAccountCellFactory?>
+<?import com.tc.app.exchangemonitor.controller.IctsCountryCellFactory?>
+
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.CompaniesMappingAddPopupController">
 <children>
 	<Label text="Add Companies Mapping" fx:id="titleLabel">
@@ -29,8 +35,14 @@
 	</FXCollections>
 	</items>
 	</ComboBox>
-	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="Company Country" fx:id="companyCountryComboBox"/>
-	<ComboBox layoutX="20.0" layoutY="124.0" prefHeight="28.0" prefWidth="200.0" promptText="ICTS Company" fx:id="ictsCompanyComboBox"/>
+	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="Company Country" fx:id="companyCountryComboBox">
+	<cellFactory><IctsCountryCellFactory/></cellFactory>
+	<buttonCell><IctsCountryButtonCell/></buttonCell>
+	</ComboBox>
+	<ComboBox layoutX="20.0" layoutY="124.0" prefHeight="28.0" prefWidth="200.0" promptText="ICTS Company" fx:id="ictsCompanyComboBox">
+	<cellFactory><IctsAccountCellFactory/></cellFactory>
+	<buttonCell><IctsAccountButtonCell/></buttonCell>
+	</ComboBox>
 	<HBox alignment="CENTER_RIGHT" spacing="10.0">
 	<children>
 		<Button defaultButton="true" text="Save" fx:id="saveButton" onAction="#handleSaveButtonClick"/>
