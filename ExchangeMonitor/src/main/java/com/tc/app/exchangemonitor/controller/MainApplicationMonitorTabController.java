@@ -24,11 +24,12 @@ import org.hibernate.Session;
 import com.tc.app.exchangemonitor.animation.FadeInUpTransition;
 import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
 import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeStateEntity;
 import com.tc.app.exchangemonitor.entitybase.IExternalTradeStatusEntity;
 import com.tc.app.exchangemonitor.model.ExternalMapping;
-import com.tc.app.exchangemonitor.model.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeState;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.DatePickerConverter;
 import com.tc.app.exchangemonitor.util.ExcelStylesHelper;
 import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
@@ -149,7 +150,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 	private CheckListView<ExternalTradeSource> externalTradeSourcesListView;
 
 	@FXML
-	private CheckListView<IExternalTradeStateEntity> externalTradeStatesListView;
+	//private CheckListView<IExternalTradeStateEntity> externalTradeStatesListView;
+	private CheckListView<ExternalTradeState> externalTradeStatesListView;
 
 	@FXML
 	private CheckListView<IExternalTradeStatusEntity> externalTradeStatusesListView;
@@ -210,7 +212,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 
 	//private ListChangeListener<IExternalTradeSourceEntity> externalTradeSourcesCheckBoxClickListener = null;
 	private ListChangeListener<ExternalTradeSource> externalTradeSourcesCheckBoxClickListener = null;
-	private ListChangeListener<IExternalTradeStateEntity> externalTradeStatesCheckBoxClickListener = null;
+	//private ListChangeListener<IExternalTradeStateEntity> externalTradeStatesCheckBoxClickListener = null;
+	private ListChangeListener<ExternalTradeState> externalTradeStatesCheckBoxClickListener = null;
 	private ListChangeListener<IExternalTradeStatusEntity> externalTradeStatusesCheckBoxClickListener = null;
 	private ListChangeListener<IExternalMappingEntity> externalTradeAccountsCheckBoxClickListener = null;
 	private ChangeListener<String> externalTradeAccountsFilterTextFieldKeyListener = null;
@@ -225,7 +228,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 	// externalTradeSourceObservableList = FXCollections.observableArrayList();
 	private final ObservableList<ExternalTradeSource> externalTradeSourceObservableList = FXCollections.observableArrayList();
 
-	private final ObservableList<IExternalTradeStateEntity> externalTradeStateObservableList = FXCollections.observableArrayList();
+	//private final ObservableList<IExternalTradeStateEntity> externalTradeStateObservableList = FXCollections.observableArrayList();
+	private final ObservableList<ExternalTradeState> externalTradeStateObservableList = FXCollections.observableArrayList();
 
 	private final ObservableList<IExternalTradeStatusEntity> externalTradeStatusObservableList = FXCollections.observableArrayList();
 
@@ -436,12 +440,14 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 
 	private void fetchExternalTradeSources()
 	{
-		this.externalTradeSourceObservableList.addAll(ReferenceDataCache.fetchExternalTradeSources().values());
+		//this.externalTradeSourceObservableList.addAll(ReferenceDataCache.fetchExternalTradeSources().values());
+		this.externalTradeSourceObservableList.addAll(CayenneReferenceDataCache.fetchExternalTradeSources().values());
 	}
 
 	private void fetchExternalTradeStates()
 	{
-		this.externalTradeStateObservableList.addAll(ReferenceDataCache.fetchExternalTradeStates().values());
+		//this.externalTradeStateObservableList.addAll(ReferenceDataCache.fetchExternalTradeStates().values());
+		this.externalTradeStateObservableList.addAll(CayenneReferenceDataCache.fetchExternalTradeStates().values());
 	}
 
 	private void fetchExternalTradeStatuses()
@@ -584,7 +590,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		}
 	}
 
-	private void handleExternalTradeStatesCheckBoxClick(final Change<? extends IExternalTradeStateEntity> change)
+	//private void handleExternalTradeStatesCheckBoxClick(final Change<? extends IExternalTradeStateEntity> change)
+	private void handleExternalTradeStatesCheckBoxClick(final Change<? extends ExternalTradeState> change)
 	{
 		if(this.externalTradeStatesListView.getCheckModel().getCheckedItems().size() == 0)
 		{
@@ -825,7 +832,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		String selectedEndDate = null;
 
 		final List<ExternalTradeSource> externalTradeSourceObjectsSelectedByUserFromUI = this.getExternalTradeSourcesSelectedByUserFromUI();
-		final List<IExternalTradeStateEntity> externalTradeStateObjectsSelectedByUserFromUI = this.getExternalTradeStatesSelectedByUserFromUI();
+		//final List<IExternalTradeStateEntity> externalTradeStateObjectsSelectedByUserFromUI = this.getExternalTradeStatesSelectedByUserFromUI();
+		final List<ExternalTradeState> externalTradeStateObjectsSelectedByUserFromUI = this.getExternalTradeStatesSelectedByUserFromUI();
 		final List<IExternalTradeStatusEntity> externalTradeStatusObjectsSelectedByUserFromUI = this.getExternalTradeStatusesSelectedByUserFromUI();
 		final List<IExternalMappingEntity> externalTradeAccountObjectsSelectedByUserFromUI = this.getExternalTradeAccountsSelectedByUserFromUI();
 
@@ -833,10 +841,11 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		selectedEndDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.endDateDatePicker.getValue() != null ? this.endDateDatePicker.getValue() : LocalDate.now());
 
 		final List<String> selectedExternalTradeSourceNames = new ArrayList<>();
-		externalTradeSourceObjectsSelectedByUserFromUI.forEach((anExternalTradeSourceEntity) -> selectedExternalTradeSourceNames.add(anExternalTradeSourceEntity.getOid().toString()));
+		externalTradeSourceObjectsSelectedByUserFromUI.forEach((anExternalTradeSource) -> selectedExternalTradeSourceNames.add(anExternalTradeSource.getExternalTradeSourceOid().toString()));
 
 		final List<String> selectedExternalTradeStateNames = new ArrayList<>();
-		externalTradeStateObjectsSelectedByUserFromUI.forEach((anExternalTradeState) -> selectedExternalTradeStateNames.add(anExternalTradeState.getOid().toString()));
+		//externalTradeStateObjectsSelectedByUserFromUI.forEach((anExternalTradeState) -> selectedExternalTradeStateNames.add(anExternalTradeState.getOid().toString()));
+		externalTradeStateObjectsSelectedByUserFromUI.forEach((anExternalTradeState) -> selectedExternalTradeStateNames.add(anExternalTradeState.getExternalTradeStateOid().toString()));
 
 		final List<String> selectedExternalTradeStatusNames = new ArrayList<>();
 		externalTradeStatusObjectsSelectedByUserFromUI.forEach((anExternalTradeStatus) -> selectedExternalTradeStatusNames.add(anExternalTradeStatus.getOid().toString()));
@@ -920,7 +929,8 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		return this.externalTradeSourcesListView.getCheckModel().getCheckedItems();
 	}
 
-	public List<IExternalTradeStateEntity> getExternalTradeStatesSelectedByUserFromUI()
+	//public List<IExternalTradeStateEntity> getExternalTradeStatesSelectedByUserFromUI()
+	public List<ExternalTradeState> getExternalTradeStatesSelectedByUserFromUI()
 	{
 		return this.externalTradeStatesListView.getCheckModel().getCheckedItems();
 	}

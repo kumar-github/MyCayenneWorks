@@ -174,7 +174,9 @@
 			<content>
 				<VBox prefHeight="260.0" prefWidth="138.0">
 				<children>
-					<CheckListView fx:id="externalTradeSourcesListView" focusTraversable="false" prefHeight="10.0" prefWidth="315.0" VBox.vgrow="ALWAYS" />
+					<CheckListView fx:id="externalTradeSourcesListView" focusTraversable="false" prefHeight="10.0" prefWidth="315.0" VBox.vgrow="ALWAYS">
+					<!--<cellFactory><ExternalTradeSourceCheckBoxCellFactory/></cellFactory>-->
+					</CheckListView>
 					</children>
 					<padding><Insets top="1.0" /></padding>
 				</VBox>

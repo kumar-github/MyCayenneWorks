@@ -10,4 +10,11 @@ public class ExternalTradeState extends _ExternalTradeState
 	{
 		return (this.getObjectId() != null) && !this.getObjectId().isTemporary() ? (Integer) this.getObjectId().getIdSnapshot().get(OID_PK_COLUMN) : null;
 	}
+
+	@Override
+	public String toString()
+	{
+		//return super.toString();
+		return this.getExternalTradeStateName().trim().toUpperCase();
+	}
 }

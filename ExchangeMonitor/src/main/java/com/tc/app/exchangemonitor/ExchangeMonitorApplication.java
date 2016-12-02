@@ -49,6 +49,7 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
 		HibernateUtil.getSessionFactory();
 		CayenneHelper.initializeCayenneServerRuntime();
+		this.testCall();
 		ReferenceDataCache.loadAllReferenceData();
 		CayenneReferenceDataCache.loadAllReferenceData();
 		for(int i = 0; i < 1000; i++)
@@ -86,9 +87,9 @@ public class ExchangeMonitorApplication extends Application
 			primaryStage.show();
 			primaryStage.toFront();
 		}
-		catch(final Exception ex)
+		catch(final Exception exception)
 		{
-			LOGGER.error(ex);
+			LOGGER.error(exception);
 			Injector.forgetAll();
 			Platform.exit();
 		}
@@ -162,5 +163,28 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.info("Application Terminated.");
 		Platform.exit();
 		System.exit(0);
+	}
+
+	private void testCall()
+	{
+		/*
+		final EJBQLQuery query = new EJBQLQuery("select ets FROM ExternalTradeSource ets");
+		final List<ExternalTradeSource> x = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
+		System.out.println(x);
+		x.forEach((a) -> System.out.println(a.getExternalTradeSrcName()));
+		final SQLTemplate select = new SQLTemplate(ExternalTradeState.class, "select * from external_trade_state");
+		final List<ExternalTradeState> y = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(select);
+		System.out.println(x);
+		y.forEach((a) -> System.out.println(a.getExternalTradeStateName()));
+		//final String ss = "SELECT et.* FROM dbo.external_trade AS et LEFT OUTER JOIN dbo.external_comment AS ec ON et.external_comment_oid = ec.oid INNER JOIN dbo.exch_tools_trade AS ett ON et.oid = ett.external_trade_oid WHERE (et.external_trade_source_oid IN (:externalTradeSourcesParam)) AND (et.external_trade_status_oid IN (:externalTradeStatusesParam)) AND (et.external_trade_state_oid IN (:externalTradeStatesParam)) AND (ett.buyer_account IN (:buyerAccountsParam)) AND (ett.creation_date >= (:startDate)) AND (ett.creation_date <= (:endDate)) ORDER BY ett.creation_date DESC";
+		final String ss = "SELECT et.* FROM dbo.external_trade AS et LEFT OUTER JOIN dbo.external_comment AS ec ON et.external_comment_oid = ec.oid INNER JOIN dbo.exch_tools_trade AS ett ON et.oid = ett.external_trade_oid WHERE (et.oid = 18853833)";
+		final SQLTemplate select1 = new SQLTemplate(ExternalTrade.class, ss);
+		final List<ExternalTrade> ab = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(select1);
+		System.out.println(ab);
+		ab.forEach((a) -> System.out.println(a.getExternalTradeStateO()));
+		final List<ExternalTrade> abcd = ObjectSelect.query(ExternalTrade.class).where(ExternalTrade.EXTERNAL_TRADE_STATUS_O.dot(ExternalTradeStatus.EXTERNAL_TRADE_STATUS_NAME).eq("Pending")).prefetch(ExternalTrade.EXTERNAL_TRADE_O1.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		System.out.println(abcd);
+		abcd.forEach((a) -> System.out.println(a.getExternalTradeO1().getExchToolsTradeNum()));
+		System.exit(0);*/
 	}
 }
