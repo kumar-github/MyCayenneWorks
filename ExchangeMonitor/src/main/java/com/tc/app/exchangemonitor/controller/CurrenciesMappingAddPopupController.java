@@ -90,7 +90,7 @@ public class CurrenciesMappingAddPopupController implements Initializable
 	private void fetchIctsCurrencies()
 	{
 		this.observableIctsCurrencyList.clear();
-		this.observableIctsCurrencyList.addAll(CayenneReferenceDataCache.fetchAllActiveCommodities().values());
+		this.observableIctsCurrencyList.addAll(CayenneReferenceDataCache.loadAllActiveCommodities().values());
 		LOGGER.debug("Currencies Count : " + this.observableIctsCurrencyList.size());
 	}
 

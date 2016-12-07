@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.BrokersMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -33,22 +33,28 @@ public class ExternalMappingBrokersController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingBrokersController.class);
 
+	/*
 	private final ObservableList<IExternalMappingEntity> externalMappingBrokersObservableList = FXCollections.observableArrayList();
 	private final FilteredList<IExternalMappingEntity> externalMappingBrokersFilteredList = new FilteredList<>(this.externalMappingBrokersObservableList, null);
 	private final SortedList<IExternalMappingEntity> externalMappingBrokersSortedList = new SortedList<>(this.externalMappingBrokersFilteredList);
+	 */
+
+	private final ObservableList<ExternalMapping> externalMappingBrokersObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingBrokersFilteredList = new FilteredList<>(this.externalMappingBrokersObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingBrokersSortedList = new SortedList<>(this.externalMappingBrokersFilteredList);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingBrokersTableView;
+	private TableView<ExternalMapping> externalMappingBrokersTableView;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceBrokerTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceBrokerTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> brokerTypeTableColumn;
+	private TableColumn<ExternalMapping, String> brokerTypeTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceTraderTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceTraderTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceAccountTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceAccountTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> ictsBrokerTableColumn;
+	private TableColumn<ExternalMapping, String> ictsBrokerTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -120,12 +126,13 @@ public class ExternalMappingBrokersController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingBrokersObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingBrokersObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	//public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingBrokersFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isBrokerPredicate));
 	}

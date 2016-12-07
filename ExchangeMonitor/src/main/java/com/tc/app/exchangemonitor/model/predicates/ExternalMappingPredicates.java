@@ -6,209 +6,210 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 
 public class ExternalMappingPredicates
 {
 	/* An utility Predicate to check whether a given object is NULL. */
-	public static final Predicate<IExternalMappingEntity> isNull = Objects::isNull;
+	public static final Predicate<ExternalMapping> isNull = Objects::isNull;
 
 	/* An utility Predicate to check whether a given object is NOT NULL. */
-	public static final Predicate<IExternalMappingEntity> isNotNull = Objects::nonNull;
+	public static final Predicate<ExternalMapping> isNotNull = Objects::nonNull;
 
-	public static final Predicate<IExternalMappingEntity> applyShowAllPredicate = (anExternalMapping) -> {
+	public static final Predicate<ExternalMapping> applyShowAllPredicate = (anExternalMapping) -> {
 		return true;
 	};
 
-	public static final Predicate<IExternalMappingEntity> applyShowNonePredicate = (anExternalMapping) -> {
+	public static final Predicate<ExternalMapping> applyShowNonePredicate = (anExternalMapping) -> {
 		return false;
 	};
 
 	/* A Predicate to check whether a given mapping's source is NYMEX. */
-	public static final Predicate<IExternalMappingEntity> isNYMEXPredicate = (anExternalMapping) -> {
+	public static final Predicate<ExternalMapping> isNYMEXPredicate = (anExternalMapping) -> {
 		//return anExternalMapping.getExternalTradeSourceOid().getOid() == 1;
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("NYMEX");
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("NYMEX");
 	};
 
 	/* A Predicate to check whether a given mapping's source is IPE. */
-	public static final Predicate<IExternalMappingEntity> isIPEPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("IPE");
+	public static final Predicate<ExternalMapping> isIPEPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("IPE");
 	};
 
 	/* A Predicate to check whether a given mapping's source is ICE. */
-	public static final Predicate<IExternalMappingEntity> isICEPredicate = (anExternalMapping) -> {
+	public static final Predicate<ExternalMapping> isICEPredicate = (anExternalMapping) -> {
 		//return anExternalMapping.getExternalTradeSourceOid().getOid() == 3;
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("ICE");
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("ICE");
 	};
 
 	/* A Predicate to check whether a given mapping's source is EXCHANGE TOOLS. */
-	public static final Predicate<IExternalMappingEntity> isExchangeToolsPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("ExchangeTools");
+	public static final Predicate<ExternalMapping> isExchangeToolsPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("EXCHANGETOOLS");
 	};
 
 	/* A Predicate to check whether a given mapping's source is DASHBOARD. */
-	public static final Predicate<IExternalMappingEntity> isDashBoardPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("DashBoard");
+	public static final Predicate<ExternalMapping> isDashBoardPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("DASHBOARD");
 	};
 
 	/* A Predicate to check whether a given mapping's source is EXCEL. */
-	public static final Predicate<IExternalMappingEntity> isExcelPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("Excel");
+	public static final Predicate<ExternalMapping> isExcelPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("EXCEL");
 	};
 
 	/* A Predicate to check whether a given mapping's source is DME. */
-	public static final Predicate<IExternalMappingEntity> isDMEPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("DME");
+	public static final Predicate<ExternalMapping> isDMEPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("DME");
 	};
 
 	/* A Predicate to check whether a given mapping's source is ECONFIRM. */
-	public static final Predicate<IExternalMappingEntity> isECONFIRMPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("ECONFIRM");
+	public static final Predicate<ExternalMapping> isECONFIRMPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("ECONFIRM");
 	};
 
 	/* A Predicate to check whether a given mapping's source is CEE. */
-	public static final Predicate<IExternalMappingEntity> isCEEPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("CEE");
+	public static final Predicate<ExternalMapping> isCEEPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("CEE");
 	};
 
 	/* A Predicate to check whether a given mapping's source is OLYMPUS. */
-	public static final Predicate<IExternalMappingEntity> isOlympusPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("Olympus");
+	public static final Predicate<ExternalMapping> isOlympusPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("OLYMPUS");
 	};
 
 	/* A Predicate to check whether a given mapping's source is CBT. */
-	public static final Predicate<IExternalMappingEntity> isCBTPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getExternalTradeSourceOid().getExternalTradeSrcName().trim().equals("CBT");
+	public static final Predicate<ExternalMapping> isCBTPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getExternalTradeSourceO().getExternalTradeSrcName().trim().equals("CBT");
 	};
 
 	/* A Predicate to tell whether the given mapping is a TRADER. */
-	public static final Predicate<IExternalMappingEntity> isTraderPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('T');
+	public static final Predicate<ExternalMapping> isTraderPredicate = (anExternalMapping) -> {
+		//return anExternalMapping.getMappingType().equals('T');
+		return anExternalMapping.getMappingType().equals("T");
 	};
 
 	/* A Predicate to tell whether the given mapping is a BROKER. */
-	public static final Predicate<IExternalMappingEntity> isBrokerPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('B');
+	public static final Predicate<ExternalMapping> isBrokerPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("B");
 	};
 
 	/* A Predicate to tell whether the given mapping is a COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isCompanyPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('C');
+	public static final Predicate<ExternalMapping> isCompanyPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("C");
 	};
 
 	/* A Predicate to tell whether the given mapping is a CURRENCY. */
-	public static final Predicate<IExternalMappingEntity> isCurrencyPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('U');
+	public static final Predicate<ExternalMapping> isCurrencyPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("U");
 	};
 
 	/* A Predicate to tell whether the given mapping is a PORTFOLIO. */
-	public static final Predicate<IExternalMappingEntity> isPortfolioPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('P');
+	public static final Predicate<ExternalMapping> isPortfolioPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("P");
 	};
 
 	/* A Predicate to tell whether the given mapping is a TEMPLATE TRADE. */
-	public static final Predicate<IExternalMappingEntity> isTemplateTradePredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('S');
+	public static final Predicate<ExternalMapping> isTemplateTradePredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("S");
 	};
 
 	/* A Predicate to tell whether the given mapping is an ACCOUNT. */
-	public static final Predicate<IExternalMappingEntity> isAccountPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('K');
+	public static final Predicate<ExternalMapping> isAccountPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("K");
 	};
 
 	/* A Predicate to tell whether the given mapping is an UOM CONVERSION. */
-	public static final Predicate<IExternalMappingEntity> isUomConversionPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('Q');
+	public static final Predicate<ExternalMapping> isUomConversionPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("Q");
 	};
 
 	/* A Predicate to tell whether the given mapping is a TRADING PERIOD. */
-	public static final Predicate<IExternalMappingEntity> isTradingPeriodPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('O');
+	public static final Predicate<ExternalMapping> isTradingPeriodPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("O");
 	};
 
 	/* A Predicate to tell whether the given mapping is a BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isBookingCompanyPredicate = (anExternalMapping) -> {
-		return anExternalMapping.getMappingType().equals('C') && (anExternalMapping.getExternalValue2() != null) && anExternalMapping.getExternalValue2().equals("BOOKING COMPANY");
+	public static final Predicate<ExternalMapping> isBookingCompanyPredicate = (anExternalMapping) -> {
+		return anExternalMapping.getMappingType().equals("C") && (anExternalMapping.getExternalValue2() != null) && anExternalMapping.getExternalValue2().equals("BOOKING COMPANY");
 	};
 
 	//NYMEX
 	/* Few utility predicates to test NYMEX related mappings. */
-	public static final Predicate<IExternalMappingEntity> isNymexTraderPredicate = isNYMEXPredicate.and(isTraderPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexBrokerPredicate = isNYMEXPredicate.and(isBrokerPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexCompanyPredicate = isNYMEXPredicate.and(isCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexCurrencyPredicate = isNYMEXPredicate.and(isCurrencyPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexPortfolioPredicate = isNYMEXPredicate.and(isPortfolioPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexTemplateTradePredicate = isNYMEXPredicate.and(isTemplateTradePredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexAccountPredicate = isNYMEXPredicate.and(isAccountPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexUomConversionPredicate = isNYMEXPredicate.and(isUomConversionPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexTradingPeriodPredicate = isNYMEXPredicate.and(isTradingPeriodPredicate);
-	public static final Predicate<IExternalMappingEntity> isNymexBookingCompanyPredicate = isNYMEXPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isNymexTraderPredicate = isNYMEXPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isNymexBrokerPredicate = isNYMEXPredicate.and(isBrokerPredicate);
+	public static final Predicate<ExternalMapping> isNymexCompanyPredicate = isNYMEXPredicate.and(isCompanyPredicate);
+	public static final Predicate<ExternalMapping> isNymexCurrencyPredicate = isNYMEXPredicate.and(isCurrencyPredicate);
+	public static final Predicate<ExternalMapping> isNymexPortfolioPredicate = isNYMEXPredicate.and(isPortfolioPredicate);
+	public static final Predicate<ExternalMapping> isNymexTemplateTradePredicate = isNYMEXPredicate.and(isTemplateTradePredicate);
+	public static final Predicate<ExternalMapping> isNymexAccountPredicate = isNYMEXPredicate.and(isAccountPredicate);
+	public static final Predicate<ExternalMapping> isNymexUomConversionPredicate = isNYMEXPredicate.and(isUomConversionPredicate);
+	public static final Predicate<ExternalMapping> isNymexTradingPeriodPredicate = isNYMEXPredicate.and(isTradingPeriodPredicate);
+	public static final Predicate<ExternalMapping> isNymexBookingCompanyPredicate = isNYMEXPredicate.and(isBookingCompanyPredicate);
 
 	/* A Predicate to tell whether the given mapping is an IPE BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isIpeBookingCompanyPredicate = isIPEPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isIpeTraderPredicate = isIPEPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isIpeBookingCompanyPredicate = isIPEPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isIpeTraderPredicate = isIPEPredicate.and(isTraderPredicate);
 
 	//ICE
 	/* Few utility predicates to test ICE related mappings. */
-	public static final Predicate<IExternalMappingEntity> isIceTraderPredicate = isICEPredicate.and(isTraderPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceBrokerPredicate = isICEPredicate.and(isBrokerPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceCompanyPredicate = isICEPredicate.and(isCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceCurrencyPredicate = isICEPredicate.and(isCurrencyPredicate);
-	public static final Predicate<IExternalMappingEntity> isIcePortfolioPredicate = isICEPredicate.and(isPortfolioPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceTemplateTradePredicate = isICEPredicate.and(isTemplateTradePredicate);
-	public static final Predicate<IExternalMappingEntity> isIceAccountPredicate = isICEPredicate.and(isAccountPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceUomConversionPredicate = isICEPredicate.and(isUomConversionPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceTradingPeriodPredicate = isICEPredicate.and(isTradingPeriodPredicate);
-	public static final Predicate<IExternalMappingEntity> isIceBookingCompanyPredicate = isICEPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isIceTraderPredicate = isICEPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isIceBrokerPredicate = isICEPredicate.and(isBrokerPredicate);
+	public static final Predicate<ExternalMapping> isIceCompanyPredicate = isICEPredicate.and(isCompanyPredicate);
+	public static final Predicate<ExternalMapping> isIceCurrencyPredicate = isICEPredicate.and(isCurrencyPredicate);
+	public static final Predicate<ExternalMapping> isIcePortfolioPredicate = isICEPredicate.and(isPortfolioPredicate);
+	public static final Predicate<ExternalMapping> isIceTemplateTradePredicate = isICEPredicate.and(isTemplateTradePredicate);
+	public static final Predicate<ExternalMapping> isIceAccountPredicate = isICEPredicate.and(isAccountPredicate);
+	public static final Predicate<ExternalMapping> isIceUomConversionPredicate = isICEPredicate.and(isUomConversionPredicate);
+	public static final Predicate<ExternalMapping> isIceTradingPeriodPredicate = isICEPredicate.and(isTradingPeriodPredicate);
+	public static final Predicate<ExternalMapping> isIceBookingCompanyPredicate = isICEPredicate.and(isBookingCompanyPredicate);
 
 	/* A Predicate to tell whether the given mapping is an EXCHANGE TOOLS BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isExchangeToolsBookingCompanyPredicate = isExchangeToolsPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isExchangeToolsTraderPredicate = isExchangeToolsPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isExchangeToolsBookingCompanyPredicate = isExchangeToolsPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isExchangeToolsTraderPredicate = isExchangeToolsPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a DASHBOARD BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isDashBoardBookingCompanyPredicate = isDashBoardPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isDashBoardTraderPredicate = isDashBoardPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isDashBoardBookingCompanyPredicate = isDashBoardPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isDashBoardTraderPredicate = isDashBoardPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a EXCEL BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isExcelBookingCompanyPredicate = isExcelPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isExcelTraderPredicate = isExcelPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isExcelBookingCompanyPredicate = isExcelPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isExcelTraderPredicate = isExcelPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a DME BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isDMEBookingCompanyPredicate = isDMEPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isDMETraderPredicate = isDMEPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isDMEBookingCompanyPredicate = isDMEPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isDMETraderPredicate = isDMEPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a ECONFIRM BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isECONFIRMBookingCompanyPredicate = isECONFIRMPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isECONFIRMTraderPredicate = isECONFIRMPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isECONFIRMBookingCompanyPredicate = isECONFIRMPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isECONFIRMTraderPredicate = isECONFIRMPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a CEE BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isCEEBookingCompanyPredicate = isCEEPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isCEETraderPredicate = isCEEPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isCEEBookingCompanyPredicate = isCEEPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isCEETraderPredicate = isCEEPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a OLYMPUS BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isOlympusBookingCompanyPredicate = isOlympusPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isOlympusTraderPredicate = isOlympusPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isOlympusBookingCompanyPredicate = isOlympusPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isOlympusTraderPredicate = isOlympusPredicate.and(isTraderPredicate);
 
 	/* A Predicate to tell whether the given mapping is a CBT BOOKING COMPANY. */
-	public static final Predicate<IExternalMappingEntity> isCBTBookingCompanyPredicate = isCBTPredicate.and(isBookingCompanyPredicate);
-	public static final Predicate<IExternalMappingEntity> isCBTTraderPredicate = isCBTPredicate.and(isTraderPredicate);
+	public static final Predicate<ExternalMapping> isCBTBookingCompanyPredicate = isCBTPredicate.and(isBookingCompanyPredicate);
+	public static final Predicate<ExternalMapping> isCBTTraderPredicate = isCBTPredicate.and(isTraderPredicate);
 
 	/* An utility method to filter a given list of mappings with the given predicate. */
-	public static final List<IExternalMappingEntity> filterExternalMappings(final List<IExternalMappingEntity> externalMappings, final Predicate<IExternalMappingEntity> predicate)
+	public static final List<ExternalMapping> filterExternalMappings(final List<ExternalMapping> externalMappings, final Predicate<ExternalMapping> predicate)
 	{
-		return externalMappings.stream().filter(predicate).collect(Collectors.<IExternalMappingEntity>toList());
+		return externalMappings.stream().filter(predicate).collect(Collectors.<ExternalMapping>toList());
 	}
 
 	/* An utility method to filter a given list of mappings with the given predicate. */
-	public static final List<IExternalMappingEntity> filter(final List<IExternalMappingEntity> externalMappings, final Predicate<IExternalMappingEntity> predicate)
+	public static final List<ExternalMapping> filter(final List<ExternalMapping> externalMappings, final Predicate<ExternalMapping> predicate)
 	{
-		return externalMappings.stream().filter(predicate).collect(Collectors.<IExternalMappingEntity>toList());
+		return externalMappings.stream().filter(predicate).collect(Collectors.<ExternalMapping>toList());
 	}
 
 	/* An utility method to return the predicate for a given external trade source.. */
-	public static final Predicate<IExternalMappingEntity> getPredicateForExternalTradeSource(final String externalTradeSource)
+	public static final Predicate<ExternalMapping> getPredicateForExternalTradeSource(final String externalTradeSource)
 	{
-		final Predicate<IExternalMappingEntity> predicate;
+		final Predicate<ExternalMapping> predicate;
 		switch(externalTradeSource)
 		{
 			case "NYMEX":
@@ -223,15 +224,15 @@ public class ExternalMappingPredicates
 				predicate = ExternalMappingPredicates.isICEPredicate;
 				break;
 
-			case "ExchangeTools":
+			case "EXCHANGETOOLS":
 				predicate = ExternalMappingPredicates.isExchangeToolsPredicate;
 				break;
 
-			case "DashBoard":
+			case "DASHBOARD":
 				predicate = ExternalMappingPredicates.isDashBoardPredicate;
 				break;
 
-			case "Excel":
+			case "EXCEL":
 				predicate = ExternalMappingPredicates.isExcelPredicate;
 				break;
 
@@ -247,7 +248,7 @@ public class ExternalMappingPredicates
 				predicate = ExternalMappingPredicates.isCEEPredicate;
 				break;
 
-			case "Olympus":
+			case "OLYMPUS":
 				predicate = ExternalMappingPredicates.isOlympusPredicate;
 				break;
 

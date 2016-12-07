@@ -8,11 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckListView;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
-import com.tc.app.exchangemonitor.model.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingAccountsView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingBrokersView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingCompaniesView;
@@ -135,7 +135,8 @@ public class MainApplicationMappingsTabController implements Initializable
 
 	private void fetchExternalTradeSources()
 	{
-		this.observableExternalTradeSourceList.addAll(ReferenceDataCache.fetchExternalTradeSources().values());
+		//this.observableExternalTradeSourceList.addAll(ReferenceDataCache.fetchExternalTradeSources().values());
+		this.observableExternalTradeSourceList.addAll(CayenneReferenceDataCache.loadExternalTradeSources().values());
 	}
 
 	public void createListeners()
@@ -149,7 +150,8 @@ public class MainApplicationMappingsTabController implements Initializable
 	{
 		if(this.mappingsWindowBorderPane.getCenter() != null)
 		{
-			final Predicate<IExternalMappingEntity> anExternalSourcePredicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(((RadioButton) newValue).getText());
+			//final Predicate<IExternalMappingEntity> anExternalSourcePredicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(((RadioButton) newValue).getText());
+			final Predicate<ExternalMapping> anExternalSourcePredicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(((RadioButton) newValue).getText());
 			switch(this.mappingsWindowBorderPane.getCenter().getId())
 			{
 				case "tradersMappingVBox":

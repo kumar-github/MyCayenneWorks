@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.TradingPeriodsMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,11 +34,11 @@ public class ExternalMappingTradingPeriodsController implements Initializable
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTradingPeriodsController.class);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingTradingPeriodsTableView;
+	private TableView<ExternalMapping> externalMappingTradingPeriodsTableView;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceCommodityTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceCommodityTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> tradingPeriodOffsetMonthTableColumn;
+	private TableColumn<ExternalMapping, String> tradingPeriodOffsetMonthTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -48,9 +48,9 @@ public class ExternalMappingTradingPeriodsController implements Initializable
 	@FXML
 	private Button refreshMappingButton;
 
-	private final ObservableList<IExternalMappingEntity> externalMappingTradingPeriodsObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingTradingPeriodsFilteredList = new FilteredList<>(this.externalMappingTradingPeriodsObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingTradingPeriodsSortedList = new SortedList<>(this.externalMappingTradingPeriodsFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingTradingPeriodsObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingTradingPeriodsFilteredList = new FilteredList<>(this.externalMappingTradingPeriodsObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingTradingPeriodsSortedList = new SortedList<>(this.externalMappingTradingPeriodsFilteredList);
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
@@ -98,7 +98,7 @@ public class ExternalMappingTradingPeriodsController implements Initializable
 	private void fetchTradingPeriodsExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
 		this.externalMappingTradingPeriodsObservableList.addAll(ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), predicate.and(ExternalMappingPredicates.isTradingPeriodPredicate)));
 		LOGGER.info("Fetched Mappings Count : " + this.externalMappingTradingPeriodsObservableList.size());
 	}
@@ -107,12 +107,12 @@ public class ExternalMappingTradingPeriodsController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingTradingPeriodsObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingTradingPeriodsObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingTradingPeriodsFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isTradingPeriodPredicate));
 	}

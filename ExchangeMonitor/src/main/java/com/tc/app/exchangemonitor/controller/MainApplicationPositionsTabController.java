@@ -18,16 +18,16 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeStateEntity;
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeStatusEntity;
-import com.tc.app.exchangemonitor.model.ExternalMapping;
-import com.tc.app.exchangemonitor.model.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeState;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeStatus;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.DatePickerConverter;
 import com.tc.app.exchangemonitor.util.HibernateUtil;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
 
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -52,7 +52,8 @@ import javafx.util.Duration;
 
 public class MainApplicationPositionsTabController implements IMainApplicationMonitorTabController
 {
-	private static final Logger LOGGER = LogManager.getLogger(MainApplicationPositionsTabController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean IS_DEBUG_ENABLED = LOGGER.isDebugEnabled();
 
 	/**
 	 * ============================================================================================================================================================================
@@ -116,13 +117,14 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 	private CheckListView<ExternalTradeSource> externalTradeSourcesListView;
 
 	@FXML
-	private CheckListView<IExternalTradeStateEntity> externalTradeStatesListView;
+	private CheckListView<ExternalTradeState> externalTradeStatesListView;
 
 	@FXML
-	private CheckListView<IExternalTradeStatusEntity> externalTradeStatusesListView;
+	private CheckListView<ExternalTradeStatus> externalTradeStatusesListView;
 
 	@FXML
-	private CheckListView<IExternalMappingEntity> externalTradeAccountsListView;
+	//private CheckListView<IExternalMappingEntity> externalTradeAccountsListView;
+	private CheckListView<ExternalMapping> externalTradeAccountsListView;
 
 	@FXML
 	private TextField externalTradeAccountsFilterTextField;
@@ -173,22 +175,22 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 	 */
 
 	private ChangeListener<Toggle> externalTradeSourcesRadioButtonClickListener = null;
-	private ListChangeListener<IExternalTradeStateEntity> externalTradeStatesCheckBoxClickListener = null;
-	private ListChangeListener<IExternalTradeStatusEntity> externalTradeStatusesCheckBoxClickListener = null;
-	private ListChangeListener<IExternalMappingEntity> externalTradeAccountsCheckBoxClickListener = null;
+	private ListChangeListener<ExternalTradeState> externalTradeStatesCheckBoxClickListener = null;
+	private ListChangeListener<ExternalTradeStatus> externalTradeStatusesCheckBoxClickListener = null;
+	private ListChangeListener<ExternalMapping> externalTradeAccountsCheckBoxClickListener = null;
 	private ChangeListener<String> externalTradeAccountsFilterTextFieldKeyListener = null;
 
-	private final List<IExternalMappingEntity> externalTradeAccounts = new ArrayList<>();
+	private final List<ExternalMapping> externalTradeAccounts = new ArrayList<>();
 
-	private final List<IExternalMappingEntity> checkedExternalTradeAccounts = new ArrayList<>();
+	private final List<ExternalMapping> checkedExternalTradeAccounts = new ArrayList<>();
 
 	private final ObservableList<ExternalTradeSource> externalTradeSourceObservableList = FXCollections.observableArrayList();
 
-	private final ObservableList<IExternalTradeStateEntity> externalTradeStateObservableList = FXCollections.observableArrayList();
+	private final ObservableList<ExternalTradeState> externalTradeStateObservableList = FXCollections.observableArrayList();
 
-	private final ObservableList<IExternalTradeStatusEntity> externalTradeStatusObservableList = FXCollections.observableArrayList();
+	private final ObservableList<ExternalTradeStatus> externalTradeStatusObservableList = FXCollections.observableArrayList();
 
-	private final ObservableList<IExternalMappingEntity> externalTradeAccountObservableList = FXCollections.observableArrayList();
+	private final ObservableList<ExternalMapping> externalTradeAccountObservableList = FXCollections.observableArrayList();
 
 	// private ObservableList<DummyPosition> dummyPositionsObservableList = FXCollections.observableArrayList();
 	private final ObservableList<DummyPosition> dummyPositionsObservableList = FXCollections.observableArrayList(aPosition -> new Observable[] {aPosition.totalProperty()});
@@ -369,24 +371,26 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 
 	private void fetchExternalTradeSources()
 	{
-		this.externalTradeSourceObservableList.addAll(ReferenceDataCache.fetchExternalTradeSources().values());
+		this.externalTradeSourceObservableList.addAll(CayenneReferenceDataCache.loadExternalTradeSources().values());
 	}
 
 	private void fetchExternalTradeStates()
 	{
-		this.externalTradeStateObservableList.addAll(ReferenceDataCache.fetchExternalTradeStates().values());
+		this.externalTradeStateObservableList.addAll(CayenneReferenceDataCache.loadExternalTradeStates().values());
 	}
 
 	private void fetchExternalTradeStatuses()
 	{
-		this.externalTradeStatusObservableList.addAll(ReferenceDataCache.fetchExternalTradeStatuses().values());
+		this.externalTradeStatusObservableList.addAll(CayenneReferenceDataCache.loadExternalTradeStatuses().values());
 	}
 
 	private void fetchExternalTradeAccounts()
 	{
-		this.externalTradeAccounts.addAll(ReferenceDataCache.fetchExternalTradeAccounts().values());
+		this.externalTradeAccounts.addAll(CayenneReferenceDataCache.loadExternalTradeAccounts().values());
 		// the below line is creating a dummy external mapping record with name "Any". not a better way.
-		this.externalTradeAccounts.add(0, new ExternalMapping("Any"));
+		final ExternalMapping anyExternalMapping = CayenneHelper.getCayenneServerRuntime().newContext().newObject(ExternalMapping.class);
+		anyExternalMapping.setExternalValue1("Any");
+		this.externalTradeAccounts.add(0, anyExternalMapping);
 		this.externalTradeAccountObservableList.addAll(this.externalTradeAccounts);
 	}
 
@@ -467,9 +471,9 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		newValue = newValue.toUpperCase();
 
 		// Filter out the entries that don't contain the entered text
-		final ObservableList<IExternalMappingEntity> subentries = FXCollections.observableArrayList();
+		final ObservableList<ExternalMapping> subentries = FXCollections.observableArrayList();
 
-		for(final IExternalMappingEntity entry : this.externalTradeAccountsListView.getItems())
+		for(final ExternalMapping entry : this.externalTradeAccountsListView.getItems())
 		{
 			if(entry.getExternalValue1().toUpperCase().contains(newValue))
 			{
@@ -478,7 +482,7 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		}
 		this.externalTradeAccountsListView.setItems(subentries);
 
-		for(final IExternalMappingEntity string : this.checkedExternalTradeAccounts)
+		for(final ExternalMapping string : this.checkedExternalTradeAccounts)
 		{
 			if(subentries.contains(string))
 			{
@@ -502,7 +506,7 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		this.exchangesFilterValueText.setText(((RadioButton) newValue).getText());
 	}
 
-	private void handleExternalTradeStatesCheckBoxClick(final Change<? extends IExternalTradeStateEntity> change)
+	private void handleExternalTradeStatesCheckBoxClick(final Change<? extends ExternalTradeState> change)
 	{
 		if(this.externalTradeStatesListView.getCheckModel().getCheckedItems().size() == 0)
 		{
@@ -523,7 +527,7 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		}
 	};
 
-	private void handleExternalTradeStatusesCheckBoxClick(final Change<? extends IExternalTradeStatusEntity> change)
+	private void handleExternalTradeStatusesCheckBoxClick(final Change<? extends ExternalTradeStatus> change)
 	{
 		if(this.externalTradeStatusesListView.getCheckModel().getCheckedItems().size() == 0)
 		{
@@ -544,7 +548,7 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		}
 	};
 
-	private void handleExternalTradeAccountsCheckBoxClick(final Change<? extends IExternalMappingEntity> change)
+	private void handleExternalTradeAccountsCheckBoxClick(final Change<? extends ExternalMapping> change)
 	{
 		change.next();
 		if(change.wasAdded())
@@ -648,21 +652,21 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		String selectedEndDate = null;
 
 		final List<ExternalTradeSource> externalTradeSourceObjectsSelectedByUserFromUI = this.getExternalTradeSourcesSelectedByUserFromUI();
-		final List<IExternalTradeStateEntity> externalTradeStateObjectsSelectedByUserFromUI = this.getExternalTradeStatesSelectedByUserFromUI();
-		final List<IExternalTradeStatusEntity> externalTradeStatusObjectsSelectedByUserFromUI = this.getExternalTradeStatusesSelectedByUserFromUI();
-		final List<IExternalMappingEntity> externalTradeAccountObjectsSelectedByUserFromUI = this.getExternalTradeAccountsSelectedByUserFromUI();
+		final List<ExternalTradeState> externalTradeStateObjectsSelectedByUserFromUI = this.getExternalTradeStatesSelectedByUserFromUI();
+		final List<ExternalTradeStatus> externalTradeStatusObjectsSelectedByUserFromUI = this.getExternalTradeStatusesSelectedByUserFromUI();
+		final List<ExternalMapping> externalTradeAccountObjectsSelectedByUserFromUI = this.getExternalTradeAccountsSelectedByUserFromUI();
 
 		selectedStartDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.startDateDatePicker.getValue() != null ? this.startDateDatePicker.getValue() : LocalDate.now());
 		selectedEndDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.endDateDatePicker.getValue() != null ? this.endDateDatePicker.getValue() : LocalDate.now());
 
 		final List<String> selectedExternalTradeSourceNames = new ArrayList<>();
-		externalTradeSourceObjectsSelectedByUserFromUI.forEach((anExternalTradeSourceEntity) -> selectedExternalTradeSourceNames.add(anExternalTradeSourceEntity.getOid().toString()));
+		externalTradeSourceObjectsSelectedByUserFromUI.forEach((anExternalTradeSourceEntity) -> selectedExternalTradeSourceNames.add(anExternalTradeSourceEntity.getExternalTradeSourceOid().toString()));
 
 		final List<String> selectedExternalTradeStateNames = new ArrayList<>();
-		externalTradeStateObjectsSelectedByUserFromUI.forEach((anExternalTradeState) -> selectedExternalTradeStateNames.add(anExternalTradeState.getOid().toString()));
+		externalTradeStateObjectsSelectedByUserFromUI.forEach((anExternalTradeState) -> selectedExternalTradeStateNames.add(anExternalTradeState.getExternalTradeStateOid().toString()));
 
 		final List<String> selectedExternalTradeStatusNames = new ArrayList<>();
-		externalTradeStatusObjectsSelectedByUserFromUI.forEach((anExternalTradeStatus) -> selectedExternalTradeStatusNames.add(anExternalTradeStatus.getOid().toString()));
+		externalTradeStatusObjectsSelectedByUserFromUI.forEach((anExternalTradeStatus) -> selectedExternalTradeStatusNames.add(anExternalTradeStatus.getExternalTradeStatusOid().toString()));
 
 		final Session session = HibernateUtil.beginTransaction();
 		final List<String> selectedExternalTradeAccountNames = new ArrayList<>();
@@ -742,17 +746,17 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		return this.externalTradeSourcesListView.getCheckModel().getCheckedItems();
 	}
 
-	public List<IExternalTradeStateEntity> getExternalTradeStatesSelectedByUserFromUI()
+	public List<ExternalTradeState> getExternalTradeStatesSelectedByUserFromUI()
 	{
 		return this.externalTradeStatesListView.getCheckModel().getCheckedItems();
 	}
 
-	public List<IExternalTradeStatusEntity> getExternalTradeStatusesSelectedByUserFromUI()
+	public List<ExternalTradeStatus> getExternalTradeStatusesSelectedByUserFromUI()
 	{
 		return this.externalTradeStatusesListView.getCheckModel().getCheckedItems();
 	}
 
-	public List<IExternalMappingEntity> getExternalTradeAccountsSelectedByUserFromUI()
+	public List<ExternalMapping> getExternalTradeAccountsSelectedByUserFromUI()
 	{
 		return this.externalTradeAccountsListView.getCheckModel().getCheckedItems();
 	}
@@ -769,14 +773,17 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		//selectedSource = ((RadioButton) toggleGroup.getSelectedToggle()).getText();
 		selectedSource = ((RadioButton) ExternalTradeSourceRadioCellForPositionsTab.toggleGroup.getSelectedToggle()).getText();
 		final List<String> homeCompanyNames = this.getHomeCompaniesForSource(selectedSource);
-		LOGGER.info("homeCompanyNames : " + homeCompanyNames);
+		LOGGER.info("homeCompanyNames : {}", homeCompanyNames);
 
 		/*
 		 * NEVER EVER DO THIS. Logging the entire collection leads to enormous amount of toString() calls and that leads to Out of memory, N+1 select problem, thread starvation (logging is
 		 * synchronous), lazy initialization exception, logs storage filled completely. It is always better to log only
 		 * the collection size or the id's of the collection objects. But we do here bcoz the collection size is limited here.
 		 */
-		LOGGER.debug("listOfUniquePositions : " + listOfUniquePositions);
+		if(IS_DEBUG_ENABLED)
+		{
+			LOGGER.debug("listOfUniquePositions : {}", listOfUniquePositions);
+		}
 
 		listOfUniquePositions.stream().forEach((aPosition) -> {
 			if(homeCompanyNames.contains(aPosition.getInputCompany()))
@@ -807,14 +814,20 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		this.dummyPositionsObservableList.clear();
 		// addTradePosition(listOfUniquePositions);
 		final Map<String, Map<String, Map<String, Map<Double, List<DummyPosition>>>>> mapOfGroupedPostions = listOfUniquePositions.stream().collect(Collectors.groupingBy(DummyPosition::getCommodity, Collectors.groupingBy(DummyPosition::getTradingPeriod, Collectors.groupingBy(DummyPosition::getCallPut, Collectors.groupingBy(DummyPosition::getStrikePrice)))));
-		LOGGER.debug("mapOfGroupedPostions : " + mapOfGroupedPostions);
+		if(IS_DEBUG_ENABLED)
+		{
+			LOGGER.debug("mapOfGroupedPostions : {}", mapOfGroupedPostions);
+		}
 
 		/*
 		 * mapOfGroupedPostions.values().forEach(a -> a.values().forEach(b -> b.values().forEach(theMap -> { System.out.println("theMap : " + theMap); dummyPositionsObservableList.add(doThis(theMap)); })));
 		 */
 
 		mapOfGroupedPostions.values().forEach(a -> a.values().forEach(b -> b.values().forEach(theMap -> theMap.values().forEach(listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice -> {
-			LOGGER.debug("listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice : " + listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice);
+			if(IS_DEBUG_ENABLED)
+			{
+				LOGGER.debug("listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice {}", listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice);
+			}
 			this.dummyPositionsObservableList.add(this.doThis(listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice));
 		}))));
 
@@ -917,7 +930,7 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 
 	private List<String> getHomeCompaniesForSource(final String selectedSource)
 	{
-		final Predicate<IExternalMappingEntity> homeCompanyPredicate;
+		final Predicate<ExternalMapping> homeCompanyPredicate;
 		switch(selectedSource)
 		{
 			case "NYMEX":
@@ -968,8 +981,8 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 				homeCompanyPredicate = null;
 				break;
 		}
-		final List<IExternalMappingEntity> homeCompanyObjects = ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), homeCompanyPredicate);
-		final List<String> homeCompanyNames = homeCompanyObjects.stream().map(IExternalMappingEntity::getExternalValue1).collect(Collectors.toList());
+		final List<ExternalMapping> homeCompanyObjects = ExternalMappingPredicates.filterExternalMappings(CayenneReferenceDataCache.loadExternalMappings(), homeCompanyPredicate);
+		final List<String> homeCompanyNames = homeCompanyObjects.stream().map(ExternalMapping::getExternalValue1).collect(Collectors.toList());
 		return homeCompanyNames;
 	}
 }

@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.AccountsMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,10 +34,10 @@ public class ExternalMappingAccountsController implements Initializable
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingAccountsController.class);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingAccountsTableView;
+	private TableView<ExternalMapping> externalMappingAccountsTableView;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceAccountTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceAccountTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -47,9 +47,9 @@ public class ExternalMappingAccountsController implements Initializable
 	@FXML
 	private Button refreshMappingButton;
 
-	private final ObservableList<IExternalMappingEntity> externalMappingAccountsObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingAccountsFilteredList = new FilteredList<>(this.externalMappingAccountsObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingAccountsSortedList = new SortedList<>(this.externalMappingAccountsFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingAccountsObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingAccountsFilteredList = new FilteredList<>(this.externalMappingAccountsObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingAccountsSortedList = new SortedList<>(this.externalMappingAccountsFilteredList);
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
@@ -105,12 +105,12 @@ public class ExternalMappingAccountsController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingAccountsObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingAccountsObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingAccountsFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isAccountPredicate));
 	}

@@ -1,9 +1,11 @@
 package com.tc.app.exchangemonitor;
 
+import org.apache.cayenne.query.ObjectSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sun.javafx.application.LauncherImpl;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.HibernateUtil;
@@ -51,7 +53,7 @@ public class ExchangeMonitorApplication extends Application
 		CayenneHelper.initializeCayenneServerRuntime();
 		this.testCall();
 		ReferenceDataCache.loadAllReferenceData();
-		CayenneReferenceDataCache.loadAllReferenceData();
+		CayenneReferenceDataCache.fetchAllReferenceData();
 		for(int i = 0; i < 1000; i++)
 		{
 			final double progress = (100 * i) / 1000;
@@ -167,6 +169,30 @@ public class ExchangeMonitorApplication extends Application
 
 	private void testCall()
 	{
+		//final EJBQLQuery query = new EJBQLQuery("select user FROM IctsUser user JOIN user.userJobTitle title");
+		/*final EJBQLQuery query = new EJBQLQuery("select account FROM Account account JOIN account.accountType code");
+		long startTime = System.currentTimeMillis();
+		CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
+		long endTime = System.currentTimeMillis();
+		System.out.println("Time : " + (endTime - startTime));
+
+		startTime = System.currentTimeMillis();
+		CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
+		endTime = System.currentTimeMillis();
+		System.out.println("Time : " + (endTime - startTime));
+		System.exit(0);
+		 */
+
+		long startTime = System.currentTimeMillis();
+		ObjectSelect.query(Account.class).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		long endTime = System.currentTimeMillis();
+		System.out.println("Time : " + (endTime - startTime));
+
+		startTime = System.currentTimeMillis();
+		ObjectSelect.query(Account.class).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		endTime = System.currentTimeMillis();
+		System.out.println("Time : " + (endTime - startTime));
+
 		/*
 		final EJBQLQuery query = new EJBQLQuery("select ets FROM ExternalTradeSource ets");
 		final List<ExternalTradeSource> x = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);

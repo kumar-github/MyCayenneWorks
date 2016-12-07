@@ -144,7 +144,7 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private void fetchCountries()
 	{
 		this.observableCompanyCountriesList.clear();
-		this.observableCompanyCountriesList.addAll(CayenneReferenceDataCache.fetchAllActiveCountries().values());
+		this.observableCompanyCountriesList.addAll(CayenneReferenceDataCache.loadAllActiveCountries().values());
 		LOGGER.debug("Countries Count : " + this.observableCompanyCountriesList.size());
 
 		/*
@@ -165,7 +165,7 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private void fetchCompanies()
 	{
 		this.observableIctsCompaniesList.clear();
-		this.observableIctsCompaniesList.addAll(CayenneReferenceDataCache.fetchAllActiveAccounts().values());
+		this.observableIctsCompaniesList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
 		LOGGER.debug("Companies Count : " + this.observableIctsCompaniesList.size());
 
 		/*

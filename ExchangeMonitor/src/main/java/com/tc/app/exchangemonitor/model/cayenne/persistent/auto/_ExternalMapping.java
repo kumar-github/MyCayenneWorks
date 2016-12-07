@@ -13,98 +13,97 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
  */
 public abstract class _ExternalMapping extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String OID_PK_COLUMN = "oid";
 
-	public static final Property<String> ALIAS_VALUE = new Property<String>("aliasValue");
-	public static final Property<String> EXTERNAL_VALUE1 = new Property<String>("externalValue1");
-	public static final Property<String> EXTERNAL_VALUE2 = new Property<String>("externalValue2");
-	public static final Property<String> EXTERNAL_VALUE3 = new Property<String>("externalValue3");
-	public static final Property<String> EXTERNAL_VALUE4 = new Property<String>("externalValue4");
-	public static final Property<String> MAPPING_TYPE = new Property<String>("mappingType");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<ExternalTradeSource> EXTERNAL_TRADE_SOURCE_O = new Property<ExternalTradeSource>("externalTradeSourceO");
+	public static final Property<Integer> OID = new Property<>("oid");
+	public static final Property<String> ALIAS_VALUE = new Property<>("aliasValue");
+	public static final Property<String> EXTERNAL_VALUE1 = new Property<>("externalValue1");
+	public static final Property<String> EXTERNAL_VALUE2 = new Property<>("externalValue2");
+	public static final Property<String> EXTERNAL_VALUE3 = new Property<>("externalValue3");
+	public static final Property<String> EXTERNAL_VALUE4 = new Property<>("externalValue4");
+	public static final Property<String> MAPPING_TYPE = new Property<>("mappingType");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<ExternalTradeSource> EXTERNAL_TRADE_SOURCE_O = new Property<>("externalTradeSourceO");
 
-	public void setAliasValue(String aliasValue)
+	public void setAliasValue(final String aliasValue)
 	{
-		writeProperty("aliasValue", aliasValue);
+		this.writeProperty("aliasValue", aliasValue);
 	}
 
 	public String getAliasValue()
 	{
-		return (String) readProperty("aliasValue");
+		return (String) this.readProperty("aliasValue");
 	}
 
-	public void setExternalValue1(String externalValue1)
+	public void setExternalValue1(final String externalValue1)
 	{
-		writeProperty("externalValue1", externalValue1);
+		this.writeProperty("externalValue1", externalValue1);
 	}
 
 	public String getExternalValue1()
 	{
-		return (String) readProperty("externalValue1");
+		return (String) this.readProperty("externalValue1");
 	}
 
-	public void setExternalValue2(String externalValue2)
+	public void setExternalValue2(final String externalValue2)
 	{
-		writeProperty("externalValue2", externalValue2);
+		this.writeProperty("externalValue2", externalValue2);
 	}
 
 	public String getExternalValue2()
 	{
-		return (String) readProperty("externalValue2");
+		return (String) this.readProperty("externalValue2");
 	}
 
-	public void setExternalValue3(String externalValue3)
+	public void setExternalValue3(final String externalValue3)
 	{
-		writeProperty("externalValue3", externalValue3);
+		this.writeProperty("externalValue3", externalValue3);
 	}
 
 	public String getExternalValue3()
 	{
-		return (String) readProperty("externalValue3");
+		return (String) this.readProperty("externalValue3");
 	}
 
-	public void setExternalValue4(String externalValue4)
+	public void setExternalValue4(final String externalValue4)
 	{
-		writeProperty("externalValue4", externalValue4);
+		this.writeProperty("externalValue4", externalValue4);
 	}
 
 	public String getExternalValue4()
 	{
-		return (String) readProperty("externalValue4");
+		return (String) this.readProperty("externalValue4");
 	}
 
-	public void setMappingType(String mappingType)
+	public void setMappingType(final String mappingType)
 	{
-		writeProperty("mappingType", mappingType);
+		this.writeProperty("mappingType", mappingType);
 	}
 
 	public String getMappingType()
 	{
-		return (String) readProperty("mappingType");
+		return (String) this.readProperty("mappingType");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setExternalTradeSourceO(ExternalTradeSource externalTradeSourceO)
+	public void setExternalTradeSourceO(final ExternalTradeSource externalTradeSourceO)
 	{
-		setToOneTarget("externalTradeSourceO", externalTradeSourceO, true);
+		this.setToOneTarget("externalTradeSourceO", externalTradeSourceO, true);
 	}
 
 	public ExternalTradeSource getExternalTradeSourceO()
 	{
-		return (ExternalTradeSource) readProperty("externalTradeSourceO");
+		return (ExternalTradeSource) this.readProperty("externalTradeSourceO");
 	}
-
 }

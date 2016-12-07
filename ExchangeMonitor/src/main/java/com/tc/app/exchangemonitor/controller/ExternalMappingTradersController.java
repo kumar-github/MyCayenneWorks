@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.TradersMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,14 +34,11 @@ public class ExternalMappingTradersController implements Initializable
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTradersController.class);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingTradersTableView;
-
+	private TableView<ExternalMapping> externalMappingTradersTableView;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceTraderTableColumn;
-
+	private TableColumn<ExternalMapping, String> externalSourceTraderTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> ictsTraderTableColumn;
-
+	private TableColumn<ExternalMapping, String> ictsTraderTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -51,13 +48,9 @@ public class ExternalMappingTradersController implements Initializable
 	@FXML
 	private Button refreshMappingButton;
 
-	private final ObservableList<IExternalMappingEntity> externalMappingTradersObservableList = FXCollections.observableArrayList();
-	//private final FilteredList<IExternalMappingEntity> externalMappingTradersFilteredList = new FilteredList<>(this.externalMappingTradersObservableList, ExternalMappingPredicates.isNymexTraderPredicate);
-	private final FilteredList<IExternalMappingEntity> externalMappingTradersFilteredList = new FilteredList<>(this.externalMappingTradersObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingTradersSortedList = new SortedList<>(this.externalMappingTradersFilteredList);
-
-
-
+	private final ObservableList<ExternalMapping> externalMappingTradersObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingTradersFilteredList = new FilteredList<>(this.externalMappingTradersObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingTradersSortedList = new SortedList<>(this.externalMappingTradersFilteredList);
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
@@ -128,15 +121,15 @@ public class ExternalMappingTradersController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		//this.externalMappingTradersObservableList.addAll(ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), predicate.and(ExternalMappingPredicates.isTraderPredicate)));
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
 
 		/* We are loading all the external mappings and setting it to the tableview. After that we update the filter with required predicates. Is this better or load only respective mappings.? */
-		this.externalMappingTradersObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		//this.externalMappingTradersObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		this.externalMappingTradersObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingTradersFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isTraderPredicate));
 	}
@@ -190,5 +183,7 @@ public class ExternalMappingTradersController implements Initializable
 	@FXML
 	private void handleRefreshMappingButtonClick()
 	{
+		this.externalMappingTradersObservableList.clear();
+		this.externalMappingTradersObservableList.addAll(CayenneReferenceDataCache.reloadExternalMappings());
 	}
 }

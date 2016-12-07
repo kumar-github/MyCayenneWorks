@@ -24,528 +24,527 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.TradeStatus;
  */
 public abstract class _Trade extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String TRADE_NUM_PK_COLUMN = "trade_num";
 
-	public static final Property<String> ACCT_REF_NUM = new Property<String>("acctRefNum");
-	public static final Property<String> ACCT_SHORT_NAME = new Property<String>("acctShortName");
-	public static final Property<String> CARGO_ID_NUMBER = new Property<String>("cargoIdNumber");
-	public static final Property<Date> CONCLUDED_DATE = new Property<Date>("concludedDate");
-	public static final Property<String> CONCLUSION_TYPE = new Property<String>("conclusionType");
-	public static final Property<String> CONTR_ANLY_INIT = new Property<String>("contrAnlyInit");
-	public static final Property<String> CONTR_APPROV_TYPE = new Property<String>("contrApprovType");
-	public static final Property<String> CONTR_CNFRM_METHOD = new Property<String>("contrCnfrmMethod");
-	public static final Property<Date> CONTR_DATE = new Property<Date>("contrDate");
-	public static final Property<String> CONTR_EXCH_METHOD = new Property<String>("contrExchMethod");
-	public static final Property<String> CONTR_TLX_HOLD_IND = new Property<String>("contrTlxHoldInd");
-	public static final Property<String> COPY_TYPE = new Property<String>("copyType");
-	public static final Property<String> CP_GOV_CONTR_IND = new Property<String>("cpGovContrInd");
-	public static final Property<Date> CREATION_DATE = new Property<Date>("creationDate");
-	public static final Property<Date> CREDIT_RES_EXP_DATE = new Property<Date>("creditResExpDate");
-	public static final Property<String> CREDIT_STATUS = new Property<String>("creditStatus");
-	public static final Property<String> ECONFIRM_STATUS = new Property<String>("econfirmStatus");
-	public static final Property<String> EXTERNAL_TRADE_TYPE = new Property<String>("externalTradeType");
-	public static final Property<String> INHOUSE_IND = new Property<String>("inhouseInd");
-	public static final Property<String> INTERNAL_AGREEMENT_IND = new Property<String>("internalAgreementInd");
-	public static final Property<Integer> INTERNAL_PARENT_TRADE_NUM = new Property<Integer>("internalParentTradeNum");
-	public static final Property<String> INV_PRICING_TYPE = new Property<String>("invPricingType");
-	public static final Property<String> INVENTORY_TYPE = new Property<String>("inventoryType");
-	public static final Property<String> INVOICE_CAP_TYPE = new Property<String>("invoiceCapType");
-	public static final Property<String> IS_LONG_TERM_IND = new Property<String>("isLongTermInd");
-	public static final Property<Short> MAX_ORDER_NUM = new Property<Short>("maxOrderNum");
-	public static final Property<String> NO_DEL_DRAW_PRICE_IND = new Property<String>("noDelDrawPriceInd");
-	public static final Property<Integer> NO_OF_FORWARD_MONTHS = new Property<Integer>("noOfForwardMonths");
-	public static final Property<Integer> PORT_NUM = new Property<Integer>("portNum");
-	public static final Property<String> SPECIAL_CONTRACT_NUM = new Property<String>("specialContractNum");
-	public static final Property<Date> TRADE_MOD_DATE = new Property<Date>("tradeModDate");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<Boolean> USE_MTM = new Property<Boolean>("useMtm");
-	public static final Property<Account> ACCOUNT = new Property<Account>("account");
-	public static final Property<AccountContact> ACCOUNT_CONTACT = new Property<AccountContact>("accountContact");
-	public static final Property<AccountContact> ACCOUNT_CONTACT1 = new Property<AccountContact>("accountContact1");
-	public static final Property<ContractStatus> CONTRACT_STATUS = new Property<ContractStatus>("contractStatus");
-	public static final Property<CreditTerm> CREDIT_TERM = new Property<CreditTerm>("creditTerm");
-	public static final Property<IctsUser> ICTS_USER = new Property<IctsUser>("ictsUser");
-	public static final Property<IctsUser> ICTS_USER1 = new Property<IctsUser>("ictsUser1");
-	public static final Property<IctsUser> ICTS_USER2 = new Property<IctsUser>("ictsUser2");
-	public static final Property<IctsUser> ICTS_USER3 = new Property<IctsUser>("ictsUser3");
-	public static final Property<IctsProduct> PRODUCT = new Property<IctsProduct>("product");
-	public static final Property<List<ReleaseDocument>> RELEASE_DOCUMENTS = new Property<List<ReleaseDocument>>("releaseDocuments");
-	public static final Property<List<TradeFeed>> TRADE_FEEDS = new Property<List<TradeFeed>>("tradeFeeds");
-	public static final Property<TradeStatus> TRADE_STATUS = new Property<TradeStatus>("tradeStatus");
+	public static final Property<String> ACCT_REF_NUM = new Property<>("acctRefNum");
+	public static final Property<String> ACCT_SHORT_NAME = new Property<>("acctShortName");
+	public static final Property<String> CARGO_ID_NUMBER = new Property<>("cargoIdNumber");
+	public static final Property<Date> CONCLUDED_DATE = new Property<>("concludedDate");
+	public static final Property<String> CONCLUSION_TYPE = new Property<>("conclusionType");
+	public static final Property<String> CONTR_ANLY_INIT = new Property<>("contrAnlyInit");
+	public static final Property<String> CONTR_APPROV_TYPE = new Property<>("contrApprovType");
+	public static final Property<String> CONTR_CNFRM_METHOD = new Property<>("contrCnfrmMethod");
+	public static final Property<Date> CONTR_DATE = new Property<>("contrDate");
+	public static final Property<String> CONTR_EXCH_METHOD = new Property<>("contrExchMethod");
+	public static final Property<String> CONTR_TLX_HOLD_IND = new Property<>("contrTlxHoldInd");
+	public static final Property<String> COPY_TYPE = new Property<>("copyType");
+	public static final Property<String> CP_GOV_CONTR_IND = new Property<>("cpGovContrInd");
+	public static final Property<Date> CREATION_DATE = new Property<>("creationDate");
+	public static final Property<Date> CREDIT_RES_EXP_DATE = new Property<>("creditResExpDate");
+	public static final Property<String> CREDIT_STATUS = new Property<>("creditStatus");
+	public static final Property<String> ECONFIRM_STATUS = new Property<>("econfirmStatus");
+	public static final Property<String> EXTERNAL_TRADE_TYPE = new Property<>("externalTradeType");
+	public static final Property<String> INHOUSE_IND = new Property<>("inhouseInd");
+	public static final Property<String> INTERNAL_AGREEMENT_IND = new Property<>("internalAgreementInd");
+	public static final Property<Integer> INTERNAL_PARENT_TRADE_NUM = new Property<>("internalParentTradeNum");
+	public static final Property<String> INV_PRICING_TYPE = new Property<>("invPricingType");
+	public static final Property<String> INVENTORY_TYPE = new Property<>("inventoryType");
+	public static final Property<String> INVOICE_CAP_TYPE = new Property<>("invoiceCapType");
+	public static final Property<String> IS_LONG_TERM_IND = new Property<>("isLongTermInd");
+	public static final Property<Short> MAX_ORDER_NUM = new Property<>("maxOrderNum");
+	public static final Property<String> NO_DEL_DRAW_PRICE_IND = new Property<>("noDelDrawPriceInd");
+	public static final Property<Integer> NO_OF_FORWARD_MONTHS = new Property<>("noOfForwardMonths");
+	public static final Property<Integer> PORT_NUM = new Property<>("portNum");
+	public static final Property<String> SPECIAL_CONTRACT_NUM = new Property<>("specialContractNum");
+	public static final Property<Date> TRADE_MOD_DATE = new Property<>("tradeModDate");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<Boolean> USE_MTM = new Property<>("useMtm");
+	public static final Property<Account> ACCOUNT = new Property<>("account");
+	public static final Property<AccountContact> ACCOUNT_CONTACT = new Property<>("accountContact");
+	public static final Property<AccountContact> ACCOUNT_CONTACT1 = new Property<>("accountContact1");
+	public static final Property<ContractStatus> CONTRACT_STATUS = new Property<>("contractStatus");
+	public static final Property<CreditTerm> CREDIT_TERM = new Property<>("creditTerm");
+	public static final Property<IctsUser> ICTS_USER = new Property<>("ictsUser");
+	public static final Property<IctsUser> ICTS_USER1 = new Property<>("ictsUser1");
+	public static final Property<IctsUser> ICTS_USER2 = new Property<>("ictsUser2");
+	public static final Property<IctsUser> ICTS_USER3 = new Property<>("ictsUser3");
+	public static final Property<IctsProduct> PRODUCT = new Property<>("product");
+	public static final Property<List<ReleaseDocument>> RELEASE_DOCUMENTS = new Property<>("releaseDocuments");
+	public static final Property<List<TradeFeed>> TRADE_FEEDS = new Property<>("tradeFeeds");
+	public static final Property<TradeStatus> TRADE_STATUS = new Property<>("tradeStatus");
 
-	public void setAcctRefNum(String acctRefNum)
+	public void setAcctRefNum(final String acctRefNum)
 	{
-		writeProperty("acctRefNum", acctRefNum);
+		this.writeProperty("acctRefNum", acctRefNum);
 	}
 
 	public String getAcctRefNum()
 	{
-		return (String) readProperty("acctRefNum");
+		return (String) this.readProperty("acctRefNum");
 	}
 
-	public void setAcctShortName(String acctShortName)
+	public void setAcctShortName(final String acctShortName)
 	{
-		writeProperty("acctShortName", acctShortName);
+		this.writeProperty("acctShortName", acctShortName);
 	}
 
 	public String getAcctShortName()
 	{
-		return (String) readProperty("acctShortName");
+		return (String) this.readProperty("acctShortName");
 	}
 
-	public void setCargoIdNumber(String cargoIdNumber)
+	public void setCargoIdNumber(final String cargoIdNumber)
 	{
-		writeProperty("cargoIdNumber", cargoIdNumber);
+		this.writeProperty("cargoIdNumber", cargoIdNumber);
 	}
 
 	public String getCargoIdNumber()
 	{
-		return (String) readProperty("cargoIdNumber");
+		return (String) this.readProperty("cargoIdNumber");
 	}
 
-	public void setConcludedDate(Date concludedDate)
+	public void setConcludedDate(final Date concludedDate)
 	{
-		writeProperty("concludedDate", concludedDate);
+		this.writeProperty("concludedDate", concludedDate);
 	}
 
 	public Date getConcludedDate()
 	{
-		return (Date) readProperty("concludedDate");
+		return (Date) this.readProperty("concludedDate");
 	}
 
-	public void setConclusionType(String conclusionType)
+	public void setConclusionType(final String conclusionType)
 	{
-		writeProperty("conclusionType", conclusionType);
+		this.writeProperty("conclusionType", conclusionType);
 	}
 
 	public String getConclusionType()
 	{
-		return (String) readProperty("conclusionType");
+		return (String) this.readProperty("conclusionType");
 	}
 
-	public void setContrAnlyInit(String contrAnlyInit)
+	public void setContrAnlyInit(final String contrAnlyInit)
 	{
-		writeProperty("contrAnlyInit", contrAnlyInit);
+		this.writeProperty("contrAnlyInit", contrAnlyInit);
 	}
 
 	public String getContrAnlyInit()
 	{
-		return (String) readProperty("contrAnlyInit");
+		return (String) this.readProperty("contrAnlyInit");
 	}
 
-	public void setContrApprovType(String contrApprovType)
+	public void setContrApprovType(final String contrApprovType)
 	{
-		writeProperty("contrApprovType", contrApprovType);
+		this.writeProperty("contrApprovType", contrApprovType);
 	}
 
 	public String getContrApprovType()
 	{
-		return (String) readProperty("contrApprovType");
+		return (String) this.readProperty("contrApprovType");
 	}
 
-	public void setContrCnfrmMethod(String contrCnfrmMethod)
+	public void setContrCnfrmMethod(final String contrCnfrmMethod)
 	{
-		writeProperty("contrCnfrmMethod", contrCnfrmMethod);
+		this.writeProperty("contrCnfrmMethod", contrCnfrmMethod);
 	}
 
 	public String getContrCnfrmMethod()
 	{
-		return (String) readProperty("contrCnfrmMethod");
+		return (String) this.readProperty("contrCnfrmMethod");
 	}
 
-	public void setContrDate(Date contrDate)
+	public void setContrDate(final Date contrDate)
 	{
-		writeProperty("contrDate", contrDate);
+		this.writeProperty("contrDate", contrDate);
 	}
 
 	public Date getContrDate()
 	{
-		return (Date) readProperty("contrDate");
+		return (Date) this.readProperty("contrDate");
 	}
 
-	public void setContrExchMethod(String contrExchMethod)
+	public void setContrExchMethod(final String contrExchMethod)
 	{
-		writeProperty("contrExchMethod", contrExchMethod);
+		this.writeProperty("contrExchMethod", contrExchMethod);
 	}
 
 	public String getContrExchMethod()
 	{
-		return (String) readProperty("contrExchMethod");
+		return (String) this.readProperty("contrExchMethod");
 	}
 
-	public void setContrTlxHoldInd(String contrTlxHoldInd)
+	public void setContrTlxHoldInd(final String contrTlxHoldInd)
 	{
-		writeProperty("contrTlxHoldInd", contrTlxHoldInd);
+		this.writeProperty("contrTlxHoldInd", contrTlxHoldInd);
 	}
 
 	public String getContrTlxHoldInd()
 	{
-		return (String) readProperty("contrTlxHoldInd");
+		return (String) this.readProperty("contrTlxHoldInd");
 	}
 
-	public void setCopyType(String copyType)
+	public void setCopyType(final String copyType)
 	{
-		writeProperty("copyType", copyType);
+		this.writeProperty("copyType", copyType);
 	}
 
 	public String getCopyType()
 	{
-		return (String) readProperty("copyType");
+		return (String) this.readProperty("copyType");
 	}
 
-	public void setCpGovContrInd(String cpGovContrInd)
+	public void setCpGovContrInd(final String cpGovContrInd)
 	{
-		writeProperty("cpGovContrInd", cpGovContrInd);
+		this.writeProperty("cpGovContrInd", cpGovContrInd);
 	}
 
 	public String getCpGovContrInd()
 	{
-		return (String) readProperty("cpGovContrInd");
+		return (String) this.readProperty("cpGovContrInd");
 	}
 
-	public void setCreationDate(Date creationDate)
+	public void setCreationDate(final Date creationDate)
 	{
-		writeProperty("creationDate", creationDate);
+		this.writeProperty("creationDate", creationDate);
 	}
 
 	public Date getCreationDate()
 	{
-		return (Date) readProperty("creationDate");
+		return (Date) this.readProperty("creationDate");
 	}
 
-	public void setCreditResExpDate(Date creditResExpDate)
+	public void setCreditResExpDate(final Date creditResExpDate)
 	{
-		writeProperty("creditResExpDate", creditResExpDate);
+		this.writeProperty("creditResExpDate", creditResExpDate);
 	}
 
 	public Date getCreditResExpDate()
 	{
-		return (Date) readProperty("creditResExpDate");
+		return (Date) this.readProperty("creditResExpDate");
 	}
 
-	public void setCreditStatus(String creditStatus)
+	public void setCreditStatus(final String creditStatus)
 	{
-		writeProperty("creditStatus", creditStatus);
+		this.writeProperty("creditStatus", creditStatus);
 	}
 
 	public String getCreditStatus()
 	{
-		return (String) readProperty("creditStatus");
+		return (String) this.readProperty("creditStatus");
 	}
 
-	public void setEconfirmStatus(String econfirmStatus)
+	public void setEconfirmStatus(final String econfirmStatus)
 	{
-		writeProperty("econfirmStatus", econfirmStatus);
+		this.writeProperty("econfirmStatus", econfirmStatus);
 	}
 
 	public String getEconfirmStatus()
 	{
-		return (String) readProperty("econfirmStatus");
+		return (String) this.readProperty("econfirmStatus");
 	}
 
-	public void setExternalTradeType(String externalTradeType)
+	public void setExternalTradeType(final String externalTradeType)
 	{
-		writeProperty("externalTradeType", externalTradeType);
+		this.writeProperty("externalTradeType", externalTradeType);
 	}
 
 	public String getExternalTradeType()
 	{
-		return (String) readProperty("externalTradeType");
+		return (String) this.readProperty("externalTradeType");
 	}
 
-	public void setInhouseInd(String inhouseInd)
+	public void setInhouseInd(final String inhouseInd)
 	{
-		writeProperty("inhouseInd", inhouseInd);
+		this.writeProperty("inhouseInd", inhouseInd);
 	}
 
 	public String getInhouseInd()
 	{
-		return (String) readProperty("inhouseInd");
+		return (String) this.readProperty("inhouseInd");
 	}
 
-	public void setInternalAgreementInd(String internalAgreementInd)
+	public void setInternalAgreementInd(final String internalAgreementInd)
 	{
-		writeProperty("internalAgreementInd", internalAgreementInd);
+		this.writeProperty("internalAgreementInd", internalAgreementInd);
 	}
 
 	public String getInternalAgreementInd()
 	{
-		return (String) readProperty("internalAgreementInd");
+		return (String) this.readProperty("internalAgreementInd");
 	}
 
-	public void setInternalParentTradeNum(Integer internalParentTradeNum)
+	public void setInternalParentTradeNum(final Integer internalParentTradeNum)
 	{
-		writeProperty("internalParentTradeNum", internalParentTradeNum);
+		this.writeProperty("internalParentTradeNum", internalParentTradeNum);
 	}
 
 	public Integer getInternalParentTradeNum()
 	{
-		return (Integer) readProperty("internalParentTradeNum");
+		return (Integer) this.readProperty("internalParentTradeNum");
 	}
 
-	public void setInvPricingType(String invPricingType)
+	public void setInvPricingType(final String invPricingType)
 	{
-		writeProperty("invPricingType", invPricingType);
+		this.writeProperty("invPricingType", invPricingType);
 	}
 
 	public String getInvPricingType()
 	{
-		return (String) readProperty("invPricingType");
+		return (String) this.readProperty("invPricingType");
 	}
 
-	public void setInventoryType(String inventoryType)
+	public void setInventoryType(final String inventoryType)
 	{
-		writeProperty("inventoryType", inventoryType);
+		this.writeProperty("inventoryType", inventoryType);
 	}
 
 	public String getInventoryType()
 	{
-		return (String) readProperty("inventoryType");
+		return (String) this.readProperty("inventoryType");
 	}
 
-	public void setInvoiceCapType(String invoiceCapType)
+	public void setInvoiceCapType(final String invoiceCapType)
 	{
-		writeProperty("invoiceCapType", invoiceCapType);
+		this.writeProperty("invoiceCapType", invoiceCapType);
 	}
 
 	public String getInvoiceCapType()
 	{
-		return (String) readProperty("invoiceCapType");
+		return (String) this.readProperty("invoiceCapType");
 	}
 
-	public void setIsLongTermInd(String isLongTermInd)
+	public void setIsLongTermInd(final String isLongTermInd)
 	{
-		writeProperty("isLongTermInd", isLongTermInd);
+		this.writeProperty("isLongTermInd", isLongTermInd);
 	}
 
 	public String getIsLongTermInd()
 	{
-		return (String) readProperty("isLongTermInd");
+		return (String) this.readProperty("isLongTermInd");
 	}
 
-	public void setMaxOrderNum(Short maxOrderNum)
+	public void setMaxOrderNum(final Short maxOrderNum)
 	{
-		writeProperty("maxOrderNum", maxOrderNum);
+		this.writeProperty("maxOrderNum", maxOrderNum);
 	}
 
 	public Short getMaxOrderNum()
 	{
-		return (Short) readProperty("maxOrderNum");
+		return (Short) this.readProperty("maxOrderNum");
 	}
 
-	public void setNoDelDrawPriceInd(String noDelDrawPriceInd)
+	public void setNoDelDrawPriceInd(final String noDelDrawPriceInd)
 	{
-		writeProperty("noDelDrawPriceInd", noDelDrawPriceInd);
+		this.writeProperty("noDelDrawPriceInd", noDelDrawPriceInd);
 	}
 
 	public String getNoDelDrawPriceInd()
 	{
-		return (String) readProperty("noDelDrawPriceInd");
+		return (String) this.readProperty("noDelDrawPriceInd");
 	}
 
-	public void setNoOfForwardMonths(Integer noOfForwardMonths)
+	public void setNoOfForwardMonths(final Integer noOfForwardMonths)
 	{
-		writeProperty("noOfForwardMonths", noOfForwardMonths);
+		this.writeProperty("noOfForwardMonths", noOfForwardMonths);
 	}
 
 	public Integer getNoOfForwardMonths()
 	{
-		return (Integer) readProperty("noOfForwardMonths");
+		return (Integer) this.readProperty("noOfForwardMonths");
 	}
 
-	public void setPortNum(Integer portNum)
+	public void setPortNum(final Integer portNum)
 	{
-		writeProperty("portNum", portNum);
+		this.writeProperty("portNum", portNum);
 	}
 
 	public Integer getPortNum()
 	{
-		return (Integer) readProperty("portNum");
+		return (Integer) this.readProperty("portNum");
 	}
 
-	public void setSpecialContractNum(String specialContractNum)
+	public void setSpecialContractNum(final String specialContractNum)
 	{
-		writeProperty("specialContractNum", specialContractNum);
+		this.writeProperty("specialContractNum", specialContractNum);
 	}
 
 	public String getSpecialContractNum()
 	{
-		return (String) readProperty("specialContractNum");
+		return (String) this.readProperty("specialContractNum");
 	}
 
-	public void setTradeModDate(Date tradeModDate)
+	public void setTradeModDate(final Date tradeModDate)
 	{
-		writeProperty("tradeModDate", tradeModDate);
+		this.writeProperty("tradeModDate", tradeModDate);
 	}
 
 	public Date getTradeModDate()
 	{
-		return (Date) readProperty("tradeModDate");
+		return (Date) this.readProperty("tradeModDate");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setUseMtm(Boolean useMtm)
+	public void setUseMtm(final Boolean useMtm)
 	{
-		writeProperty("useMtm", useMtm);
+		this.writeProperty("useMtm", useMtm);
 	}
 
 	public Boolean getUseMtm()
 	{
-		return (Boolean) readProperty("useMtm");
+		return (Boolean) this.readProperty("useMtm");
 	}
 
-	public void setAccount(Account account)
+	public void setAccount(final Account account)
 	{
-		setToOneTarget("account", account, true);
+		this.setToOneTarget("account", account, true);
 	}
 
 	public Account getAccount()
 	{
-		return (Account) readProperty("account");
+		return (Account) this.readProperty("account");
 	}
 
-	public void setAccountContact(AccountContact accountContact)
+	public void setAccountContact(final AccountContact accountContact)
 	{
-		setToOneTarget("accountContact", accountContact, true);
+		this.setToOneTarget("accountContact", accountContact, true);
 	}
 
 	public AccountContact getAccountContact()
 	{
-		return (AccountContact) readProperty("accountContact");
+		return (AccountContact) this.readProperty("accountContact");
 	}
 
-	public void setAccountContact1(AccountContact accountContact1)
+	public void setAccountContact1(final AccountContact accountContact1)
 	{
-		setToOneTarget("accountContact1", accountContact1, true);
+		this.setToOneTarget("accountContact1", accountContact1, true);
 	}
 
 	public AccountContact getAccountContact1()
 	{
-		return (AccountContact) readProperty("accountContact1");
+		return (AccountContact) this.readProperty("accountContact1");
 	}
 
-	public void setContractStatus(ContractStatus contractStatus)
+	public void setContractStatus(final ContractStatus contractStatus)
 	{
-		setToOneTarget("contractStatus", contractStatus, true);
+		this.setToOneTarget("contractStatus", contractStatus, true);
 	}
 
 	public ContractStatus getContractStatus()
 	{
-		return (ContractStatus) readProperty("contractStatus");
+		return (ContractStatus) this.readProperty("contractStatus");
 	}
 
-	public void setCreditTerm(CreditTerm creditTerm)
+	public void setCreditTerm(final CreditTerm creditTerm)
 	{
-		setToOneTarget("creditTerm", creditTerm, true);
+		this.setToOneTarget("creditTerm", creditTerm, true);
 	}
 
 	public CreditTerm getCreditTerm()
 	{
-		return (CreditTerm) readProperty("creditTerm");
+		return (CreditTerm) this.readProperty("creditTerm");
 	}
 
-	public void setIctsUser(IctsUser ictsUser)
+	public void setIctsUser(final IctsUser ictsUser)
 	{
-		setToOneTarget("ictsUser", ictsUser, true);
+		this.setToOneTarget("ictsUser", ictsUser, true);
 	}
 
 	public IctsUser getIctsUser()
 	{
-		return (IctsUser) readProperty("ictsUser");
+		return (IctsUser) this.readProperty("ictsUser");
 	}
 
-	public void setIctsUser1(IctsUser ictsUser1)
+	public void setIctsUser1(final IctsUser ictsUser1)
 	{
-		setToOneTarget("ictsUser1", ictsUser1, true);
+		this.setToOneTarget("ictsUser1", ictsUser1, true);
 	}
 
 	public IctsUser getIctsUser1()
 	{
-		return (IctsUser) readProperty("ictsUser1");
+		return (IctsUser) this.readProperty("ictsUser1");
 	}
 
-	public void setIctsUser2(IctsUser ictsUser2)
+	public void setIctsUser2(final IctsUser ictsUser2)
 	{
-		setToOneTarget("ictsUser2", ictsUser2, true);
+		this.setToOneTarget("ictsUser2", ictsUser2, true);
 	}
 
 	public IctsUser getIctsUser2()
 	{
-		return (IctsUser) readProperty("ictsUser2");
+		return (IctsUser) this.readProperty("ictsUser2");
 	}
 
-	public void setIctsUser3(IctsUser ictsUser3)
+	public void setIctsUser3(final IctsUser ictsUser3)
 	{
-		setToOneTarget("ictsUser3", ictsUser3, true);
+		this.setToOneTarget("ictsUser3", ictsUser3, true);
 	}
 
 	public IctsUser getIctsUser3()
 	{
-		return (IctsUser) readProperty("ictsUser3");
+		return (IctsUser) this.readProperty("ictsUser3");
 	}
 
-	public void setProduct(IctsProduct product)
+	public void setProduct(final IctsProduct product)
 	{
-		setToOneTarget("product", product, true);
+		this.setToOneTarget("product", product, true);
 	}
 
 	public IctsProduct getProduct()
 	{
-		return (IctsProduct) readProperty("product");
+		return (IctsProduct) this.readProperty("product");
 	}
 
-	public void addToReleaseDocuments(ReleaseDocument obj)
+	public void addToReleaseDocuments(final ReleaseDocument obj)
 	{
-		addToManyTarget("releaseDocuments", obj, true);
+		this.addToManyTarget("releaseDocuments", obj, true);
 	}
 
-	public void removeFromReleaseDocuments(ReleaseDocument obj)
+	public void removeFromReleaseDocuments(final ReleaseDocument obj)
 	{
-		removeToManyTarget("releaseDocuments", obj, true);
+		this.removeToManyTarget("releaseDocuments", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ReleaseDocument> getReleaseDocuments()
 	{
-		return (List<ReleaseDocument>) readProperty("releaseDocuments");
+		return (List<ReleaseDocument>) this.readProperty("releaseDocuments");
 	}
 
-	public void addToTradeFeeds(TradeFeed obj)
+	public void addToTradeFeeds(final TradeFeed obj)
 	{
-		addToManyTarget("tradeFeeds", obj, true);
+		this.addToManyTarget("tradeFeeds", obj, true);
 	}
 
-	public void removeFromTradeFeeds(TradeFeed obj)
+	public void removeFromTradeFeeds(final TradeFeed obj)
 	{
-		removeToManyTarget("tradeFeeds", obj, true);
+		this.removeToManyTarget("tradeFeeds", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<TradeFeed> getTradeFeeds()
 	{
-		return (List<TradeFeed>) readProperty("tradeFeeds");
+		return (List<TradeFeed>) this.readProperty("tradeFeeds");
 	}
 
-	public void setTradeStatus(TradeStatus tradeStatus)
+	public void setTradeStatus(final TradeStatus tradeStatus)
 	{
-		setToOneTarget("tradeStatus", tradeStatus, true);
+		this.setToOneTarget("tradeStatus", tradeStatus, true);
 	}
 
 	public TradeStatus getTradeStatus()
 	{
-		return (TradeStatus) readProperty("tradeStatus");
+		return (TradeStatus) this.readProperty("tradeStatus");
 	}
 
 }

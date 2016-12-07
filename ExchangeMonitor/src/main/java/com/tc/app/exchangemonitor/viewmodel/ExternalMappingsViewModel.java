@@ -9,10 +9,6 @@ package com.tc.app.exchangemonitor.viewmodel;
  */
 public class ExternalMappingsViewModel
 {
-	public ExternalMappingsViewModel()
-	{
-	}
-
 	/*
 	private BooleanProperty isAnyRowSelected = null;
 	public BooleanProperty isAnyRowSelectedProperty()

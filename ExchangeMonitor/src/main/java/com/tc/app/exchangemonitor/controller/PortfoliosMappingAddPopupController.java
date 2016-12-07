@@ -110,7 +110,7 @@ public class PortfoliosMappingAddPopupController implements IGenericController
 	private void fetchIctsPortfolios()
 	{
 		this.observablePortfoliosList.clear();
-		this.observablePortfoliosList.addAll(this.filter(CayenneReferenceDataCache.fetchAllPortfolios().values(), (final Portfolio aPortfolio) -> aPortfolio.getPortType().trim().equals("R") && (aPortfolio.getPortLocked() == 0)));
+		this.observablePortfoliosList.addAll(this.filter(CayenneReferenceDataCache.loadAllPortfolios().values(), (final Portfolio aPortfolio) -> aPortfolio.getPortType().trim().equals("R") && (aPortfolio.getPortLocked() == 0)));
 		LOGGER.debug(this.observablePortfoliosList.size());
 	}
 

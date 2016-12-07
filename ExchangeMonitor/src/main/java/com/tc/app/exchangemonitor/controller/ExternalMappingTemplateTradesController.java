@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.TemplateTradesMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,13 +34,13 @@ public class ExternalMappingTemplateTradesController implements Initializable
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTemplateTradesController.class);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingTradesTableView;
+	private TableView<ExternalMapping> externalMappingTradesTableView;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceCommodityTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceCommodityTableColumn;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> ictsTemplateTradeTableColumn;
+	private TableColumn<ExternalMapping, String> ictsTemplateTradeTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -50,9 +50,9 @@ public class ExternalMappingTemplateTradesController implements Initializable
 	@FXML
 	private Button refreshMappingButton;
 
-	private final ObservableList<IExternalMappingEntity> externalMappingTradesObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingTradesFilteredList = new FilteredList<>(this.externalMappingTradesObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingTradesSortedList = new SortedList<>(this.externalMappingTradesFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingTradesObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingTradesFilteredList = new FilteredList<>(this.externalMappingTradesObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingTradesSortedList = new SortedList<>(this.externalMappingTradesFilteredList);
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
@@ -109,12 +109,12 @@ public class ExternalMappingTemplateTradesController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingTradesObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingTradesObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingTradesFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isTemplateTradePredicate));
 	}

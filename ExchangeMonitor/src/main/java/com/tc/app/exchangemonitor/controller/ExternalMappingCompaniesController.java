@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.CompaniesMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,15 +34,15 @@ public class ExternalMappingCompaniesController implements Initializable
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingCompaniesController.class);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingCompaniesTableView;
+	private TableView<ExternalMapping> externalMappingCompaniesTableView;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceCompanyTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceCompanyTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> companyTypeTableColumn;
+	private TableColumn<ExternalMapping, String> companyTypeTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> companyCountryTableColumn;
+	private TableColumn<ExternalMapping, String> companyCountryTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> ictsCompanyTableColumn;
+	private TableColumn<ExternalMapping, String> ictsCompanyTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -52,9 +52,9 @@ public class ExternalMappingCompaniesController implements Initializable
 	@FXML
 	private Button refreshMappingButton;
 
-	private final ObservableList<IExternalMappingEntity> externalMappingCompaniesObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingCompaniesFilteredList = new FilteredList<>(this.externalMappingCompaniesObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingCompaniesSortedList = new SortedList<>(this.externalMappingCompaniesFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingCompaniesObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingCompaniesFilteredList = new FilteredList<>(this.externalMappingCompaniesObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingCompaniesSortedList = new SortedList<>(this.externalMappingCompaniesFilteredList);
 
 
 	@Override
@@ -105,7 +105,7 @@ public class ExternalMappingCompaniesController implements Initializable
 	private void fetchCompaniesExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
 		this.externalMappingCompaniesObservableList.addAll(ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), predicate.and(ExternalMappingPredicates.isCompanyPredicate)));
 		LOGGER.info("Fetched Mappings Count : " + this.externalMappingCompaniesObservableList.size());
 	}
@@ -114,12 +114,12 @@ public class ExternalMappingCompaniesController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingCompaniesObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingCompaniesObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingCompaniesFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isCompanyPredicate));
 	}

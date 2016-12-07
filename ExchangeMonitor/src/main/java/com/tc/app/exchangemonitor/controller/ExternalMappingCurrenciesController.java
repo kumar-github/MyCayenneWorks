@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.CurrenciesMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -33,16 +33,16 @@ public class ExternalMappingCurrenciesController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingCurrenciesController.class);
 
-	private final ObservableList<IExternalMappingEntity> externalMappingCurrenciesObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingCurrenciesFilteredList = new FilteredList<>(this.externalMappingCurrenciesObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingCurrenciesSortedList = new SortedList<>(this.externalMappingCurrenciesFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingCurrenciesObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingCurrenciesFilteredList = new FilteredList<>(this.externalMappingCurrenciesObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingCurrenciesSortedList = new SortedList<>(this.externalMappingCurrenciesFilteredList);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingCurrenciesTableView;
+	private TableView<ExternalMapping> externalMappingCurrenciesTableView;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceCurrencyTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceCurrencyTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> ictsCurrencyTableColumn;
+	private TableColumn<ExternalMapping, String> ictsCurrencyTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -98,7 +98,7 @@ public class ExternalMappingCurrenciesController implements Initializable
 	private void fetchCurrenciesExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
 		this.externalMappingCurrenciesObservableList.addAll(ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), predicate.and(ExternalMappingPredicates.isCurrencyPredicate)));
 		LOGGER.info("Fetched Mappings Count : " + this.externalMappingCurrenciesObservableList.size());
 	}
@@ -107,12 +107,12 @@ public class ExternalMappingCurrenciesController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingCurrenciesObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingCurrenciesObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingCurrenciesFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isCurrencyPredicate));
 	}

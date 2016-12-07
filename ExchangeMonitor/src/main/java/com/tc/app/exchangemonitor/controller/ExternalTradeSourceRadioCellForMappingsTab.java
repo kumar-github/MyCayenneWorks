@@ -6,7 +6,7 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.util.Objects;
 
-import com.tc.app.exchangemonitor.model.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.control.RadioButton;
@@ -48,7 +48,7 @@ public class ExternalTradeSourceRadioCellForMappingsTab extends ListCell<Externa
 		}
 		else
 		{
-			this.radioButton.setText(item.getExternalTradeSrcName());
+			this.radioButton.setText(item.getExternalTradeSrcName().trim().toUpperCase());
 			this.radioButton.setSelected(Objects.equals(item.getExternalTradeSrcName(), selectedRadioButtonName));
 			this.setGraphic(this.radioButton);
 		}

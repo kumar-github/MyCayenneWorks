@@ -150,11 +150,22 @@ public class MainWindowController implements Initializable
 	private void doInitialDataBinding()
 	{
 		this.monitorStatusButton.textProperty().bind(Bindings.format("%s", Bindings.when(this.isRunningProperty()).then("Monitor Running").otherwise("Monitor Not Running")));
+		this.monitorStatusButton.managedProperty().bind(this.monitorStatusButton.visibleProperty());
+
 		this.allTradesCountButton.textProperty().bind(this.allTradesCountProperty().asString());
+		this.allTradesCountButton.managedProperty().bind(this.allTradesCountButton.visibleProperty());
+
 		this.pendingTradesCountButton.textProperty().bind(this.pendingTradesCountProperty().asString());
+		this.pendingTradesCountButton.managedProperty().bind(this.pendingTradesCountButton.visibleProperty());
+
 		this.completedTradesCountButton.textProperty().bind(this.completedTradesCountProperty().asString());
+		this.completedTradesCountButton.managedProperty().bind(this.pendingTradesCountButton.visibleProperty());
+
 		this.failedTradesCountButton.textProperty().bind(this.failedTradesCountProperty().asString());
+		this.failedTradesCountButton.managedProperty().bind(this.pendingTradesCountButton.visibleProperty());
+
 		this.skippedTradesCountButton.textProperty().bind(this.skippedTradesCountProperty().asString());
+		this.skippedTradesCountButton.managedProperty().bind(this.pendingTradesCountButton.visibleProperty());
 
 		this.mainWindowStatusBar.textProperty().bind(this.statusMessagesProperty());
 		this.mainWindowStatusBar.progressProperty().bind(this.progressStatusesProperty());
@@ -268,17 +279,78 @@ public class MainWindowController implements Initializable
 
 	private void handleMainWindowTabPaneTabChange(final Tab previousTab, final Tab currentTab)
 	{
-		this.shouldShowStatusBarButtons(currentTab.getText().equals("Monitor") ? true : false);
+		this.doThisWhenTabSelectionChanges(previousTab, currentTab);
 	}
 
-	private void shouldShowStatusBarButtons(final boolean shouldShow)
+	private void doThisWhenTabSelectionChanges(final Tab previousTab, final Tab currentTab)
 	{
+		if((previousTab != null) && previousTab.getText().equals("Monitor"))
+		{
+			if(this.mainWindowStatusBar.textProperty().isBound())
+			{
+				this.mainWindowStatusBar.textProperty().unbind();
+			}
+
+			if(this.mainWindowStatusBar.progressProperty().isBound())
+			{
+				this.mainWindowStatusBar.progressProperty().unbind();
+			}
+
+			this.showHideMonitorTabStatusBarButtons(false);
+		}
+		else if((previousTab != null) && previousTab.getText().equals("Positions"))
+		{
+		}
+		else if((previousTab != null) && previousTab.getText().equals("Mappings"))
+		{
+		}
+		else if((previousTab != null) && previousTab.getText().equals("Settle Prices"))
+		{
+		}
+		else if((previousTab != null) && previousTab.getText().equals("Loading Schedule"))
+		{
+		}
+
+		if(currentTab.getText().equals("Monitor"))
+		{
+			if(!this.mainWindowStatusBar.textProperty().isBound())
+			{
+				this.mainWindowStatusBar.textProperty().bind(this.statusMessagesProperty());
+			}
+			if(!this.mainWindowStatusBar.progressProperty().isBound())
+			{
+				this.mainWindowStatusBar.progressProperty().bind(this.progressStatusesProperty());
+			}
+
+			this.showHideMonitorTabStatusBarButtons(true);
+		}
+		else if(currentTab.getText().equals("Positions"))
+		{
+			this.showHidePositionsTabStatusBarButtons(true);
+		}
+	}
+
+	private void showHideMonitorTabStatusBarButtons(final boolean shouldShow)
+	{
+		this.monitorStatusButton.setVisible(shouldShow);
 		this.allTradesCountButton.setVisible(shouldShow);
 		this.completedTradesCountButton.setVisible(shouldShow);
 		this.pendingTradesCountButton.setVisible(shouldShow);
 		this.failedTradesCountButton.setVisible(shouldShow);
 		this.skippedTradesCountButton.setVisible(shouldShow);
 		this.leftSeparator.setVisible(shouldShow);
+	}
+
+	private void showHidePositionsTabStatusBarButtons(final boolean shouldShow)
+	{
+		/*
+		this.allTradesCountButton.setVisible(shouldShow);
+		this.completedTradesCountButton.setVisible(shouldShow);
+		this.pendingTradesCountButton.setVisible(shouldShow);
+		this.failedTradesCountButton.setVisible(shouldShow);
+		this.skippedTradesCountButton.setVisible(shouldShow);
+		this.leftSeparator.setVisible(shouldShow);
+		 */
 	}
 
 	/**
@@ -429,94 +501,91 @@ public class MainWindowController implements Initializable
 	 * ============================================================================================================================================================================
 	 */
 
-	private StringProperty statusMessagesProperty = null;
-
-	//private StringProperty statusMessagesProperty()
+	private StringProperty statusMessages = null;
 	public StringProperty statusMessagesProperty()
 	{
-		if(this.statusMessagesProperty == null)
+		if(this.statusMessages == null)
 		{
-			this.statusMessagesProperty = new SimpleStringProperty();
+			this.statusMessages = new SimpleStringProperty();
 		}
-		return this.statusMessagesProperty;
+		return this.statusMessages;
 	}
 
-	private DoubleProperty progressStatusesProperty = null;
-
-	//private DoubleProperty progressStatusesProperty()
+	//private DoubleProperty progressStatusesProperty = null;
+	private DoubleProperty progressStatuses = null;
 	public DoubleProperty progressStatusesProperty()
 	{
-		if(this.progressStatusesProperty == null)
+		if(this.progressStatuses == null)
 		{
-			this.progressStatusesProperty = new SimpleDoubleProperty();
+			this.progressStatuses = new SimpleDoubleProperty();
 		}
-		return this.progressStatusesProperty;
+		return this.progressStatuses;
 	}
 
-	private BooleanProperty isRunningProperty = null;
-
+	//private BooleanProperty isRunningProperty = null;
+	private BooleanProperty isRunning = null;
 	public BooleanProperty isRunningProperty()
 	{
-		if(this.isRunningProperty == null)
+		if(this.isRunning == null)
 		{
-			this.isRunningProperty = new SimpleBooleanProperty();
+			this.isRunning = new SimpleBooleanProperty();
 		}
-		return this.isRunningProperty;
+		return this.isRunning;
 	}
 
-	private IntegerProperty allTradesCountProperty = null;
-
+	//private IntegerProperty allTradesCountProperty = null;
+	private IntegerProperty allTradesCount = null;
 	public IntegerProperty allTradesCountProperty()
 	{
-		if(this.allTradesCountProperty == null)
+		if(this.allTradesCount == null)
 		{
-			this.allTradesCountProperty = new SimpleIntegerProperty();
+			this.allTradesCount = new SimpleIntegerProperty();
 		}
-		return this.allTradesCountProperty;
+		return this.allTradesCount;
 	}
 
-	private IntegerProperty pendingTradesCountProperty = null;
-
+	//private IntegerProperty pendingTradesCountProperty = null;
+	private IntegerProperty pendingTradesCount = null;
 	public IntegerProperty pendingTradesCountProperty()
 	{
-		if(this.pendingTradesCountProperty == null)
+		if(this.pendingTradesCount == null)
 		{
-			this.pendingTradesCountProperty = new SimpleIntegerProperty();
+			this.pendingTradesCount = new SimpleIntegerProperty();
 		}
-		return this.pendingTradesCountProperty;
+		return this.pendingTradesCount;
 	}
 
-	private IntegerProperty completedTradesCountProperty = null;
-
+	//private IntegerProperty completedTradesCountProperty = null;
+	private IntegerProperty completedTradesCount = null;
 	public IntegerProperty completedTradesCountProperty()
 	{
-		if(this.completedTradesCountProperty == null)
+		if(this.completedTradesCount == null)
 		{
-			this.completedTradesCountProperty = new SimpleIntegerProperty();
+			this.completedTradesCount = new SimpleIntegerProperty();
 		}
-		return this.completedTradesCountProperty;
+		return this.completedTradesCount;
 	}
 
-	private IntegerProperty failedTradesCountProperty = null;
-
+	//private IntegerProperty failedTradesCountProperty = null;
+	private IntegerProperty failedTradesCount = null;
 	public IntegerProperty failedTradesCountProperty()
 	{
-		if(this.failedTradesCountProperty == null)
+		if(this.failedTradesCount == null)
 		{
-			this.failedTradesCountProperty = new SimpleIntegerProperty();
+			this.failedTradesCount = new SimpleIntegerProperty();
 		}
-		return this.failedTradesCountProperty;
+		return this.failedTradesCount;
 	}
 
-	private IntegerProperty skippedTradesCountProperty = null;
-
+	//private IntegerProperty skippedTradesCountProperty = null;
+	private IntegerProperty skippedTradesCount = null;
 	public IntegerProperty skippedTradesCountProperty()
 	{
-		if(this.skippedTradesCountProperty == null)
+		if(this.skippedTradesCount == null)
 		{
-			this.skippedTradesCountProperty = new SimpleIntegerProperty();
+			this.skippedTradesCount = new SimpleIntegerProperty();
 		}
-		return this.skippedTradesCountProperty;
+		return this.skippedTradesCount;
 	}
 }
 

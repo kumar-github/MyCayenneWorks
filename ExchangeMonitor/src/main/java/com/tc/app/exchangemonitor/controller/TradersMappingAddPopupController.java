@@ -7,12 +7,15 @@ package com.tc.app.exchangemonitor.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.cayenne.query.MappedExec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
+import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -31,6 +35,7 @@ import javafx.stage.Stage;
 public class TradersMappingAddPopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger(TradersMappingAddPopupController.class);
+	private static final String TRADER_MAPPING_TYPE = "T";
 
 	@FXML
 	private Label titleLabel;
@@ -56,6 +61,8 @@ public class TradersMappingAddPopupController implements IGenericController
 		this.doInitialDataBinding();
 		this.initializeGUI();
 		this.setAnyUIComponentStateIfNeeded();
+		this.createListeners();
+		this.attachListeners();
 	}
 
 	@Override
@@ -100,6 +107,12 @@ public class TradersMappingAddPopupController implements IGenericController
 	@Override
 	public void attachListeners()
 	{
+		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+	}
+
+	private void doThis(final String newValue)
+	{
+		this.externalSourceTraderTextField.setText(newValue.toUpperCase());
 	}
 
 	private void fetchIctsTraders()
@@ -108,7 +121,7 @@ public class TradersMappingAddPopupController implements IGenericController
 		//this.observableIctsTradersList.addAll(ReferenceDataCache.fetchAllActiveIctsUsers().values());
 
 		this.observableIctsTradersList.clear();
-		this.observableIctsTradersList.addAll(this.filter(CayenneReferenceDataCache.fetchAllActiveIctsUsers().values(), (final IctsUser anIctsUser) -> anIctsUser.getUserJobTitle().getUserJobTitle().trim().equals("TRADER")));
+		this.observableIctsTradersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveIctsUsers().values(), (final IctsUser anIctsUser) -> anIctsUser.getUserJobTitle().getUserJobTitle().trim().equals("TRADER")));
 		LOGGER.debug("Traders Count : " + this.observableIctsTradersList.size());
 
 		/*
@@ -124,53 +137,6 @@ public class TradersMappingAddPopupController implements IGenericController
 		session.close();
 		 */
 	}
-
-	/*
-	private void saveTraderMapping()
-	{
-		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
-		final String externalSourceTrader = this.externalSourceTraderTextField.getText().trim().toUpperCase();
-		final String ictsTrader = this.ictsTraderComboBox.getSelectionModel().getSelectedItem().getUserInit();
-		Session session = null;
-		//final boolean doesTraderMappingExistsAlready = this.doesTraderMappingExistsAlready(externalTradeSourceOid, externalSourceTrader, ictsTrader);
-		final boolean doesTraderMappingExistsAlready = false;
-
-		try
-		{
-			if(!doesTraderMappingExistsAlready)
-			{
-				session = HibernateUtil.beginTransaction();
-				final Integer transid = HibernateReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = HibernateReferenceDataFetchUtil.generateNewNum();
-				session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", TRADER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceTrader).setParameter("externalValue2Param", null).setParameter("externalValue3Param", null).setParameter("externalValue4Param", null).setParameter("aliasValueParam", ictsTrader).setParameter("transIdParam", transid).executeUpdate();
-				session.getTransaction().commit();
-				LOGGER.info("Mapping Saved Successfully.");
-			}
-			else
-			{
-				LOGGER.error("Mapping Already Exists!");
-			}
-		}
-		catch(final Exception exception)
-		{
-			LOGGER.error("Save Failed." + exception);
-			session.getTransaction().rollback();
-			throw new RuntimeException("Save Failed.", exception);
-		}
-		finally
-		{
-			if((session != null) && session.isOpen())
-			{
-				if((session.getTransaction() != null) && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE))
-				{
-					session.getTransaction().commit();//This is mandatory - to avoid DB locking
-					//session.close();
-				}
-			}
-		}
-	}
-	 */
 
 	/*
 	private boolean doesTraderMappingExistsAlready(final Integer externalTradeSourceOid, final String externalSourceTrader, final String ictsTrader)
@@ -201,12 +167,85 @@ public class TradersMappingAddPopupController implements IGenericController
 	@FXML
 	private void handleSaveButtonClick()
 	{
-		//this.saveTraderMapping();
+		this.saveTraderMapping();
 	}
 
 	@FXML
 	private void handleCancelButtonClick()
 	{
+		this.closePopup();
+	}
+
+	private void closePopup()
+	{
 		((Stage) this.cancelButton.getScene().getWindow()).close();
+	}
+
+	private void saveTraderMapping()
+	{
+		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
+		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
+
+		final String externalSourceTrader = this.externalSourceTraderTextField.getText().trim();
+		final String ictsTrader = this.ictsTraderComboBox.getSelectionModel().getSelectedItem().getUserInit();
+
+		//final boolean doesTraderMappingExistsAlready = this.doesTraderMappingExistsAlready(externalTradeSourceOid, externalSourceTrader, ictsTrader);
+		final boolean doesTraderMappingExistsAlready = false;
+
+		try
+		{
+			if(!doesTraderMappingExistsAlready)
+			{
+				final Integer transid = HibernateReferenceDataFetchUtil.generateNewTransaction();
+				final Integer newNum = HibernateReferenceDataFetchUtil.generateNewNum();
+				//SQLExec.query(insertNewTraderMappingQuery).paramsArray(newNum, externalTradeSourceOid, TRADER_MAPPING_TYPE, externalSourceTrader, null, null, null, ictsTrader, transid).execute(CayenneHelper.getCayenneServerRuntime().newContext());
+				MappedExec.query("InsertNewMapping")
+				.param("oidParam", newNum)
+				.param("externalTradeSourceOidParam", externalTradeSourceOid)
+				.param("mappingTypeParam", TRADER_MAPPING_TYPE)
+				.param("externalValue1Param", externalSourceTrader)
+				.param("externalValue2Param", null)
+				.param("externalValue3Param", null)
+				.param("externalValue4Param", null)
+				.param("aliasValueParam", ictsTrader)
+				.param("transIdParam", transid)
+				.execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
+				/*
+				final ObjectContext context = CayenneHelper.getCayenneServerRuntime().newContext();
+				final ExternalTradeSource tempSource = SelectById.query(ExternalTradeSource.class, 1).selectOne(context);
+				final ExternalMapping newExternalMapping = context.newObject(ExternalMapping.class);
+				newExternalMapping.setOid(newNum);
+				newExternalMapping.setExternalTradeSourceO(tempSource);
+				newExternalMapping.setMappingType(TRADER_MAPPING_TYPE);
+				newExternalMapping.setExternalValue1(null);
+				newExternalMapping.setExternalValue2(null);
+				newExternalMapping.setExternalValue3(null);
+				newExternalMapping.setExternalValue4(null);
+				newExternalMapping.setAliasValue(ictsTrader);
+				newExternalMapping.setTransId(transid);
+				context.commitChanges();
+				 */
+				LOGGER.info("Mapping Saved Successfully.");
+				this.closePopup();
+			}
+			else
+			{
+				LOGGER.error("Mapping Already Exists!");
+			}
+		}
+		catch(final Exception exception)
+		{
+			LOGGER.error("Save Failed." + exception);
+			throw new RuntimeException("Save Failed.", exception);
+		}
+		finally
+		{
+		}
+	}
+
+	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
+	{
+		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 }

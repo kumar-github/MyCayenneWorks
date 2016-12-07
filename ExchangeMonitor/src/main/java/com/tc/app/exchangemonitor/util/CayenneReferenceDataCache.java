@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.logging.log4j.LogManager;
@@ -23,31 +24,30 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.Uom;
 
 public class CayenneReferenceDataCache
 {
-	private static final Logger LOGGER = LogManager.getLogger(CayenneReferenceDataCache.class);
+	//private static final Logger LOGGER = LogManager.getLogger(CayenneReferenceDataCache.class);
+	/* In Log4j2, passing class name for getLogger() is optional. So the below is equal to the above. */
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean IS_DEBUG_ENABLED = LOGGER.isDebugEnabled();
 
-	public CayenneReferenceDataCache()
+	public static void fetchAllReferenceData()
 	{
+		fetchExternalTradeSourceReferenceData();
+		fetchExternalTradeStateReferenceData();
+		fetchExternalTradeStatusReferenceData();
+		fetchExternalTradeAccountReferenceData();
+		fetchExternalMappingReferenceData();
+		fetchAccountsReferenceData();
+		fetchIctsUsersReferenceData();
+		fetchCountriesReferenceData();
+		fetchCommoditiesReferenceData();
+		fetchPortfoliosReferenceData();
+		fetchTemplateTradesReferenceData();
+		fetchUomsReferenceData();
 	}
 
-	public static void loadAllReferenceData()
-	{
-		loadExternalTradeSourceReferenceData();
-		loadExternalTradeStateReferenceData();
-		loadExternalTradeStatusReferenceData();
-		loadExternalTradeAccountReferenceData();
-		loadExternalMappingReferenceData();
-		loadAccountsReferenceData();
-		loadIctsUsersReferenceData();
-		loadCountriesReferenceData();
-		loadCommoditiesReferenceData();
-		loadPortfoliosReferenceData();
-		loadTemplateTradesReferenceData();
-		loadUomsReferenceData();
-	}
-
-	/* Do we really need a map here? Think please...*/
-	private static ConcurrentMap<Integer, ExternalTradeSource> externalTradeSourceReferenceDataHashMap = null;
-	public static void loadExternalTradeSourceReferenceData()
+	/* Do we really need a map here? Think again... */
+	private static ConcurrentMap<String, ExternalTradeSource> externalTradeSourceReferenceDataHashMap = null;
+	private static void fetchExternalTradeSourceReferenceData()
 	{
 		if(externalTradeSourceReferenceDataHashMap == null)
 		{
@@ -56,8 +56,10 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class).where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + externalTradeSourceList.size() + " external trade sources.");
+			LOGGER.info("It took {} milli seconds to fetch {} external trade sources.", (endTime - startTime), externalTradeSourceList.size());
 
+			//Bye Bye loops... Welcome Lambdas
+			/*
 			if(externalTradeSourceList != null)
 			{
 				for(final ExternalTradeSource anExternalTradeSource : externalTradeSourceList)
@@ -65,11 +67,19 @@ public class CayenneReferenceDataCache
 					externalTradeSourceReferenceDataHashMap.put(anExternalTradeSource.getExternalTradeSourceOid(), anExternalTradeSource);
 				}
 			}
+			 */
+			//externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream().collect(Collectors.toConcurrentMap(theExternalTradeSource -> theExternalTradeSource.getExternalTradeSourceOid(), theExternalTradeSource -> theExternalTradeSource));
+			externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream().collect(Collectors.toConcurrentMap(ExternalTradeSource::getExternalTradeSrcName, theExternalTradeSource -> theExternalTradeSource));
+
+			if(IS_DEBUG_ENABLED)
+			{
+				doSomeExtraLogginIfNeeded(externalTradeSourceList, externalTradeSourceReferenceDataHashMap);
+			}
 		}
 	}
 
 	private static ConcurrentMap<Integer, ExternalTradeState> externalTradeStateReferenceDataHashMap = null;
-	public static void loadExternalTradeStateReferenceData()
+	private static void fetchExternalTradeStateReferenceData()
 	{
 		if(externalTradeStateReferenceDataHashMap == null)
 		{
@@ -78,20 +88,19 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<ExternalTradeState> externalTradeStateList = ObjectSelect.query(ExternalTradeState.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + externalTradeStateList.size() + " external trade states.");
+			LOGGER.info("It took {} milli seconds to fetch {} external trade states.", (endTime - startTime), externalTradeStateList.size());
 
-			if(externalTradeStateList != null)
+			externalTradeStateReferenceDataHashMap = externalTradeStateList.stream().collect(Collectors.toConcurrentMap(ExternalTradeState::getExternalTradeStateOid, theExternalTradeState -> theExternalTradeState));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final ExternalTradeState anExternalTradeState : externalTradeStateList)
-				{
-					externalTradeStateReferenceDataHashMap.put(anExternalTradeState.getExternalTradeStateOid(), anExternalTradeState);
-				}
+				doSomeExtraLogginIfNeeded(externalTradeStateList, externalTradeStateReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<Integer, ExternalTradeStatus> externalTradeStatusReferenceDataHashMap = null;
-	public static void loadExternalTradeStatusReferenceData()
+	private static void fetchExternalTradeStatusReferenceData()
 	{
 		if(externalTradeStatusReferenceDataHashMap == null)
 		{
@@ -100,43 +109,40 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<ExternalTradeStatus> externalTradeStatusList = ObjectSelect.query(ExternalTradeStatus.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + externalTradeStatusList.size() + " external trade statuses.");
+			LOGGER.info("It took {} milli seconds to fetch {} external trade statuses.", (endTime - startTime), externalTradeStatusList.size());
 
-			if(externalTradeStatusList != null)
+			externalTradeStatusReferenceDataHashMap = externalTradeStatusList.stream().collect(Collectors.toConcurrentMap(ExternalTradeStatus::getExternalTradeStatusOid, theExternalTradeStatus -> theExternalTradeStatus));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final ExternalTradeStatus anExternalTradeStatus : externalTradeStatusList)
-				{
-					externalTradeStatusReferenceDataHashMap.put(anExternalTradeStatus.getExternalTradeStatusOid(), anExternalTradeStatus);
-				}
+				doSomeExtraLogginIfNeeded(externalTradeStatusList, externalTradeStatusReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<String, ExternalMapping> externalTradeAccountReferenceDataHashMap = null;
-	public static void loadExternalTradeAccountReferenceData()
+	private static void fetchExternalTradeAccountReferenceData()
 	{
 		if(externalTradeAccountReferenceDataHashMap == null)
 		{
 			externalTradeAccountReferenceDataHashMap = new ConcurrentHashMap<>();
 
 			final long startTime = System.currentTimeMillis();
-			//final List<ExternalMapping> externalTradeAccountList = ObjectSelect.query(ExternalMapping.class).where(ExternalMapping.MAPPING_TYPE.eq("K")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final List<ExternalMapping> externalTradeAccountList = ObjectSelect.query(ExternalMapping.class).where(ExternalMapping.MAPPING_TYPE.eq("K")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + externalTradeAccountList.size() + " external trade accounts.");
+			LOGGER.info("It took {} milli seconds to fetch {} external trade accounts.", (endTime - startTime), externalTradeAccountList.size());
 
-			if(externalTradeAccountList != null)
+			//externalTradeAccountReferenceDataHashMap = externalTradeAccountList.stream().collect(Collectors.toConcurrentMap(ExternalMapping::getExternalValue1, theExternalMapping -> theExternalMapping));
+			externalTradeAccountReferenceDataHashMap = externalTradeAccountList.stream().collect(Collectors.toConcurrentMap(ExternalMapping::getExternalValue1, theExternalMapping -> theExternalMapping, (theExistingMapping, theNewMapping) -> theExistingMapping));
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final ExternalMapping anExternalTradeAccount : externalTradeAccountList)
-				{
-					externalTradeAccountReferenceDataHashMap.put(anExternalTradeAccount.getExternalValue1(), anExternalTradeAccount);
-				}
+				doSomeExtraLogginIfNeeded(externalTradeAccountList, externalTradeAccountReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static List<ExternalMapping> externalMappingReferenceDataList = null;
-	public static void loadExternalMappingReferenceData()
+	private static void fetchExternalMappingReferenceData()
 	{
 		if(externalMappingReferenceDataList == null)
 		{
@@ -144,14 +150,19 @@ public class CayenneReferenceDataCache
 
 			final long startTime = System.currentTimeMillis();
 			//externalMappingReferenceDataList = HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("ExternalMapping.findAllExternalMappings");
-			externalMappingReferenceDataList = ObjectSelect.query(ExternalMapping.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
+			externalMappingReferenceDataList = ObjectSelect.query(ExternalMapping.class).prefetch(ExternalMapping.EXTERNAL_TRADE_SOURCE_O.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + externalMappingReferenceDataList.size() + " external mappings.");
+			LOGGER.info("It took {} milli seconds to fetch {} external mappings.", (endTime - startTime), externalMappingReferenceDataList.size());
+
+			if(IS_DEBUG_ENABLED)
+			{
+				doSomeExtraLogginIfNeeded(externalMappingReferenceDataList);
+			}
 		}
 	}
 
 	private static ConcurrentMap<Integer, Account> accountsReferenceDataHashMap = null;
-	public static void loadAccountsReferenceData()
+	private static void fetchAccountsReferenceData()
 	{
 		if(accountsReferenceDataHashMap == null)
 		{
@@ -161,20 +172,19 @@ public class CayenneReferenceDataCache
 			//final List<Account> accountList = ObjectSelect.query(Account.class).where(Account.ACCT_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final List<Account> accountList = ObjectSelect.query(Account.class).where(Account.ACCT_STATUS.eq("A")).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + accountList.size() + " accounts.");
+			LOGGER.info("It took {} milli seconds to fetch {} accounts.", (endTime - startTime), accountList.size());
 
-			if(accountList != null)
+			accountsReferenceDataHashMap = accountList.stream().collect(Collectors.toConcurrentMap(Account::getAccountNum, theAccount -> theAccount));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final Account anAccount : accountList)
-				{
-					accountsReferenceDataHashMap.put(anAccount.getAccountNum(), anAccount);
-				}
+				doSomeExtraLogginIfNeeded(accountList, accountsReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<String, IctsUser> ictsUsersReferenceDataHashMap = null;
-	public static void loadIctsUsersReferenceData()
+	private static void fetchIctsUsersReferenceData()
 	{
 		if(ictsUsersReferenceDataHashMap == null)
 		{
@@ -183,20 +193,19 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<IctsUser> ictsUsersList = ObjectSelect.query(IctsUser.class).where(IctsUser.USER_STATUS.eq("A")).prefetch(IctsUser.USER_JOB_TITLE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + ictsUsersList.size() + " icts users.");
+			LOGGER.info("It took {} milli seconds to fetch {} icts users.", (endTime - startTime), ictsUsersList.size());
 
-			if(ictsUsersList != null)
+			ictsUsersReferenceDataHashMap = ictsUsersList.stream().collect(Collectors.toConcurrentMap(IctsUser::getUserInit, theIctsUser -> theIctsUser));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final IctsUser anIctsUser : ictsUsersList)
-				{
-					ictsUsersReferenceDataHashMap.put(anIctsUser.getUserInit(), anIctsUser);
-				}
+				doSomeExtraLogginIfNeeded(ictsUsersList, ictsUsersReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<String, Country> countriesReferenceDataHashMap = null;
-	public static void loadCountriesReferenceData()
+	private static void fetchCountriesReferenceData()
 	{
 		if(countriesReferenceDataHashMap == null)
 		{
@@ -205,20 +214,19 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Country> countriesList = ObjectSelect.query(Country.class).where(Country.COUNTRY_STATUS.eq("A")).and(Country.ISO_COUNTRY_CODE.isNotNull()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + countriesList.size() + " countries.");
+			LOGGER.info("It took {} milli seconds to fetch {} countries.", (endTime - startTime), countriesList.size());
 
-			if(countriesList != null)
+			countriesReferenceDataHashMap = countriesList.stream().collect(Collectors.toConcurrentMap(Country::getCountryCode, theCountry -> theCountry));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final Country aCountry : countriesList)
-				{
-					countriesReferenceDataHashMap.put(aCountry.getCountryCode(), aCountry);
-				}
+				doSomeExtraLogginIfNeeded(countriesList, countriesReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<String, Commodity> commoditiesReferenceDataHashMap = null;
-	public static void loadCommoditiesReferenceData()
+	private static void fetchCommoditiesReferenceData()
 	{
 		if(commoditiesReferenceDataHashMap == null)
 		{
@@ -227,20 +235,19 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Commodity> commoditiesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + commoditiesList.size() + " commodities.");
+			LOGGER.info("It took {} milli seconds to fetch {} commodities.", (endTime - startTime), commoditiesList.size());
 
-			if(commoditiesList != null)
+			commoditiesReferenceDataHashMap = commoditiesList.stream().collect(Collectors.toConcurrentMap(Commodity::getCmdtyCode, theCommodity -> theCommodity));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final Commodity aCommodity : commoditiesList)
-				{
-					commoditiesReferenceDataHashMap.put(aCommodity.getCmdtyCode(), aCommodity);
-				}
+				doSomeExtraLogginIfNeeded(commoditiesList, commoditiesReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<Integer, Portfolio> portfoliosReferenceDataHashMap = null;
-	public static void loadPortfoliosReferenceData()
+	private static void fetchPortfoliosReferenceData()
 	{
 		if(portfoliosReferenceDataHashMap == null)
 		{
@@ -249,20 +256,19 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Portfolio> portfoliosList = ObjectSelect.query(Portfolio.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + portfoliosList.size() + " portfolios.");
+			LOGGER.info("It took {} milli seconds to fetch {} portfolios.", (endTime - startTime), portfoliosList.size());
 
-			if(portfoliosList != null)
+			portfoliosReferenceDataHashMap = portfoliosList.stream().collect(Collectors.toConcurrentMap(Portfolio::getPortNum, thePortfolio -> thePortfolio));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final Portfolio aPortfolio : portfoliosList)
-				{
-					portfoliosReferenceDataHashMap.put(aPortfolio.getPortNum(), aPortfolio);
-				}
+				doSomeExtraLogginIfNeeded(portfoliosList, portfoliosReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<Integer, Trade> templateTradesReferenceDataHashMap = null;
-	public static void loadTemplateTradesReferenceData()
+	private static void fetchTemplateTradesReferenceData()
 	{
 		if(templateTradesReferenceDataHashMap == null)
 		{
@@ -271,21 +277,23 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			/* Actually we need to filter even the deleted trades but dont know how to do. We can go for query method to fetch the required trades. But leaving it for now. */
 			final List<Trade> templateTradesList = ObjectSelect.query(Trade.class).where(Trade.CONCLUSION_TYPE.eq("I")).prefetch(Trade.TRADE_STATUS.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+			//final EJBQLQuery queryToFetchTradeNums = new EJBQLQuery("select trade.trade_num FROM Trade trade where trade.copyType <> 'FULL'");
+			//final List<String> tradeNums = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(queryToFetchTradeNums);
+			//tradeNums.forEach(System.out::println);
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + templateTradesList.size() + " template trades.");
+			LOGGER.info("It took {} milli seconds to fetch {} template trades.", (endTime - startTime), templateTradesList.size());
 
-			if(templateTradesList != null)
+			templateTradesReferenceDataHashMap = templateTradesList.stream().collect(Collectors.toConcurrentMap(Trade::getTradeNum, theTrade -> theTrade));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final Trade aTrade : templateTradesList)
-				{
-					templateTradesReferenceDataHashMap.put(aTrade.getTradeNum(), aTrade);
-				}
+				doSomeExtraLogginIfNeeded(templateTradesList, templateTradesReferenceDataHashMap);
 			}
 		}
 	}
 
 	private static ConcurrentMap<String, Uom> uomsReferenceDataHashMap = null;
-	public static void loadUomsReferenceData()
+	private static void fetchUomsReferenceData()
 	{
 		if(uomsReferenceDataHashMap == null)
 		{
@@ -294,124 +302,158 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Uom> uomsList = ObjectSelect.query(Uom.class).where(Uom.UOM_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to fetch " + uomsList.size() + " uoms.");
+			LOGGER.info("It took {} milli seconds to fetch {} uoms.", (endTime - startTime), uomsList.size());
 
-			if(uomsList != null)
+			uomsReferenceDataHashMap = uomsList.stream().collect(Collectors.toConcurrentMap(Uom::getUomCode, theUom -> theUom));
+
+			if(IS_DEBUG_ENABLED)
 			{
-				for(final Uom anUom : uomsList)
-				{
-					uomsReferenceDataHashMap.put(anUom.getUomCode(), anUom);
-				}
+				doSomeExtraLogginIfNeeded(uomsList, uomsReferenceDataHashMap);
 			}
 		}
 	}
 
-	//public static ConcurrentMap<Integer, IExternalTradeSourceEntity> fetchExternalTradeSources()
-	public static ConcurrentMap<Integer, ExternalTradeSource> fetchExternalTradeSources()
+	public static ConcurrentMap<String, ExternalTradeSource> loadExternalTradeSources()
 	{
 		if(externalTradeSourceReferenceDataHashMap == null)
 		{
-			loadExternalTradeSourceReferenceData();
+			fetchExternalTradeSourceReferenceData();
 		}
 		return externalTradeSourceReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<Integer, ExternalTradeState> fetchExternalTradeStates()
+	public static ConcurrentMap<Integer, ExternalTradeState> loadExternalTradeStates()
 	{
 		if(externalTradeStateReferenceDataHashMap == null)
 		{
-			loadExternalTradeStateReferenceData();
+			fetchExternalTradeStateReferenceData();
 		}
 		return externalTradeStateReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<Integer, ExternalTradeStatus> fetchExternalTradeStatuses()
+	public static ConcurrentMap<Integer, ExternalTradeStatus> loadExternalTradeStatuses()
 	{
 		if(externalTradeStatusReferenceDataHashMap == null)
 		{
-			loadExternalTradeStatusReferenceData();
+			fetchExternalTradeStatusReferenceData();
 		}
 		return externalTradeStatusReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<String, ExternalMapping> fetchExternalTradeAccounts()
+	public static ConcurrentMap<String, ExternalMapping> loadExternalTradeAccounts()
 	{
 		if(externalTradeAccountReferenceDataHashMap == null)
 		{
-			loadExternalTradeAccountReferenceData();
+			fetchExternalTradeAccountReferenceData();
 		}
 		return externalTradeAccountReferenceDataHashMap;
 	}
 
-	public static List<ExternalMapping> fetchExternalMappings()
+	public static List<ExternalMapping> loadExternalMappings()
 	{
 		if(externalMappingReferenceDataList == null)
 		{
-			loadExternalMappingReferenceData();
+			fetchExternalMappingReferenceData();
 		}
 		return externalMappingReferenceDataList;
 	}
 
-	public static ConcurrentMap<Integer, Account> fetchAllActiveAccounts()
+	public static ConcurrentMap<Integer, Account> loadAllActiveAccounts()
 	{
 		if(accountsReferenceDataHashMap == null)
 		{
-			loadAccountsReferenceData();
+			fetchAccountsReferenceData();
 		}
 		return accountsReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<String, IctsUser> fetchAllActiveIctsUsers()
+	public static ConcurrentMap<String, IctsUser> loadAllActiveIctsUsers()
 	{
 		if(ictsUsersReferenceDataHashMap == null)
 		{
-			loadIctsUsersReferenceData();
+			fetchIctsUsersReferenceData();
 		}
 		return ictsUsersReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<String, Country> fetchAllActiveCountries()
+	public static ConcurrentMap<String, Country> loadAllActiveCountries()
 	{
 		if(countriesReferenceDataHashMap == null)
 		{
-			loadCountriesReferenceData();
+			fetchCountriesReferenceData();
 		}
 		return countriesReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<String, Commodity> fetchAllActiveCommodities()
+	public static ConcurrentMap<String, Commodity> loadAllActiveCommodities()
 	{
 		if(commoditiesReferenceDataHashMap == null)
 		{
-			loadCommoditiesReferenceData();
+			fetchCommoditiesReferenceData();
 		}
 		return commoditiesReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<Integer, Portfolio> fetchAllPortfolios()
+	public static ConcurrentMap<Integer, Portfolio> loadAllPortfolios()
 	{
 		if(portfoliosReferenceDataHashMap == null)
 		{
-			loadPortfoliosReferenceData();
+			fetchPortfoliosReferenceData();
 		}
 		return portfoliosReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<Integer, Trade> fetchAllTemplateTrades()
+	public static ConcurrentMap<Integer, Trade> loadAllTemplateTrades()
 	{
 		if(templateTradesReferenceDataHashMap == null)
 		{
-			loadTemplateTradesReferenceData();
+			fetchTemplateTradesReferenceData();
 		}
 		return templateTradesReferenceDataHashMap;
 	}
 
-	public static ConcurrentMap<String, Uom> fetchAllActiveUoms()
+	public static ConcurrentMap<String, Uom> loadAllActiveUoms()
 	{
 		if(uomsReferenceDataHashMap == null)
 		{
-			loadUomsReferenceData();
+			fetchUomsReferenceData();
 		}
 		return uomsReferenceDataHashMap;
+	}
+
+	public static ConcurrentMap<String, Uom> reloadAllActiveUoms()
+	{
+		uomsReferenceDataHashMap = null;
+		return loadAllActiveUoms();
+	}
+
+	public static List<ExternalMapping> reloadExternalMappings()
+	{
+		externalMappingReferenceDataList = null;
+		return loadExternalMappings();
+	}
+
+	/**
+	 * @param someList
+	 * @param someMap
+	 */
+	@SuppressWarnings("rawtypes")
+	private static void doSomeExtraLogginIfNeeded(final List someList, final ConcurrentMap someMap)
+	{
+		LOGGER.debug("List Count : {}", someList.size());
+		LOGGER.debug("List : {}", someList);
+
+		LOGGER.debug("Map Count : {}", someMap.size());
+		LOGGER.debug("Map : {}", someMap);
+	}
+
+	/**
+	 * @param someList
+	 */
+	@SuppressWarnings("rawtypes")
+	private static void doSomeExtraLogginIfNeeded(final List someList)
+	{
+		LOGGER.debug("List Count : {}", someList.size());
+		LOGGER.debug("List : {}", someList);
 	}
 }

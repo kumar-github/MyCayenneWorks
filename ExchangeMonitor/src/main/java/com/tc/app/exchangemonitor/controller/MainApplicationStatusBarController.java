@@ -20,10 +20,10 @@ public class MainApplicationStatusBarController implements Initializable
 	private StatusBar mainApplicationStatusBar;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		addThisControllerToControllersMap();
-		doInitialBinding();
+		this.addThisControllerToControllersMap();
+		this.doInitialBinding();
 	}
 
 	private void addThisControllerToControllersMap()
@@ -33,31 +33,29 @@ public class MainApplicationStatusBarController implements Initializable
 
 	private void doInitialBinding()
 	{
-		mainApplicationStatusBar.textProperty().bind(statusMessagesProperty());
-		mainApplicationStatusBar.progressProperty().bind(progressStatusesProperty());
+		this.mainApplicationStatusBar.textProperty().bind(this.statusMessagesProperty());
+		this.mainApplicationStatusBar.progressProperty().bind(this.progressStatusesProperty());
 	}
 
 	private StringProperty statusMessagesProperty = null;
-
 	//private StringProperty statusMessagesProperty()
 	public StringProperty statusMessagesProperty()
 	{
-		if(statusMessagesProperty == null)
+		if(this.statusMessagesProperty == null)
 		{
-			statusMessagesProperty = new SimpleStringProperty();
+			this.statusMessagesProperty = new SimpleStringProperty();
 		}
-		return statusMessagesProperty;
+		return this.statusMessagesProperty;
 	}
 
 	private DoubleProperty progressStatusesProperty = null;
-
 	//private DoubleProperty progressStatusesProperty()
 	public DoubleProperty progressStatusesProperty()
 	{
-		if(progressStatusesProperty == null)
+		if(this.progressStatusesProperty == null)
 		{
-			progressStatusesProperty = new SimpleDoubleProperty();
+			this.progressStatusesProperty = new SimpleDoubleProperty();
 		}
-		return progressStatusesProperty;
+		return this.progressStatusesProperty;
 	}
 }

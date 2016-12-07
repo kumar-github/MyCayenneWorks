@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.UOMConversionsMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -33,18 +33,18 @@ public class ExternalMappingUOMConversionsController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingUOMConversionsController.class);
 
-	private final ObservableList<IExternalMappingEntity> externalMappingUOMConversionsObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingUOMConversionsFilteredList = new FilteredList<>(this.externalMappingUOMConversionsObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingUOMConversionsSortedList = new SortedList<>(this.externalMappingUOMConversionsFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingUOMConversionsObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingUOMConversionsFilteredList = new FilteredList<>(this.externalMappingUOMConversionsObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingUOMConversionsSortedList = new SortedList<>(this.externalMappingUOMConversionsFilteredList);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingUOMConversionsTableView;
+	private TableView<ExternalMapping> externalMappingUOMConversionsTableView;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceCommodityTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceCommodityTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> toUomCodeTableColumn;
+	private TableColumn<ExternalMapping, String> toUomCodeTableColumn;
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> toUomConvRateTableColumn;
+	private TableColumn<ExternalMapping, String> toUomConvRateTableColumn;
 	@FXML
 	private Button addMappingButton;
 	@FXML
@@ -116,7 +116,7 @@ public class ExternalMappingUOMConversionsController implements Initializable
 	private void fetchUOMConversionsExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
 		this.externalMappingUOMConversionsObservableList.addAll(ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), predicate.and(ExternalMappingPredicates.isUomConversionPredicate)));
 		LOGGER.info("Fetched Mappings Count : " + this.externalMappingUOMConversionsObservableList.size());
 	}
@@ -125,12 +125,12 @@ public class ExternalMappingUOMConversionsController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingUOMConversionsObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingUOMConversionsObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingUOMConversionsFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isUomConversionPredicate));
 	}

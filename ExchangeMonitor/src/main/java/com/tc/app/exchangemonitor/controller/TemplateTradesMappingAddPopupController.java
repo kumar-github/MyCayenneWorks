@@ -106,7 +106,7 @@ public class TemplateTradesMappingAddPopupController implements IGenericControll
 	{
 		this.observableIctsTemplateTradesList.clear();
 		//this.observableIctsTemplateTradesList.addAll(CayenneReferenceDataCache.fetchAllTemplateTrades().values());
-		this.observableIctsTemplateTradesList.addAll(this.filter(CayenneReferenceDataCache.fetchAllTemplateTrades().values(), (final Trade aTrade) -> !aTrade.getTradeStatus().getTradeStatusCode().trim().equals("DELETE")));
+		this.observableIctsTemplateTradesList.addAll(this.filter(CayenneReferenceDataCache.loadAllTemplateTrades().values(), (final Trade aTrade) -> !aTrade.getTradeStatus().getTradeStatusCode().trim().equals("DELETE")));
 		LOGGER.debug("Template Trades Count : " + this.observableIctsTemplateTradesList.size());
 	}
 

@@ -7,11 +7,10 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalMappingEntity;
-import com.tc.app.exchangemonitor.model.ExternalMapping;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.PortfoliosMappingAddPopupView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,24 +33,24 @@ public class ExternalMappingPortfoliosController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingPortfoliosController.class);
 
-	private final ObservableList<IExternalMappingEntity> externalMappingPortfoliosObservableList = FXCollections.observableArrayList();
-	private final FilteredList<IExternalMappingEntity> externalMappingPortfoliosFilteredList = new FilteredList<>(this.externalMappingPortfoliosObservableList, null);
-	private final SortedList<IExternalMappingEntity> externalMappingPortfoliosSortedList = new SortedList<>(this.externalMappingPortfoliosFilteredList);
+	private final ObservableList<ExternalMapping> externalMappingPortfoliosObservableList = FXCollections.observableArrayList();
+	private final FilteredList<ExternalMapping> externalMappingPortfoliosFilteredList = new FilteredList<>(this.externalMappingPortfoliosObservableList, null);
+	private final SortedList<ExternalMapping> externalMappingPortfoliosSortedList = new SortedList<>(this.externalMappingPortfoliosFilteredList);
 
 	@FXML
-	private TableView<IExternalMappingEntity> externalMappingPortfoliosTableView;
+	private TableView<ExternalMapping> externalMappingPortfoliosTableView;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceCommodityTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceCommodityTableColumn;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceTraderTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceTraderTableColumn;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceTradingPeriodTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceTradingPeriodTableColumn;
 
 	@FXML
-	private TableColumn<IExternalMappingEntity, String> externalSourceAccountTableColumn;
+	private TableColumn<ExternalMapping, String> externalSourceAccountTableColumn;
 
 	@FXML
 	private TableColumn<ExternalMapping, String> ictsPortfolioTableColumn;
@@ -122,12 +121,12 @@ public class ExternalMappingPortfoliosController implements Initializable
 	private void fetchExternalMapping()
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingPortfoliosObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
+		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+		this.externalMappingPortfoliosObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
-	public void updateFilter(final Predicate<IExternalMappingEntity> predicate)
+	public void updateFilter(final Predicate<ExternalMapping> predicate)
 	{
 		this.externalMappingPortfoliosFilteredList.setPredicate(predicate.and(ExternalMappingPredicates.isPortfolioPredicate));
 	}

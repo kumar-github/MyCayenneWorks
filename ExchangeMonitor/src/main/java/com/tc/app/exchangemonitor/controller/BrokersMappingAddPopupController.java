@@ -156,7 +156,7 @@ public class BrokersMappingAddPopupController implements Initializable
 		//this.observableBrokersList.addAll(ReferenceDataCache.fetchAllActiveAccounts().values());
 
 		this.observableBrokersList.clear();
-		this.observableBrokersList.addAll(CayenneReferenceDataCache.fetchAllActiveAccounts().values());
+		this.observableBrokersList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
 		LOGGER.debug("Brokers Count : " + this.observableBrokersList.size());
 		/*
 		final Session session = HibernateUtil.beginTransaction();

@@ -92,7 +92,7 @@ public class UOMConversionsMappingAddPopupController implements Initializable
 	private void fetchIctsUoms()
 	{
 		this.observableUomsList.clear();
-		this.observableUomsList.addAll(CayenneReferenceDataCache.fetchAllActiveUoms().values());
+		this.observableUomsList.addAll(CayenneReferenceDataCache.loadAllActiveUoms().values());
 	}
 
 	@FXML
