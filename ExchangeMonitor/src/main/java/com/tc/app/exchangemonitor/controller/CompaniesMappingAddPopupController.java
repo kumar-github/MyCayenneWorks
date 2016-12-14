@@ -7,13 +7,20 @@ package com.tc.app.exchangemonitor.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
+import org.apache.cayenne.query.MappedExec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Country;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.viewmodel.ExternalMappingCompaniesViewModel;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -26,6 +33,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -35,8 +43,11 @@ import javafx.stage.Stage;
  */
 public class CompaniesMappingAddPopupController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(CompaniesMappingAddPopupController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String COMPANY_MAPPING_TYPE = "C";
+
+	@Inject
+	private ExternalMappingCompaniesViewModel externalMappingCompaniesViewModel;
 
 	@FXML
 	private Label titleLabel;
@@ -59,7 +70,6 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private final FilteredList<Account> filteredIctsCompaniesList = new FilteredList<>(this.observableIctsCompaniesList, null);
 	private final SortedList<Account> sortedIctsCompaniesList = new SortedList<>(this.filteredIctsCompaniesList);
 
-
 	/* Listener Variables */
 	private ChangeListener<String> companyTypeComboBoxChangeListener = null;
 
@@ -81,7 +91,6 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private void addThisControllerToControllersMap()
 	{
 		ApplicationHelper.controllersMap.putInstance(CompaniesMappingAddPopupController.class, this);
-		System.out.println(COMPANY_MAPPING_TYPE);
 	}
 
 	private void doAssertion()
@@ -119,6 +128,12 @@ public class CompaniesMappingAddPopupController implements Initializable
 	private void attachListeners()
 	{
 		this.companyTypeComboBox.valueProperty().addListener(this.companyTypeComboBoxChangeListener);
+		this.externalSourceCompanyTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+	}
+
+	private void doThis(final String newValue)
+	{
+		this.externalSourceCompanyTextField.setText(newValue.toUpperCase());
 	}
 
 	private void handleCompanyTypeComboBoxSelectionChange(final String newValue)
@@ -145,7 +160,7 @@ public class CompaniesMappingAddPopupController implements Initializable
 	{
 		this.observableCompanyCountriesList.clear();
 		this.observableCompanyCountriesList.addAll(CayenneReferenceDataCache.loadAllActiveCountries().values());
-		LOGGER.debug("Countries Count : " + this.observableCompanyCountriesList.size());
+		LOGGER.debug("Countries Count : {}", this.observableCompanyCountriesList.size());
 
 		/*
 		final Session session = HibernateUtil.beginTransaction();
@@ -182,32 +197,47 @@ public class CompaniesMappingAddPopupController implements Initializable
 		 */
 	}
 
-	/*
-	private void saveBrokerMapping()
+	@FXML
+	private void handleSaveButtonClick()
+	{
+		this.saveCompanyMapping();
+	}
+
+	@FXML
+	private void handleCancelButtonClick()
+	{
+		this.closePopup();
+	}
+
+	private void closePopup()
+	{
+		((Stage) this.cancelButton.getScene().getWindow()).close();
+	}
+
+	private void saveCompanyMapping()
 	{
 		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
 		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
 
-		final String externalSourceBroker = this.externalSourceBrokerTextField.getText().isEmpty() ? null : this.externalSourceBrokerTextField.getText().trim().toUpperCase();
-		final String brokerType = this.brokerTypeComboBox.getSelectionModel().getSelectedItem();
-		final String externalSourceTrader = this.externalSourceTraderTextField.getText().isEmpty() ? null : this.externalSourceTraderTextField.getText().trim().toUpperCase();
-		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim().toUpperCase();
-		final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAcctShortName();
-		Session session = null;
+		final String externalSourceCompany = this.externalSourceCompanyTextField.getText().isEmpty() ? null : this.externalSourceCompanyTextField.getText().trim().toUpperCase();
+		final String companyType = this.companyTypeComboBox.getSelectionModel().getSelectedItem();
+		final String companyCountry = this.companyCountryComboBox.getSelectionModel().getSelectedItem().getCountryName().trim().toUpperCase();
+		final String ictsCompany = this.ictsCompanyComboBox.getSelectionModel().getSelectedItem().getAcctShortName().trim().toUpperCase();
 
-		//final boolean doesBrokerMappingExistsAlready = this.doesBrokerMappingExistsAlready(externalSourceBroker, brokerType, externalSourceTrader, externalSourceAccount);
 		final boolean doesBrokerMappingExistsAlready = false;
 
 		try
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				session = HibernateUtil.beginTransaction();
-				final Integer transid = HibernateReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = HibernateReferenceDataFetchUtil.generateNewNum();
-				session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", COMPANY_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).setParameter("aliasValueParam", ictsBroker).setParameter("transIdParam", transid).executeUpdate();
-				session.getTransaction().commit();
+				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
+				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
+				//session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).setParameter("aliasValueParam", ictsBroker).setParameter("transIdParam", transid).executeUpdate();
+				MappedExec.query("InsertNewMapping").param("oidParam", newNum).param("externalTradeSourceOidParam", externalTradeSourceOid).param("mappingTypeParam", COMPANY_MAPPING_TYPE).param("externalValue1Param", externalSourceCompany).param("externalValue2Param", companyType).param("externalValue3Param", null).param("externalValue4Param", companyCountry).param("aliasValueParam", ictsCompany).param("transIdParam", transid).execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
 				LOGGER.info("Mapping Saved Successfully.");
+				this.closePopup();
+				this.refreshExternalMappingCompaniesTableView();
 			}
 			else
 			{
@@ -217,57 +247,22 @@ public class CompaniesMappingAddPopupController implements Initializable
 		catch(final Exception exception)
 		{
 			LOGGER.error("Save Failed." + exception);
-			session.getTransaction().rollback();
 			throw new RuntimeException("Save Failed.", exception);
 		}
 		finally
 		{
-			if((session != null) && session.isOpen())
-			{
-				if((session.getTransaction() != null) && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE))
-				{
-					session.getTransaction().commit();//This is mandatory - to avoid DB locking
-					//session.close();
-				}
-			}
 		}
 	}
-	 */
 
-	/*
-	private boolean doesBrokerMappingExistsAlready(final String externalSourceBroker, final String brokerType, final String externalSourceTrader, final String externalSourceAccount)
+	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
-		boolean doesExists = false;
-		Session session = null;
-		List aMapping = null;
-
-		try
-		{
-			session = HibernateUtil.beginTransaction();
-			aMapping = session.getNamedQuery("DoesMappingExists").setParameter("externalTradeSourceOidParam", 1).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).list();
-			System.out.println(aMapping);
-			doesExists = (aMapping == null) ? false : true;
-		}
-		catch(final Exception exception)
-		{
-		}
-		finally
-		{
-			session.close();
-		}
-
-		return doesExists;
-	}
-	 */
-
-	@FXML
-	private void handleSaveButtonClick()
-	{
+		return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
 	}
 
-	@FXML
-	private void handleCancelButtonClick()
+	private void refreshExternalMappingCompaniesTableView()
 	{
-		((Stage) this.cancelButton.getScene().getWindow()).close();
+		LOGGER.debug("ExternalMappingCompaniesViewModel Instance {}", this.externalMappingCompaniesViewModel);
+		this.externalMappingCompaniesViewModel.getExternalMappingCompaniesObservableList().clear();
+		this.externalMappingCompaniesViewModel.getExternalMappingCompaniesObservableList().addAll(CayenneReferenceDataCache.reloadExternalMappings());
 	}
 }

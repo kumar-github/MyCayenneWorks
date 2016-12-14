@@ -205,88 +205,110 @@ public class MainApplicationMappingsTabController implements Initializable
 	@FXML
 	private void handleTradersMappingButtonClick()
 	{
-		if(CURRENT_VISIBLE_MAPPING_VIEW == null)
-		{
-			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
-			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
-		}
-		else if(!CURRENT_VISIBLE_MAPPING_VIEW.equals("tradersMappingVBox"))
-		{
-			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
-			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
-		}
 		//this.mappingsWindowBorderPane.setCenter(null);
 		//this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("tradersMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingTradersView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingTradersView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handleBrokersMappingButtonClick()
 	{
-		if(CURRENT_VISIBLE_MAPPING_VIEW == null)
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("brokersMappingVBox"))
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingBrokersView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingBrokersView Loaded.");
 		}
-		else if(!CURRENT_VISIBLE_MAPPING_VIEW.equals("brokersMappingVBox"))
-		{
-			this.mappingsWindowBorderPane.setCenter(new ExternalMappingBrokersView().getView());
-			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
-		}
+		LOGGER.debug("ExternalMappingBrokersView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handleCompaniesMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingCompaniesView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("companiesMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingCompaniesView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingCompaniesView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingCompaniesView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handleCurrenciesMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingCurrenciesView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("currenciesMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingCurrenciesView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingCurrenciesView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingCurrenciesView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handlePortfoliosMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingPortfoliosView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("portfoliosMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingPortfoliosView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingPortfoliosView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingPortfoliosView not loaded because it is already loaded.");
 	}
 
 	@FXML
-	private void handleTradesMappingButtonClick()
+	private void handleTemplateTradesMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingTemplateTradesView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("templateTradesMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTemplateTradesView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingTemplateTradesView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingTemplateTradesView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handleAccountsMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingAccountsView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("accountsMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingAccountsView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingAccountsView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingAccountsView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handleUOMConversionsMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingUOMConversionsView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("uomConversionsMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingUOMConversionsView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingUOMConversionsView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingUOMConversionsView not loaded because it is already loaded.");
 	}
 
 	@FXML
 	private void handleTradingPeriodsMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradingPeriodsView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if((CURRENT_VISIBLE_MAPPING_VIEW == null) || !CURRENT_VISIBLE_MAPPING_VIEW.equals("tradingPeriodsMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradingPeriodsView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			LOGGER.debug("ExternalMappingTradingPeriodsView Loaded.");
+		}
+		LOGGER.debug("ExternalMappingTradingPeriodsView not loaded because it is already loaded.");
 	}
 }

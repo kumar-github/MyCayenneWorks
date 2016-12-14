@@ -17,7 +17,7 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.viewmodel.ExternalMappingTradersViewModel;
 
 import javafx.application.Platform;
@@ -123,9 +123,6 @@ public class TradersMappingAddPopupController implements IGenericController
 
 	private void fetchIctsTraders()
 	{
-		//this.observableIctsTradersList.clear();
-		//this.observableIctsTradersList.addAll(ReferenceDataCache.fetchAllActiveIctsUsers().values());
-
 		this.observableIctsTradersList.clear();
 		this.observableIctsTradersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveIctsUsers().values(), (final IctsUser anIctsUser) -> anIctsUser.getUserJobTitle().getUserJobTitle().trim().equals("TRADER")));
 		LOGGER.debug("Traders Count : {}", this.observableIctsTradersList.size());
@@ -202,11 +199,8 @@ public class TradersMappingAddPopupController implements IGenericController
 		{
 			if(!doesTraderMappingExistsAlready)
 			{
-				final Integer transid = HibernateReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = HibernateReferenceDataFetchUtil.generateNewNum();
-				//SQLExec.query(insertNewTraderMappingQuery).paramsArray(newNum, externalTradeSourceOid, TRADER_MAPPING_TYPE, externalSourceTrader, null, null, null, ictsTrader, transid).execute(CayenneHelper.getCayenneServerRuntime().newContext());
 				MappedExec.query("InsertNewMapping")
-				.param("oidParam", newNum)
+				.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum())
 				.param("externalTradeSourceOidParam", externalTradeSourceOid)
 				.param("mappingTypeParam", TRADER_MAPPING_TYPE)
 				.param("externalValue1Param", externalSourceTrader)
@@ -214,7 +208,7 @@ public class TradersMappingAddPopupController implements IGenericController
 				.param("externalValue3Param", null)
 				.param("externalValue4Param", null)
 				.param("aliasValueParam", ictsTrader)
-				.param("transIdParam", transid)
+				.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction())
 				.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				/*

@@ -64,4 +64,31 @@ public class CayenneReferenceDataFetchUtil
 		}
 		return transId;
 	}
+
+	/* Read the Stored Procedure from the datamap.xml file, set the paramters and keep it ready. */
+	public static Integer generateNewNum()
+	{
+		Integer newNum = null;
+
+		try
+		{
+			final ProcedureQuery getNewNumProcedureQuery = new ProcedureQuery("get_new_num");
+			getNewNumProcedureQuery.addParameter("key_name", "external_mapping_oid");
+			getNewNumProcedureQuery.addParameter("location_num", 0);
+
+			final List data = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(getNewNumProcedureQuery);
+			if(!data.isEmpty())
+			{
+				newNum = ((Map<String, Integer>) data.get(0)).get("");
+			}
+		}
+		catch(final Exception localException)
+		{
+			throw localException;
+		}
+		finally
+		{
+		}
+		return newNum;
+	}
 }

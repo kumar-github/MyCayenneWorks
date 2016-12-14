@@ -7,17 +7,19 @@ package com.tc.app.exchangemonitor.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
+import org.apache.cayenne.query.MappedExec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
-import com.tc.app.exchangemonitor.util.HibernateUtil;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.viewmodel.ExternalMappingBrokersViewModel;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -40,8 +42,11 @@ import javafx.stage.Stage;
  */
 public class BrokersMappingAddPopupController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(BrokersMappingAddPopupController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String BROKER_MAPPING_TYPE = "B";
+
+	@Inject
+	private ExternalMappingBrokersViewModel externalMappingBrokersViewModel;
 
 	@FXML
 	private Label titleLabel;
@@ -119,6 +124,14 @@ public class BrokersMappingAddPopupController implements Initializable
 	private void attachListeners()
 	{
 		this.brokerTypeComboBox.valueProperty().addListener(this.brokerTypeComboBoxChangeListener);
+		this.externalSourceBrokerTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+		this.externalSourceAccountTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+	}
+
+	private void doThis(final String newValue)
+	{
+		this.externalSourceTraderTextField.setText(newValue.toUpperCase());
 	}
 
 	private void handleBrokerTypeComboBoxSelectionChange(final String newValue)
@@ -152,12 +165,9 @@ public class BrokersMappingAddPopupController implements Initializable
 
 	private void fetchIctsBrokers()
 	{
-		//this.observableBrokersList.clear();
-		//this.observableBrokersList.addAll(ReferenceDataCache.fetchAllActiveAccounts().values());
-
 		this.observableBrokersList.clear();
 		this.observableBrokersList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
-		LOGGER.debug("Brokers Count : " + this.observableBrokersList.size());
+		LOGGER.debug("Brokers Count : {}", this.observableBrokersList.size());
 		/*
 		final Session session = HibernateUtil.beginTransaction();
 		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Account.class);
@@ -183,6 +193,23 @@ public class BrokersMappingAddPopupController implements Initializable
 		//ictsBrokers.stream().forEach((aBroker) -> Hibernate.initialize(aBroker.getAcctTypeCode()));
 	}
 
+	@FXML
+	private void handleSaveButtonClick()
+	{
+		this.saveBrokerMapping();
+	}
+
+	@FXML
+	private void handleCancelButtonClick()
+	{
+		this.closePopup();
+	}
+
+	private void closePopup()
+	{
+		((Stage) this.cancelButton.getScene().getWindow()).close();
+	}
+
 	private void saveBrokerMapping()
 	{
 		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
@@ -193,21 +220,21 @@ public class BrokersMappingAddPopupController implements Initializable
 		final String externalSourceTrader = this.externalSourceTraderTextField.getText().isEmpty() ? null : this.externalSourceTraderTextField.getText().trim().toUpperCase();
 		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim().toUpperCase();
 		final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAcctShortName();
-		Session session = null;
 
-		//final boolean doesBrokerMappingExistsAlready = this.doesBrokerMappingExistsAlready(externalSourceBroker, brokerType, externalSourceTrader, externalSourceAccount);
 		final boolean doesBrokerMappingExistsAlready = false;
 
 		try
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				session = HibernateUtil.beginTransaction();
-				final Integer transid = HibernateReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = HibernateReferenceDataFetchUtil.generateNewNum();
-				session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).setParameter("aliasValueParam", ictsBroker).setParameter("transIdParam", transid).executeUpdate();
-				session.getTransaction().commit();
+				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
+				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
+				//session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).setParameter("aliasValueParam", ictsBroker).setParameter("transIdParam", transid).executeUpdate();
+				MappedExec.query("InsertNewMapping").param("oidParam", newNum).param("externalTradeSourceOidParam", externalTradeSourceOid).param("mappingTypeParam", BROKER_MAPPING_TYPE).param("externalValue1Param", externalSourceBroker).param("externalValue2Param", brokerType).param("externalValue3Param", externalSourceTrader).param("externalValue4Param", externalSourceAccount).param("aliasValueParam", ictsBroker).param("transIdParam", transid).execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
 				LOGGER.info("Mapping Saved Successfully.");
+				this.closePopup();
+				this.refreshExternalMappingTradersTableView();
 			}
 			else
 			{
@@ -217,62 +244,22 @@ public class BrokersMappingAddPopupController implements Initializable
 		catch(final Exception exception)
 		{
 			LOGGER.error("Save Failed." + exception);
-			session.getTransaction().rollback();
 			throw new RuntimeException("Save Failed.", exception);
 		}
 		finally
 		{
-			if((session != null) && session.isOpen())
-			{
-				if((session.getTransaction() != null) && (session.getTransaction().getStatus() == TransactionStatus.ACTIVE))
-				{
-					session.getTransaction().commit();//This is mandatory - to avoid DB locking
-					//session.close();
-				}
-			}
 		}
 	}
-
-	/*
-	private boolean doesBrokerMappingExistsAlready(final String externalSourceBroker, final String brokerType, final String externalSourceTrader, final String externalSourceAccount)
-	{
-		boolean doesExists = false;
-		Session session = null;
-		List aMapping = null;
-
-		try
-		{
-			session = HibernateUtil.beginTransaction();
-			aMapping = session.getNamedQuery("DoesMappingExists").setParameter("externalTradeSourceOidParam", 1).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).list();
-			System.out.println(aMapping);
-			doesExists = (aMapping == null) ? false : true;
-		}
-		catch(final Exception exception)
-		{
-		}
-		finally
-		{
-			session.close();
-		}
-
-		return doesExists;
-	}
-	 */
 
 	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
 		return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
 	}
 
-	@FXML
-	private void handleSaveButtonClick()
+	private void refreshExternalMappingTradersTableView()
 	{
-		this.saveBrokerMapping();
-	}
-
-	@FXML
-	private void handleCancelButtonClick()
-	{
-		((Stage) this.cancelButton.getScene().getWindow()).close();
+		LOGGER.debug("ExternalMappingBrokersViewModel Instance {}", this.externalMappingBrokersViewModel);
+		this.externalMappingBrokersViewModel.getExternalMappingBrokersObservableList().clear();
+		this.externalMappingBrokersViewModel.getExternalMappingBrokersObservableList().addAll(CayenneReferenceDataCache.reloadExternalMappings());
 	}
 }

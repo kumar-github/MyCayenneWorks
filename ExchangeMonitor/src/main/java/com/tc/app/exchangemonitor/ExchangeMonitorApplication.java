@@ -1,11 +1,9 @@
 package com.tc.app.exchangemonitor;
 
-import org.apache.cayenne.query.ObjectSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sun.javafx.application.LauncherImpl;
-import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.HibernateUtil;
@@ -183,6 +181,20 @@ public class ExchangeMonitorApplication extends Application
 		System.exit(0);
 		 */
 
+		/*
+		final ProcedureQuery getNewNumProcedureQuery = new ProcedureQuery("get_new_num");
+		getNewNumProcedureQuery.addParameter("key_name", "external_mapping_oid");
+		getNewNumProcedureQuery.addParameter("location_num", 0);
+
+		final List data = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(getNewNumProcedureQuery);
+		if(!data.isEmpty())
+		{
+			final Integer newNum = ((Map<String, Integer>) data.get(0)).get("");
+			System.out.println(newNum);
+		}
+		 */
+
+		/*
 		long startTime = System.currentTimeMillis();
 		ObjectSelect.query(Account.class).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 		long endTime = System.currentTimeMillis();
@@ -192,6 +204,7 @@ public class ExchangeMonitorApplication extends Application
 		ObjectSelect.query(Account.class).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 		endTime = System.currentTimeMillis();
 		System.out.println("Time : " + (endTime - startTime));
+		 */
 
 		/*
 		final EJBQLQuery query = new EJBQLQuery("select ets FROM ExternalTradeSource ets");

@@ -59,7 +59,7 @@
 				<Button fx:id="companiesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Companies" onAction="#handleCompaniesMappingButtonClick" disable="true"/>
 				<Button fx:id="currenciesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Currencies" onAction="#handleCurrenciesMappingButtonClick" disable="true"/>
 				<Button fx:id="portfoliosMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Portfolios" onAction="#handlePortfoliosMappingButtonClick" disable="true"/>
-				<Button fx:id="templateTradesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Template Trades" onAction="#handleTradesMappingButtonClick" disable="true"/>
+				<Button fx:id="templateTradesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Template Trades" onAction="#handleTemplateTradesMappingButtonClick" disable="true"/>
 				<Button fx:id="accountsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Accounts" onAction="#handleAccountsMappingButtonClick" disable="true"/>
 				<Button fx:id="uomConversionsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="UOM Conversions" onAction="#handleUOMConversionsMappingButtonClick" disable="true"/>
 				<Button fx:id="tradingPeriodsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Trading Periods" onAction="#handleTradingPeriodsMappingButtonClick" disable="true"/>

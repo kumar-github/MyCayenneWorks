@@ -17,6 +17,7 @@ import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.view.java.TradersMappingAddPopupView;
+import com.tc.app.exchangemonitor.view.java.TradersMappingUpdatePopupView;
 import com.tc.app.exchangemonitor.viewmodel.ExternalMappingTradersViewModel;
 
 import javafx.collections.transformation.FilteredList;
@@ -92,6 +93,8 @@ public class ExternalMappingTradersController implements Initializable
 
 	private void doInitialDataBinding()
 	{
+		this.externalMappingTradersViewModel.selectedRecordProperty().bind(this.externalMappingTradersTableView.getSelectionModel().selectedItemProperty());
+
 		this.externalMappingTradersSortedList.comparatorProperty().bind(this.externalMappingTradersTableView.comparatorProperty());
 		this.externalMappingTradersTableView.setItems(this.externalMappingTradersSortedList);
 
@@ -194,6 +197,7 @@ public class ExternalMappingTradersController implements Initializable
 	@FXML
 	private void handleUpdateMapingButtonClick()
 	{
+		this.showUpdateTradersMappingView();
 	}
 
 	@FXML
@@ -228,6 +232,19 @@ public class ExternalMappingTradersController implements Initializable
 		/*x.ifPresent(data -> {
 			System.out.println(data);
 		});*/
+	}
+
+	private void showUpdateTradersMappingView()
+	{
+		final Stage tempStage = new Stage(StageStyle.TRANSPARENT);
+		/* To make this stage appears on top of the application window. Else, if the application is displayed in the secondary monitor the child stage will still visible on the primary monitor. */
+		tempStage.initOwner(this.addMappingButton.getScene().getWindow());
+		tempStage.initModality(Modality.APPLICATION_MODAL);
+		tempStage.setScene(new Scene(new TradersMappingUpdatePopupView().getView()));
+		tempStage.showAndWait();
+
+		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
+		System.out.println("Stage Operation Completed.");
 	}
 
 	private void refreshExternalMappingTradersTableView()

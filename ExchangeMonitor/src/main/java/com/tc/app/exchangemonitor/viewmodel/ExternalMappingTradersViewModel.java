@@ -7,7 +7,9 @@ package com.tc.app.exchangemonitor.viewmodel;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -39,5 +41,15 @@ public class ExternalMappingTradersViewModel
 	public final ObservableList<ExternalMapping> getExternalMappingTradersObservableList()
 	{
 		return this.externalMappingTradersObservableList;
+	}
+
+	private ObjectProperty<ExternalMapping> selectedRecord = null;
+	public ObjectProperty<ExternalMapping> selectedRecordProperty()
+	{
+		if(this.selectedRecord == null)
+		{
+			this.selectedRecord = new SimpleObjectProperty<>();
+		}
+		return this.selectedRecord;
 	}
 }
