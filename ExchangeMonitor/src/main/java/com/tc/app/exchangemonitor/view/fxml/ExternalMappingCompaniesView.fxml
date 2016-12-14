@@ -20,12 +20,12 @@
 		<Button text="Refresh" fx:id="refreshMappingButton"/>
 	</children>
 	</HBox>
-	<TableView fx:id="externalMappingCompaniesTableView" cache="true" prefWidth="600.0" VBox.vgrow="ALWAYS" focusTraversable="false">
+	<TableView fx:id="externalMappingCompaniesTableView" cache="true" prefWidth="680.0" VBox.vgrow="ALWAYS" focusTraversable="false">
 	<columns>
 		<TableColumn text="Companies" styleClass="tableTitle">
 		<columns>
-			<TableColumn fx:id="externalSourceCompanyTableColumn" minWidth="160.0" text="External Source Company"/>
-			<TableColumn fx:id="companyTypeTableColumn" minWidth="160.0" text="Company Type"/>
+			<TableColumn fx:id="externalSourceCompanyTableColumn" minWidth="220.0" text="External Source Company"/>
+			<TableColumn fx:id="companyTypeTableColumn" minWidth="150.0" text="Company Type"/>
 			<TableColumn fx:id="companyCountryTableColumn" minWidth="120.0" text="Company Country"/>
 			<TableColumn fx:id="ictsCompanyTableColumn" minWidth="160.0" text="ICTS Company"/>
 		</columns>

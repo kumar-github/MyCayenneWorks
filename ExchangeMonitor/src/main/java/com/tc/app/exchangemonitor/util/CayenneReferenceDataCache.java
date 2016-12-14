@@ -149,7 +149,6 @@ public class CayenneReferenceDataCache
 			externalMappingReferenceDataList = new ArrayList<>();
 
 			final long startTime = System.currentTimeMillis();
-			//externalMappingReferenceDataList = HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("ExternalMapping.findAllExternalMappings");
 			externalMappingReferenceDataList = ObjectSelect.query(ExternalMapping.class).prefetch(ExternalMapping.EXTERNAL_TRADE_SOURCE_O.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} external mappings.", (endTime - startTime), externalMappingReferenceDataList.size());
@@ -169,7 +168,6 @@ public class CayenneReferenceDataCache
 			accountsReferenceDataHashMap = new ConcurrentHashMap<>();
 
 			final long startTime = System.currentTimeMillis();
-			//final List<Account> accountList = ObjectSelect.query(Account.class).where(Account.ACCT_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final List<Account> accountList = ObjectSelect.query(Account.class).where(Account.ACCT_STATUS.eq("A")).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} accounts.", (endTime - startTime), accountList.size());

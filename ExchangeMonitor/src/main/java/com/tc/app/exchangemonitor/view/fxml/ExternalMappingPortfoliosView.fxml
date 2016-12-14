@@ -20,7 +20,7 @@
 		<Button text="Refresh" fx:id="refreshMappingButton"/>
 	</children>
 	</HBox>
-	<TableView fx:id="externalMappingPortfoliosTableView" cache="true" prefWidth="900.0" VBox.vgrow="ALWAYS" focusTraversable="false">
+	<TableView fx:id="externalMappingPortfoliosTableView" cache="true" prefWidth="1100.0" VBox.vgrow="ALWAYS" focusTraversable="false">
 	<columns>
 		<TableColumn text="Portfolios" styleClass="tableTitle">
 		<columns>

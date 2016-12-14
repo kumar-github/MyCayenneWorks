@@ -4,18 +4,21 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import javax.inject.Inject;
+
+import org.apache.cayenne.query.MappedExec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.view.java.TradersMappingAddPopupView;
+import com.tc.app.exchangemonitor.viewmodel.ExternalMappingTradersViewModel;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -32,6 +35,14 @@ import javafx.stage.StageStyle;
 public class ExternalMappingTradersController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTradersController.class);
+	private static final String TRADER_MAPPING_TYPE = "T";
+
+	/*
+	 * This is the ViewModel instance. Moved the externalMappingTradersObservableList property to the view model, so that other controllers which need can access from there.
+	 * This is done mainly bcoz, the TradersMappingAddPopupController need to call the refresh method after a new mapping is added which inturn repopulate the externalMappingTradersObservableList.
+	 */
+	@Inject
+	private ExternalMappingTradersViewModel externalMappingTradersViewModel;
 
 	@FXML
 	private TableView<ExternalMapping> externalMappingTradersTableView;
@@ -48,20 +59,26 @@ public class ExternalMappingTradersController implements Initializable
 	@FXML
 	private Button refreshMappingButton;
 
-	private final ObservableList<ExternalMapping> externalMappingTradersObservableList = FXCollections.observableArrayList();
-	private final FilteredList<ExternalMapping> externalMappingTradersFilteredList = new FilteredList<>(this.externalMappingTradersObservableList, null);
-	private final SortedList<ExternalMapping> externalMappingTradersSortedList = new SortedList<>(this.externalMappingTradersFilteredList);
+	private FilteredList<ExternalMapping> externalMappingTradersFilteredList = null;
+	private SortedList<ExternalMapping> externalMappingTradersSortedList = null;
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
 	{
 		this.addThisControllerToControllersMap();
+		this.doSomeGlobalVariableInitialization();
 		this.doAssertion();
 		this.doInitialDataBinding();
 		this.initializeGUI();
 		this.createListeners();
 		this.attachListeners();
-		this.initializeTableView();
+	}
+
+	private void doSomeGlobalVariableInitialization()
+	{
+		LOGGER.debug("ExternalMappingTradersViewModel Instance {}", this.externalMappingTradersViewModel);
+		this.externalMappingTradersFilteredList = new FilteredList<>(this.externalMappingTradersViewModel.getExternalMappingTradersObservableList(), null);
+		this.externalMappingTradersSortedList = new SortedList<>(this.externalMappingTradersFilteredList);
 	}
 
 	private void addThisControllerToControllersMap()
@@ -97,17 +114,6 @@ public class ExternalMappingTradersController implements Initializable
 	{
 	}
 
-	private void initializeTableView()
-	{
-		this.initializeExternalMappingTradersTableView();
-	}
-
-	private void initializeExternalMappingTradersTableView()
-	{
-		this.externalSourceTraderTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getExternalValue1()));
-		this.ictsTraderTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAliasValue()));
-	}
-
 	/*
 	private void fetchTradersExternalMapping()
 	{
@@ -124,8 +130,8 @@ public class ExternalMappingTradersController implements Initializable
 		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
 
 		/* We are loading all the external mappings and setting it to the tableview. After that we update the filter with required predicates. Is this better or load only respective mappings.? */
-		//this.externalMappingTradersObservableList.addAll(ReferenceDataCache.fetchExternalMappings());
-		this.externalMappingTradersObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
+		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().clear();
+		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}
 
@@ -150,6 +156,50 @@ public class ExternalMappingTradersController implements Initializable
 		alert.showAndWait();
 		 */
 		this.showAddTradersMappingView();
+	}
+
+	@FXML
+	private void handleDeleteMapingButtonClick()
+	{
+		final ExternalMapping selectedMappingToDelete = this.externalMappingTradersTableView.getSelectionModel().getSelectedItem();
+
+		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
+		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
+
+		try
+		{
+			/* Read the delete mapping query from datamap.xml file, set the paramters and keep it ready. */
+			final MappedExec deleteMappingQuery = MappedExec.query("DeleteSelectedMapping")
+			.param("externalTradeSourceOidParam", externalTradeSourceOid)
+			.param("mappingTypeParam", TRADER_MAPPING_TYPE)
+			.param("externalValue1Param", selectedMappingToDelete.getExternalValue1())
+			.param("externalValue2Param", null)
+			.param("externalValue3Param", null)
+			.param("externalValue4Param", null)
+			.param("aliasValueParam", selectedMappingToDelete.getAliasValue());
+
+			/* Fire the gen_new_transaction SP first and immediately the delete query. */
+			CayenneReferenceDataFetchUtil.generateNewTransaction();
+			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
+			LOGGER.info("Mapping Deleted Successfully.");
+			this.refreshExternalMappingTradersTableView();
+		}
+		catch(final Exception exception)
+		{
+			LOGGER.error("Unable to delete the mapping.", exception);
+		}
+	}
+
+	@FXML
+	private void handleUpdateMapingButtonClick()
+	{
+	}
+
+	@FXML
+	private void handleRefreshMappingButtonClick()
+	{
+		this.refreshExternalMappingTradersTableView();
 	}
 
 	private void showAddTradersMappingView()
@@ -180,10 +230,15 @@ public class ExternalMappingTradersController implements Initializable
 		});*/
 	}
 
-	@FXML
-	private void handleRefreshMappingButtonClick()
+	private void refreshExternalMappingTradersTableView()
 	{
-		this.externalMappingTradersObservableList.clear();
-		this.externalMappingTradersObservableList.addAll(CayenneReferenceDataCache.reloadExternalMappings());
+		LOGGER.debug("ExternalMappingTradersViewModel Instance {}", this.externalMappingTradersViewModel);
+		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().clear();
+		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().addAll(CayenneReferenceDataCache.reloadExternalMappings());
+	}
+
+	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
+	{
+		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 }

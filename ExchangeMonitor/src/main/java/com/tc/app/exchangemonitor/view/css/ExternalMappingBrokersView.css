@@ -1,7 +1,11 @@
 .tableTitle
 {
-	-fx-font-family: "Ubuntu";
-	-fx-font-weight: bold;
-	-fx-font-size: 13;
-	/*-fx-text-fill: rgb(0,104,139);*/
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 14;
+}
+
+.table-column
+{
+	-fx-alignment: BASELINE_CENTER;
 }

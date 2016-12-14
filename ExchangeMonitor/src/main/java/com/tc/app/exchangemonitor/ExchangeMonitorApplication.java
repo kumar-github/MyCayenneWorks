@@ -51,7 +51,7 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
 		HibernateUtil.getSessionFactory();
 		CayenneHelper.initializeCayenneServerRuntime();
-		this.testCall();
+		//this.testCall();
 		ReferenceDataCache.loadAllReferenceData();
 		CayenneReferenceDataCache.fetchAllReferenceData();
 		for(int i = 0; i < 1000; i++)

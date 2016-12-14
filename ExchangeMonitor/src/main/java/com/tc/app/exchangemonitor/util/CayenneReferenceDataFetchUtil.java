@@ -1,9 +1,11 @@
 package com.tc.app.exchangemonitor.util;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.ObjectSelect;
+import org.apache.cayenne.query.ProcedureQuery;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
 
@@ -34,5 +36,32 @@ public class CayenneReferenceDataFetchUtil
 		{
 		}
 		return data;
+	}
+
+	/* Read the Stored Procedure from the datamap.xml file, set the paramters and keep it ready. */
+	public static Integer generateNewTransaction()
+	{
+		Integer transId = null;
+
+		try
+		{
+			final ProcedureQuery genNewTransactionProcedureQuery = new ProcedureQuery("gen_new_transaction");
+			genNewTransactionProcedureQuery.addParameter("app_name", "ExchangeMonitor");
+			genNewTransactionProcedureQuery.addParameter("trans_type", "U");
+
+			final List data = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(genNewTransactionProcedureQuery);
+			if(!data.isEmpty())
+			{
+				transId = ((Map<String, Integer>) data.get(0)).get("");
+			}
+		}
+		catch(final Exception localException)
+		{
+			throw localException;
+		}
+		finally
+		{
+		}
+		return transId;
 	}
 }

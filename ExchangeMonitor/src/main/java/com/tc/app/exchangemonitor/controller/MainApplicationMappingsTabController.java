@@ -201,21 +201,37 @@ public class MainApplicationMappingsTabController implements Initializable
 		ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.selectedToggleProperty().addListener(this.externalTradeSourcesRadioButtonClickListener);
 	}
 
-	//private static String CURRENT_VISIBLE_MAPPING_VIEW = null;
+	private static String CURRENT_VISIBLE_MAPPING_VIEW = null;
 	@FXML
 	private void handleTradersMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if(CURRENT_VISIBLE_MAPPING_VIEW == null)
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		}
+		else if(!CURRENT_VISIBLE_MAPPING_VIEW.equals("tradersMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		}
+		//this.mappingsWindowBorderPane.setCenter(null);
+		//this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
 	}
 
 	@FXML
 	private void handleBrokersMappingButtonClick()
 	{
-		this.mappingsWindowBorderPane.setCenter(null);
-		this.mappingsWindowBorderPane.setCenter(new ExternalMappingBrokersView().getView());
-		//CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		if(CURRENT_VISIBLE_MAPPING_VIEW == null)
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingBrokersView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		}
+		else if(!CURRENT_VISIBLE_MAPPING_VIEW.equals("brokersMappingVBox"))
+		{
+			this.mappingsWindowBorderPane.setCenter(new ExternalMappingBrokersView().getView());
+			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+		}
 	}
 
 	@FXML

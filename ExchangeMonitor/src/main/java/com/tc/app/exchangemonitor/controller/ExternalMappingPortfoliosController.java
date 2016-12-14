@@ -122,6 +122,8 @@ public class ExternalMappingPortfoliosController implements Initializable
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
 		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+
+		this.externalMappingPortfoliosObservableList.clear();
 		this.externalMappingPortfoliosObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}

@@ -126,6 +126,8 @@ public class ExternalMappingUOMConversionsController implements Initializable
 	{
 		final String selectedExternalTradeSource = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
 		final Predicate<ExternalMapping> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
+
+		this.externalMappingUOMConversionsObservableList.clear();
 		this.externalMappingUOMConversionsObservableList.addAll(CayenneReferenceDataCache.loadExternalMappings());
 		this.updateFilter(predicate);
 	}

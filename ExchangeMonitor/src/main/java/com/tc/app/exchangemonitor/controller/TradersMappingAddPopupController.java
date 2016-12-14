@@ -7,6 +7,8 @@ package com.tc.app.exchangemonitor.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
 import org.apache.cayenne.query.MappedExec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +18,7 @@ import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.viewmodel.ExternalMappingTradersViewModel;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -36,6 +39,9 @@ public class TradersMappingAddPopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger(TradersMappingAddPopupController.class);
 	private static final String TRADER_MAPPING_TYPE = "T";
+
+	@Inject
+	private ExternalMappingTradersViewModel externalMappingTradersViewModel;
 
 	@FXML
 	private Label titleLabel;
@@ -122,7 +128,7 @@ public class TradersMappingAddPopupController implements IGenericController
 
 		this.observableIctsTradersList.clear();
 		this.observableIctsTradersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveIctsUsers().values(), (final IctsUser anIctsUser) -> anIctsUser.getUserJobTitle().getUserJobTitle().trim().equals("TRADER")));
-		LOGGER.debug("Traders Count : " + this.observableIctsTradersList.size());
+		LOGGER.debug("Traders Count : {}", this.observableIctsTradersList.size());
 
 		/*
 		final Session session = HibernateUtil.beginTransaction();
@@ -228,6 +234,7 @@ public class TradersMappingAddPopupController implements IGenericController
 				 */
 				LOGGER.info("Mapping Saved Successfully.");
 				this.closePopup();
+				this.refreshExternalMappingTradersTableView();
 			}
 			else
 			{
@@ -247,5 +254,12 @@ public class TradersMappingAddPopupController implements IGenericController
 	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
 		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
+	}
+
+	private void refreshExternalMappingTradersTableView()
+	{
+		LOGGER.debug("ExternalMappingTradersViewModel Instance {}", this.externalMappingTradersViewModel);
+		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().clear();
+		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().addAll(CayenneReferenceDataCache.reloadExternalMappings());
 	}
 }
