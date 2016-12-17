@@ -8,7 +8,6 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
@@ -21,12 +20,8 @@
 
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.CompaniesMappingAddPopupController">
 <children>
-	<Label text="Add Companies Mapping" fx:id="titleLabel">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</Label>
-	<TextField promptText="External Source Company" fx:id="externalSourceCompanyTextField">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
+	<Label text="Add Companies Mapping" fx:id="titleLabel" />
+	<TextField promptText="External Source Company" fx:id="externalSourceCompanyTextField" />
 	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="Company Type"  fx:id="companyTypeComboBox">
 	<items>
 	<FXCollections fx:factory="observableArrayList">

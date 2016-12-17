@@ -8,19 +8,14 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <?import com.tc.app.exchangemonitor.controller.IctsUserCellFactory?>
 <?import com.tc.app.exchangemonitor.controller.IctsUserButtonCell?>
 
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.TradersMappingAddPopupController">
 <children>
-	<Label text="Add Traders Mapping" fx:id="titleLabel">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</Label>
-	<TextField promptText="External Source Trader" fx:id="externalSourceTraderTextField">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
+	<Label text="Add Traders Mapping" fx:id="titleLabel" />
+	<TextField promptText="External Source Trader" fx:id="externalSourceTraderTextField" />
 	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Trader" fx:id="ictsTraderComboBox">
 	<cellFactory><IctsUserCellFactory/></cellFactory>
 	<buttonCell><IctsUserButtonCell/></buttonCell>

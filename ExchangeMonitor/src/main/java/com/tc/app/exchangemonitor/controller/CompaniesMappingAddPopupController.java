@@ -29,7 +29,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -41,7 +40,7 @@ import javafx.stage.Stage;
  * @author Saravana Kumar M
  *
  */
-public class CompaniesMappingAddPopupController implements Initializable
+public class CompaniesMappingAddPopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String COMPANY_MAPPING_TYPE = "C";
@@ -73,9 +72,6 @@ public class CompaniesMappingAddPopupController implements Initializable
 	/* Listener Variables */
 	private ChangeListener<String> companyTypeComboBoxChangeListener = null;
 
-	/* (non-Javadoc)
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-	 */
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
 	{
@@ -88,24 +84,28 @@ public class CompaniesMappingAddPopupController implements Initializable
 		this.attachListeners();
 	}
 
-	private void addThisControllerToControllersMap()
+	@Override
+	public void addThisControllerToControllersMap()
 	{
 		ApplicationHelper.controllersMap.putInstance(CompaniesMappingAddPopupController.class, this);
 	}
 
-	private void doAssertion()
+	@Override
+	public void doAssertion()
 	{
 		assert this.externalSourceCompanyTextField != null : "fx:id=\"externalSourceCompanyTextField\" was not injected. Check your FXML file CompaniesMappingAddPopupView.fxml";
 	}
 
-	private void doInitialDataBinding()
+	@Override
+	public void doInitialDataBinding()
 	{
 		this.companyCountryComboBox.setItems(this.observableCompanyCountriesList);
 		this.ictsCompanyComboBox.setItems(this.sortedIctsCompaniesList);
 		this.saveButton.disableProperty().bind(this.externalSourceCompanyTextField.textProperty().isEmpty().or(this.companyTypeComboBox.valueProperty().isNull()).or(this.companyCountryComboBox.valueProperty().isNull()).or(this.ictsCompanyComboBox.valueProperty().isNull()));
 	}
 
-	private void initializeGUI()
+	@Override
+	public void initializeGUI()
 	{
 		this.fetchCountries();
 
@@ -113,27 +113,30 @@ public class CompaniesMappingAddPopupController implements Initializable
 		this.fetchCompanies();
 	}
 
-	private void setAnyUIComponentStateIfNeeded()
+	@Override
+	public void setAnyUIComponentStateIfNeeded()
 	{
 		Platform.runLater(() -> this.titleLabel.requestFocus());
 	}
 
-	private void createListeners()
+	@Override
+	public void createListeners()
 	{
 		this.companyTypeComboBoxChangeListener = (observableValue, oldValue, newValue) -> {
 			this.handleCompanyTypeComboBoxSelectionChange(newValue);
 		};
 	}
 
-	private void attachListeners()
+	@Override
+	public void attachListeners()
 	{
 		this.companyTypeComboBox.valueProperty().addListener(this.companyTypeComboBoxChangeListener);
-		this.externalSourceCompanyTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+		this.externalSourceCompanyTextField.textProperty().addListener((observable, oldValue, newValue) -> this.convertToUpperCase(this.externalSourceCompanyTextField, newValue));
 	}
 
-	private void doThis(final String newValue)
+	private void convertToUpperCase(final TextField aTextField, final String newValue)
 	{
-		this.externalSourceCompanyTextField.setText(newValue.toUpperCase());
+		aTextField.setText(newValue.toUpperCase());
 	}
 
 	private void handleCompanyTypeComboBoxSelectionChange(final String newValue)
@@ -232,8 +235,18 @@ public class CompaniesMappingAddPopupController implements Initializable
 			{
 				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
 				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
-				//session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).setParameter("aliasValueParam", ictsBroker).setParameter("transIdParam", transid).executeUpdate();
-				MappedExec.query("InsertNewMapping").param("oidParam", newNum).param("externalTradeSourceOidParam", externalTradeSourceOid).param("mappingTypeParam", COMPANY_MAPPING_TYPE).param("externalValue1Param", externalSourceCompany).param("externalValue2Param", companyType).param("externalValue3Param", null).param("externalValue4Param", companyCountry).param("aliasValueParam", ictsCompany).param("transIdParam", transid).execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				insertMappingQuery.param("oidParam", newNum);
+				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
+				insertMappingQuery.param("mappingTypeParam", COMPANY_MAPPING_TYPE);
+				insertMappingQuery.param("externalValue1Param", externalSourceCompany);
+				insertMappingQuery.param("externalValue2Param", companyType);
+				insertMappingQuery.param("externalValue3Param", null);
+				insertMappingQuery.param("externalValue4Param", companyCountry);
+				insertMappingQuery.param("aliasValueParam", ictsCompany);
+				insertMappingQuery.param("transIdParam", transid);
+				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				LOGGER.info("Mapping Saved Successfully.");
 				this.closePopup();
@@ -246,7 +259,7 @@ public class CompaniesMappingAddPopupController implements Initializable
 		}
 		catch(final Exception exception)
 		{
-			LOGGER.error("Save Failed." + exception);
+			LOGGER.error("Save Failed.", exception);
 			throw new RuntimeException("Save Failed.", exception);
 		}
 		finally

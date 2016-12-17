@@ -6,3 +6,24 @@ VBox
 	-fx-border-color: blue;
 	-fx-border-width: 1;
 }
+
+.label
+{
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 15.0;
+}
+
+.text-field
+{
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 14.0;
+}
+
+.combo-box .cell
+{
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 14.0;
+}

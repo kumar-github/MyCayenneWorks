@@ -9,9 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 public class DatabaseUtil
 {
-	private static final Logger LOGGER = LogManager.getLogger(DatabaseUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static boolean makeTestConnection(String url, String username, String password) throws SQLException
+	public static boolean makeTestConnection(final String url, final String username, final String password) throws SQLException
 	{
 		boolean isSuccess = false;
 		//String driver = "net.sourceforge.jtds.jdbc.Driver";
@@ -24,7 +24,7 @@ public class DatabaseUtil
 				isSuccess = true;
 			}
 		}
-		catch(SQLException exception)
+		catch(final SQLException exception)
 		{
 			LOGGER.error(exception);
 			throw exception;

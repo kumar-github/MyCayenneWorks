@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.query.MappedExec;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.ProcedureQuery;
 
@@ -47,7 +48,7 @@ public class CayenneReferenceDataFetchUtil
 		{
 			final ProcedureQuery genNewTransactionProcedureQuery = new ProcedureQuery("gen_new_transaction");
 			genNewTransactionProcedureQuery.addParameter("app_name", "ExchangeMonitor");
-			genNewTransactionProcedureQuery.addParameter("trans_type", "U");
+			genNewTransactionProcedureQuery.addParameter("trans_type", 'U');
 
 			final List data = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(genNewTransactionProcedureQuery);
 			if(!data.isEmpty())
@@ -90,5 +91,10 @@ public class CayenneReferenceDataFetchUtil
 		{
 		}
 		return newNum;
+	}
+
+	public static MappedExec getQueryForName(final String queryName)
+	{
+		return MappedExec.query(queryName);
 	}
 }

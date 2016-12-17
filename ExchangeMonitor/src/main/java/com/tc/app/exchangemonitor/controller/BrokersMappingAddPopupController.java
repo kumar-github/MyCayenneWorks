@@ -28,7 +28,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -40,7 +39,7 @@ import javafx.stage.Stage;
  * @author Saravana Kumar M
  *
  */
-public class BrokersMappingAddPopupController implements Initializable
+public class BrokersMappingAddPopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String BROKER_MAPPING_TYPE = "B";
@@ -69,13 +68,9 @@ public class BrokersMappingAddPopupController implements Initializable
 	private final FilteredList<Account> filteredBrokersList = new FilteredList<>(this.observableBrokersList, null);
 	private final SortedList<Account> sortedBrokersList = new SortedList<>(this.filteredBrokersList);
 
-
 	/* Listener Variables */
 	private ChangeListener<String> brokerTypeComboBoxChangeListener = null;
 
-	/* (non-Javadoc)
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-	 */
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
 	{
@@ -88,50 +83,57 @@ public class BrokersMappingAddPopupController implements Initializable
 		this.attachListeners();
 	}
 
-	private void addThisControllerToControllersMap()
+	@Override
+	public void addThisControllerToControllersMap()
 	{
 		ApplicationHelper.controllersMap.putInstance(BrokersMappingAddPopupController.class, this);
 	}
 
-	private void doAssertion()
+	@Override
+	public void doAssertion()
 	{
 		assert this.externalSourceBrokerTextField != null : "fx:id=\"externalSourceBrokerTextField\" was not injected. Check your FXML file BrokersMappingAddPopupView.fxml";
 	}
 
-	private void doInitialDataBinding()
+	@Override
+	public void doInitialDataBinding()
 	{
 		this.ictsBrokerComboBox.setItems(this.sortedBrokersList);
 		this.saveButton.disableProperty().bind(this.externalSourceBrokerTextField.textProperty().isEmpty().or(this.brokerTypeComboBox.valueProperty().isNull()).or(this.externalSourceTraderTextField.textProperty().isEmpty()).or(this.externalSourceAccountTextField.textProperty().isEmpty()).or(this.ictsBrokerComboBox.valueProperty().isNull()));
 	}
 
-	private void initializeGUI()
+	@Override
+	public void initializeGUI()
 	{
 		this.fetchIctsBrokers();
 	}
 
-	private void setAnyUIComponentStateIfNeeded()
+	@Override
+	public void setAnyUIComponentStateIfNeeded()
 	{
 		Platform.runLater(() -> this.titleLabel.requestFocus());
 	}
 
-	private void createListeners()
+	@Override
+	public void createListeners()
 	{
 		this.brokerTypeComboBoxChangeListener = (observableValue, oldValue, newValue) -> {
 			this.handleBrokerTypeComboBoxSelectionChange(newValue);
 		};
 	}
 
-	private void attachListeners()
+	@Override
+	public void attachListeners()
 	{
 		this.brokerTypeComboBox.valueProperty().addListener(this.brokerTypeComboBoxChangeListener);
-		this.externalSourceBrokerTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
-		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
-		this.externalSourceAccountTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+		this.externalSourceBrokerTextField.textProperty().addListener((observable, oldValue, newValue) -> this.convertToUpperCase(this.externalSourceBrokerTextField, newValue));
+		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.convertToUpperCase(this.externalSourceTraderTextField, newValue));
+		this.externalSourceAccountTextField.textProperty().addListener((observable, oldValue, newValue) -> this.convertToUpperCase(this.externalSourceAccountTextField, newValue));
 	}
 
-	private void doThis(final String newValue)
+	private void convertToUpperCase(final TextField aTextField, final String newValue)
 	{
-		this.externalSourceTraderTextField.setText(newValue.toUpperCase());
+		aTextField.setText(newValue.toUpperCase());
 	}
 
 	private void handleBrokerTypeComboBoxSelectionChange(final String newValue)
@@ -229,8 +231,17 @@ public class BrokersMappingAddPopupController implements Initializable
 			{
 				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
 				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
-				//session.getNamedQuery("InsertNewMapping").setParameter("oidParam", newNum).setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", BROKER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceBroker).setParameter("externalValue2Param", brokerType).setParameter("externalValue3Param", externalSourceTrader).setParameter("externalValue4Param", externalSourceAccount).setParameter("aliasValueParam", ictsBroker).setParameter("transIdParam", transid).executeUpdate();
-				MappedExec.query("InsertNewMapping").param("oidParam", newNum).param("externalTradeSourceOidParam", externalTradeSourceOid).param("mappingTypeParam", BROKER_MAPPING_TYPE).param("externalValue1Param", externalSourceBroker).param("externalValue2Param", brokerType).param("externalValue3Param", externalSourceTrader).param("externalValue4Param", externalSourceAccount).param("aliasValueParam", ictsBroker).param("transIdParam", transid).execute(CayenneHelper.getCayenneServerRuntime().newContext());
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				insertMappingQuery.param("oidParam", newNum);
+				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
+				insertMappingQuery.param("mappingTypeParam", BROKER_MAPPING_TYPE);
+				insertMappingQuery.param("externalValue1Param", externalSourceBroker);
+				insertMappingQuery.param("externalValue2Param", brokerType);
+				insertMappingQuery.param("externalValue3Param", externalSourceTrader);
+				insertMappingQuery.param("externalValue4Param", externalSourceAccount);
+				insertMappingQuery.param("aliasValueParam", ictsBroker);
+				insertMappingQuery.param("transIdParam", transid);
+				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				LOGGER.info("Mapping Saved Successfully.");
 				this.closePopup();

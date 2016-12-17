@@ -12,7 +12,7 @@ import com.tc.app.exchangemonitor.controller.PreferencesHelper;
 
 public class HibernateUtil
 {
-	private static final Logger LOGGER = LogManager.getLogger(HibernateUtil.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	//public static String HIBERNATE_CONNECTION_URL_VALUE = "jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22";
 	private static final SessionFactory sessionFactory;
 

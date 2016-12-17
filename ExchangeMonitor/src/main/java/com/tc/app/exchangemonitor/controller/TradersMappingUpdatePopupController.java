@@ -27,7 +27,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -38,7 +37,7 @@ import javafx.stage.Stage;
 public class TradersMappingUpdatePopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final String TRADER_MAPPING_TYPE = "T";
+	private static final boolean IS_DEBUG_ENABLED = LOGGER.isDebugEnabled();
 
 	@Inject
 	private ExternalMappingTradersViewModel externalMappingTradersViewModel;
@@ -53,12 +52,11 @@ public class TradersMappingUpdatePopupController implements IGenericController
 	private Button updateButton;
 	@FXML
 	private Button cancelButton;
+	@FXML
+	private Button statusButton;
 
 	private final ObservableList<IctsUser> observableIctsTradersList = FXCollections.observableArrayList();
 
-	/* (non-Javadoc)
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-	 */
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
 	{
@@ -86,6 +84,11 @@ public class TradersMappingUpdatePopupController implements IGenericController
 	@Override
 	public void doInitialDataBinding()
 	{
+		//this.test.managedProperty().bind(this.test.visibleProperty());
+
+		this.externalSourceTraderTextField.setText(this.externalMappingTradersViewModel.selectedRecordProperty().get().getExternalValue1());
+		this.ictsTraderComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveIctsUsers().get(this.externalMappingTradersViewModel.selectedRecordProperty().get().getAliasValue()));
+
 		this.ictsTraderComboBox.setItems(this.observableIctsTradersList);
 		this.updateButton.disableProperty().bind(this.externalSourceTraderTextField.textProperty().isEmpty().or(this.ictsTraderComboBox.valueProperty().isNull()));
 	}
@@ -113,12 +116,6 @@ public class TradersMappingUpdatePopupController implements IGenericController
 	@Override
 	public void attachListeners()
 	{
-		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
-	}
-
-	private void doThis(final String newValue)
-	{
-		this.externalSourceTraderTextField.setText(newValue.toUpperCase());
 	}
 
 	private void fetchIctsTraders()
@@ -147,11 +144,23 @@ public class TradersMappingUpdatePopupController implements IGenericController
 
 	private void updateTraderMapping()
 	{
-		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
-
-		final String externalSourceTrader = this.externalSourceTraderTextField.getText().trim();
+		final String oldValue = this.externalMappingTradersViewModel.selectedRecordProperty().get().getAliasValue();
 		final String ictsTrader = this.ictsTraderComboBox.getSelectionModel().getSelectedItem().getUserInit();
+
+		if(IS_DEBUG_ENABLED)
+		{
+			LOGGER.debug("Old Value : {} New Value : {}", oldValue, ictsTrader);
+		}
+
+		if(oldValue.equals(ictsTrader))
+		{
+			this.statusButton.setVisible(true);
+			this.statusButton.setText("Nothing has changed.");
+			LOGGER.info("Nothing has changed.");
+			return;
+		}
+
+		final Integer externalMappingOid = this.externalMappingTradersViewModel.selectedRecordProperty().get().getExternalMappingOid();
 
 		final boolean doesTraderMappingExistsAlready = false;
 
@@ -159,40 +168,29 @@ public class TradersMappingUpdatePopupController implements IGenericController
 		{
 			if(!doesTraderMappingExistsAlready)
 			{
-				MappedExec.query("InsertNewMapping")
-				.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum())
-				.param("externalTradeSourceOidParam", externalTradeSourceOid)
-				.param("mappingTypeParam", TRADER_MAPPING_TYPE)
-				.param("externalValue1Param", externalSourceTrader)
-				.param("externalValue2Param", null)
-				.param("externalValue3Param", null)
-				.param("externalValue4Param", null)
-				.param("aliasValueParam", ictsTrader)
-				.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction())
-				.execute(CayenneHelper.getCayenneServerRuntime().newContext());
+				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("UpdateMapping");
+				updateMappingQuery.param("aliasValueParam", ictsTrader);
+				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);
+				updateMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
-				LOGGER.info("Mapping Saved Successfully.");
+				LOGGER.info("Mapping Updated Successfully.");
 				this.closePopup();
 				this.refreshExternalMappingTradersTableView();
 			}
 			else
 			{
-				LOGGER.error("Mapping Already Exists!");
+				LOGGER.error("Mapping Update Failed!");
 			}
 		}
 		catch(final Exception exception)
 		{
-			LOGGER.error("Save Failed." + exception);
-			throw new RuntimeException("Save Failed.", exception);
+			LOGGER.error("Update Failed.", exception);
+			throw new RuntimeException("Update Failed.", exception);
 		}
 		finally
 		{
 		}
-	}
-
-	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
-	{
-		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 
 	private void refreshExternalMappingTradersTableView()

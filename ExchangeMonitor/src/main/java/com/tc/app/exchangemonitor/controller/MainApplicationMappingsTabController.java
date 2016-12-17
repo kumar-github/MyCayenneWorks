@@ -35,7 +35,7 @@ import javafx.scene.layout.BorderPane;
 
 public class MainApplicationMappingsTabController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(MainApplicationMonitorTabController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@FXML
 	private CheckListView<ExternalTradeSource> externalTradeSourcesListView;

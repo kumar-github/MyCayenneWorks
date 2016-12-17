@@ -17,6 +17,7 @@ import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.view.java.BrokersMappingAddPopupView;
+import com.tc.app.exchangemonitor.view.java.BrokersMappingUpdatePopupView;
 import com.tc.app.exchangemonitor.viewmodel.ExternalMappingBrokersViewModel;
 
 import javafx.collections.transformation.FilteredList;
@@ -34,8 +35,7 @@ import javafx.stage.StageStyle;
 
 public class ExternalMappingBrokersController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingBrokersController.class);
-	private static final String BROKER_MAPPING_TYPE = "B";
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/*
 	 * This is the ViewModel instance. Moved the externalMappingBrokersObservableList property to the view model, so that other controllers which need can access from there.
@@ -80,16 +80,16 @@ public class ExternalMappingBrokersController implements Initializable
 		this.attachListeners();
 	}
 
+	private void addThisControllerToControllersMap()
+	{
+		ApplicationHelper.controllersMap.putInstance(ExternalMappingBrokersController.class, this);
+	}
+
 	private void doSomeGlobalVariableInitialization()
 	{
 		LOGGER.debug("ExternalMappingBrokersViewModel Instance {}", this.externalMappingBrokersViewModel);
 		this.externalMappingBrokersFilteredList = new FilteredList<>(this.externalMappingBrokersViewModel.getExternalMappingBrokersObservableList(), null);
 		this.externalMappingBrokersSortedList = new SortedList<>(this.externalMappingBrokersFilteredList);
-	}
-
-	private void addThisControllerToControllersMap()
-	{
-		ApplicationHelper.controllersMap.putInstance(ExternalMappingBrokersController.class, this);
 	}
 
 	private void doAssertion()
@@ -98,6 +98,8 @@ public class ExternalMappingBrokersController implements Initializable
 
 	private void doInitialDataBinding()
 	{
+		this.externalMappingBrokersViewModel.selectedRecordProperty().bind(this.externalMappingBrokersTableView.getSelectionModel().selectedItemProperty());
+
 		this.externalMappingBrokersSortedList.comparatorProperty().bind(this.externalMappingBrokersTableView.comparatorProperty());
 		this.externalMappingBrokersTableView.setItems(this.externalMappingBrokersSortedList);
 
@@ -144,32 +146,13 @@ public class ExternalMappingBrokersController implements Initializable
 	@FXML
 	private void handleDeleteMappingButtonClick()
 	{
-		final ExternalMapping selectedMappingToDelete = this.externalMappingBrokersTableView.getSelectionModel().getSelectedItem();
-
-		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
-
-		try
-		{
-			/* Read the delete mapping query from datamap.xml file, set the paramters and keep it ready. */
-			final MappedExec deleteMappingQuery = MappedExec.query("DeleteSelectedMapping").param("externalTradeSourceOidParam", externalTradeSourceOid).param("mappingTypeParam", BROKER_MAPPING_TYPE).param("externalValue1Param", selectedMappingToDelete.getExternalValue1()).param("externalValue2Param", null).param("externalValue3Param", null).param("externalValue4Param", null).param("aliasValueParam", selectedMappingToDelete.getAliasValue());
-
-			/* Fire the gen_new_transaction SP first and immediately the delete query. */
-			CayenneReferenceDataFetchUtil.generateNewTransaction();
-			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
-
-			LOGGER.info("Mapping Deleted Successfully.");
-			this.refreshExternalMappingBrokersTableView();
-		}
-		catch(final Exception exception)
-		{
-			LOGGER.error("Unable to delete the mapping.", exception);
-		}
+		this.deleteSelectedMapping();
 	}
 
 	@FXML
 	private void handleUpdateMappingButtonClick()
 	{
+		this.showUpdateBrokersMappingView();
 	}
 
 	@FXML
@@ -188,7 +171,41 @@ public class ExternalMappingBrokersController implements Initializable
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		System.out.println("Stage Operation Completed.");
+		LOGGER.info("Stage Operation Completed.");
+	}
+
+	private void showUpdateBrokersMappingView()
+	{
+		final Stage tempStage = new Stage(StageStyle.TRANSPARENT);
+		/* To make this stage appears on top of the application window. Else, if the application is displayed in the secondary monitor the child stage will still visible on the primary monitor. */
+		tempStage.initOwner(this.updateMappingButton.getScene().getWindow());
+		tempStage.initModality(Modality.APPLICATION_MODAL);
+		tempStage.setScene(new Scene(new BrokersMappingUpdatePopupView().getView()));
+		tempStage.showAndWait();
+
+		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
+		LOGGER.info("Stage Operation Completed.");
+	}
+
+	private void deleteSelectedMapping()
+	{
+		final ExternalMapping selectedMappingToDelete = this.externalMappingBrokersTableView.getSelectionModel().getSelectedItem();
+		final Integer externalMappingOid = selectedMappingToDelete.getExternalMappingOid();
+
+		try
+		{
+			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("DeleteMapping");
+			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
+			CayenneReferenceDataFetchUtil.generateNewTransaction();
+			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
+			LOGGER.info("{} Mapping Deleted Successfully.", (externalMappingOid + "<-->" + selectedMappingToDelete));
+			this.refreshExternalMappingBrokersTableView();
+		}
+		catch(final Exception exception)
+		{
+			LOGGER.error("Unable to delete the mapping {}.", externalMappingOid, exception);
+		}
 	}
 
 	private void refreshExternalMappingBrokersTableView()
@@ -196,10 +213,5 @@ public class ExternalMappingBrokersController implements Initializable
 		LOGGER.debug("ExternalMappingBrokersViewModel Instance {}", this.externalMappingBrokersViewModel);
 		this.externalMappingBrokersViewModel.getExternalMappingBrokersObservableList().clear();
 		this.externalMappingBrokersViewModel.getExternalMappingBrokersObservableList().addAll(CayenneReferenceDataCache.reloadExternalMappings());
-	}
-
-	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
-	{
-		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 }

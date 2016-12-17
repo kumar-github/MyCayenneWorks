@@ -26,7 +26,7 @@ import javafx.util.Duration;
 public class ExchangeMonitorApplication extends Application
 {
 	//private Rectangle2D primaryMonitor = Screen.getPrimary().getVisualBounds();
-	private static final Logger LOGGER = LogManager.getLogger(ExchangeMonitorApplication.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private Stage primaryStage = null;
 	private Scene primaryScene = null;
@@ -49,7 +49,7 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
 		HibernateUtil.getSessionFactory();
 		CayenneHelper.initializeCayenneServerRuntime();
-		//this.testCall();
+		this.testCall();
 		ReferenceDataCache.loadAllReferenceData();
 		CayenneReferenceDataCache.fetchAllReferenceData();
 		for(int i = 0; i < 1000; i++)
@@ -160,6 +160,7 @@ public class ExchangeMonitorApplication extends Application
 		super.stop();
 		Injector.forgetAll();
 		HibernateUtil.closeSessionFactory();
+		CayenneHelper.getCayenneServerRuntime().shutdown();
 		LOGGER.info("Application Terminated.");
 		Platform.exit();
 		System.exit(0);
@@ -167,6 +168,16 @@ public class ExchangeMonitorApplication extends Application
 
 	private void testCall()
 	{
+		/*
+		final String query = "SELECT MAX(trans_id) AS MaxTransID, COUNT(*) AS RecordCount from  external_trade";
+		final List<DataRow> data = SQLSelect.dataRowQuery(query).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		final Integer a = (Integer) data.get(0).get("MaxTransID");
+		final Integer b = (Integer) data.get(0).get("RecordCount");
+		System.out.println(a);
+		System.out.println(b);
+		System.exit(0);
+		 */
+
 		//final EJBQLQuery query = new EJBQLQuery("select user FROM IctsUser user JOIN user.userJobTitle title");
 		/*final EJBQLQuery query = new EJBQLQuery("select account FROM Account account JOIN account.accountType code");
 		long startTime = System.currentTimeMillis();

@@ -33,7 +33,7 @@ import javafx.util.Duration;
 
 public class MainApplicationLoadingScheduleTabController implements IMainApplicationMonitorTabController
 {
-	private static final Logger LOGGER = LogManager.getLogger(MainApplicationLoadingScheduleTabController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * ============================================================================================================================================================================

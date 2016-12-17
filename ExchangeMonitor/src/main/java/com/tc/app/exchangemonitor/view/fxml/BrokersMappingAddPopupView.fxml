@@ -8,7 +8,6 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
@@ -18,12 +17,8 @@
 
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.BrokersMappingAddPopupController">
 <children>
-	<Label text="Add Brokers Mapping" fx:id="titleLabel">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</Label>
-	<TextField fx:id="externalSourceBrokerTextField" promptText="External Source Broker">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
+	<Label text="Add Brokers Mapping" fx:id="titleLabel" />
+	<TextField fx:id="externalSourceBrokerTextField" promptText="External Source Broker" />
 	<ComboBox fx:id="brokerTypeComboBox" prefHeight="28.0" prefWidth="200.0" promptText="Broker Type">
 	<items>
 	<FXCollections fx:factory="observableArrayList">
@@ -33,12 +28,8 @@
 	</FXCollections>
 	</items>
 	</ComboBox>
-	<TextField fx:id="externalSourceTraderTextField" promptText="External Source Trader">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
-    <TextField fx:id="externalSourceAccountTextField" layoutX="20.0" layoutY="124.0" promptText="External Source Account">
-    <font><Font name="Calibri Bold" size="15.0" /></font>
-    </TextField>
+	<TextField fx:id="externalSourceTraderTextField" promptText="External Source Trader" />
+    <TextField fx:id="externalSourceAccountTextField" layoutX="20.0" layoutY="124.0" promptText="External Source Account" />
     <ComboBox fx:id="ictsBrokerComboBox" prefHeight="28.0" prefWidth="200.0" promptText="ICTS Broker">
     <cellFactory><IctsAccountCellFactory/></cellFactory>
     <buttonCell><IctsAccountButtonCell/></buttonCell>

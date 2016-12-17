@@ -47,7 +47,7 @@ import javafx.stage.WindowEvent;
 
 public class MainWindowController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(MainWindowController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * ============================================================================================================================================================================

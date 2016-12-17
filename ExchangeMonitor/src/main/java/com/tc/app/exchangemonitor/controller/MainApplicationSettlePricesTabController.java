@@ -42,7 +42,7 @@ import javafx.util.Duration;
 
 public class MainApplicationSettlePricesTabController implements IMainApplicationMonitorTabController
 {
-	private static final Logger LOGGER = LogManager.getLogger(MainApplicationSettlePricesTabController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * ============================================================================================================================================================================

@@ -1,0 +1,67 @@
+VBox
+{
+	/*-fx-background-color: lightgreen;*/
+	-fx-border-style: dotted;
+	-fx-border-radius: 1;
+	-fx-border-color: blue;
+	-fx-border-width: 1;
+}
+
+.label
+{
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 15.0;
+}
+
+.text-field
+{
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 14.0;
+}
+
+.combo-box .cell
+{
+	/*-fx-text-fill: blue;*/
+    /*-fx-font: 15 "Arial";*/
+	-fx-font-family: "Calibri";
+	-fx-font-weight: BOLD;
+	-fx-font-size: 14.0;
+}
+
+.statusButtonStyle
+{
+	-fx-background-insets: 1;
+	-fx-background-radius: 1;
+	-fx-font-family: "Segoe UI";
+	-fx-font-weight: bold;
+	-fx-background-color: ORANGE;
+}
+
+/* The below is to make the combobox looks visually active though it is disabled. */
+.list-cell:disabled
+{
+    -fx-opacity: 1;
+    /*-fx-text-fill: black;*/
+}
+
+/* The below is to make the combobox looks visually active though it is disabled. */
+.combo-box-base:disabled
+{
+    -fx-opacity: 1;
+    /*-fx-text-fill: black;*/
+}
+
+/*
+.combo-box-popup .list-view
+{
+    -fx-font-size : 15pt;
+    -fx-text-fill: red;
+}
+
+.combo-box-popup .list-view .list-cell
+{
+    -fx-padding: -1 -1 -1 -1;
+}
+*/

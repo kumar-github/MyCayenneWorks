@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class CayenneHelper
 {
-	private static final Logger LOGGER = LogManager.getLogger(CayenneHelper.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final ServerRuntime cayenneServerRuntime;
 	private static final ObjectContext cayenneObjectContext;
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<?import com.tc.app.exchangemonitor.controller.IctsAccountButtonCell?>
+<?import com.tc.app.exchangemonitor.controller.IctsCountryButtonCell?>
+
+<?import com.tc.app.exchangemonitor.controller.IctsAccountCellFactory?>
+<?import com.tc.app.exchangemonitor.controller.IctsCountryCellFactory?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.CompaniesMappingUpdatePopupController">
+<children>
+	<Label text="Update Companies Mapping" fx:id="titleLabel" />
+	<TextField editable="false" promptText="External Source Company" fx:id="externalSourceCompanyTextField" />
+	<ComboBox disable="true" prefWidth="270.0" promptText="Company Type"  fx:id="companyTypeComboBox">
+	<items>
+	<FXCollections fx:factory="observableArrayList">
+	<String fx:value="CUSTOMER" />
+	<String fx:value="BOOKING COMPANY" />
+	</FXCollections>
+	</items>
+	</ComboBox>
+	<ComboBox disable="true" prefWidth="270.0" promptText="Company Country" fx:id="companyCountryComboBox">
+	<cellFactory><IctsCountryCellFactory/></cellFactory>
+	<buttonCell><IctsCountryButtonCell/></buttonCell>
+	</ComboBox>
+	<ComboBox prefWidth="270.0" promptText="ICTS Company" fx:id="ictsCompanyComboBox">
+	<cellFactory><IctsAccountCellFactory/></cellFactory>
+	<buttonCell><IctsAccountButtonCell/></buttonCell>
+	</ComboBox>
+	<HBox alignment="CENTER_RIGHT" spacing="10.0">
+	<children>
+		<Button fx:id="statusButton" visible="false" styleClass="statusButtonStyle" text="Nothing has changed."/>
+		<Button defaultButton="true" text="Update" fx:id="updateButton" onAction="#handleUpdateButtonClick"/>
+		<Button cancelButton="true" text="Cancel" fx:id="cancelButton" onAction="#handleCancelButtonClick"/>
+	</children>
+	</HBox>
+</children>
+<padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+<effect><DropShadow height="30.0" radius="14.5" width="30.0" /></effect>
+</VBox>

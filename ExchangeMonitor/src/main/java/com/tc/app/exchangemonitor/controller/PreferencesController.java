@@ -15,7 +15,7 @@ import javafx.scene.control.CheckBox;
 
 public class PreferencesController implements Initializable
 {
-	private static final Logger LOGGER = LogManager.getLogger(PreferencesController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@FXML
 	private CheckBox resetCredentialsCheckBox;
@@ -35,23 +35,23 @@ public class PreferencesController implements Initializable
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		syncPreferencesScreenWithRegistryData();
+		this.syncPreferencesScreenWithRegistryData();
 	}
 
 	private void syncPreferencesScreenWithRegistryData()
 	{
-		displayAccountsWithPermissionCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_DISPLAY_ACCOUNTS_WITH_PERMISSION, false));
-		enableAnimationsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ANIMATIONS, true));
-		enableRowColorsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ROW_COLORS, true));
-		enableRowToolTipsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ROW_TOOLTIPS, true));
+		this.displayAccountsWithPermissionCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_DISPLAY_ACCOUNTS_WITH_PERMISSION, false));
+		this.enableAnimationsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ANIMATIONS, true));
+		this.enableRowColorsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ROW_COLORS, true));
+		this.enableRowToolTipsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ROW_TOOLTIPS, true));
 	}
 
 	@FXML
-	public void handleResetCredentialsCheckBoxClick(ActionEvent event)
+	public void handleResetCredentialsCheckBoxClick(final ActionEvent event)
 	{
-		CheckBox sourceCheckBox = ((CheckBox) event.getSource());
+		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
 		if(sourceCheckBox.isSelected())
 		{
 			try
@@ -60,7 +60,7 @@ public class PreferencesController implements Initializable
 				PreferencesHelper.forgetLoginCredentials();
 				LOGGER.info("Credentials reset successfully.");
 			}
-			catch(Exception exception)
+			catch(final Exception exception)
 			{
 				exception.printStackTrace();
 			}
@@ -71,9 +71,9 @@ public class PreferencesController implements Initializable
 	}
 
 	@FXML
-	public void handleDisplayAccountsWithPermissionCheckBoxClick(ActionEvent event)
+	public void handleDisplayAccountsWithPermissionCheckBoxClick(final ActionEvent event)
 	{
-		CheckBox sourceCheckBox = ((CheckBox) event.getSource());
+		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
 		try
 		{
 			if(sourceCheckBox.isSelected())
@@ -87,16 +87,16 @@ public class PreferencesController implements Initializable
 				LOGGER.info("Hereafter, All Accounts will be displayed.");
 			}
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			exception.printStackTrace();
 		}
 	}
 
 	@FXML
-	public void handleEnableAnimationsCheckBoxClick(ActionEvent event)
+	public void handleEnableAnimationsCheckBoxClick(final ActionEvent event)
 	{
-		CheckBox sourceCheckBox = ((CheckBox) event.getSource());
+		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
 		try
 		{
 			if(sourceCheckBox.isSelected())
@@ -110,16 +110,16 @@ public class PreferencesController implements Initializable
 				LOGGER.info("Hereafter, All Animations will be disabled.");
 			}
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			exception.printStackTrace();
 		}
 	}
 
 	@FXML
-	public void handleEnableRowColorsCheckBoxClick(ActionEvent event)
+	public void handleEnableRowColorsCheckBoxClick(final ActionEvent event)
 	{
-		CheckBox sourceCheckBox = ((CheckBox) event.getSource());
+		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
 		try
 		{
 			if(sourceCheckBox.isSelected())
@@ -133,16 +133,16 @@ public class PreferencesController implements Initializable
 				LOGGER.info("Hereafter, Row Colors will be disabled.");
 			}
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			exception.printStackTrace();
 		}
 	}
 
 	@FXML
-	public void handleEnableRowToolTipsCheckBoxClick(ActionEvent event)
+	public void handleEnableRowToolTipsCheckBoxClick(final ActionEvent event)
 	{
-		CheckBox sourceCheckBox = ((CheckBox) event.getSource());
+		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
 		try
 		{
 			if(sourceCheckBox.isSelected())
@@ -156,16 +156,16 @@ public class PreferencesController implements Initializable
 				LOGGER.info("Hereafter, Row ToolTips will be disabled.");
 			}
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			exception.printStackTrace();
 		}
 	}
 
 	@FXML
-	public void handleEnableRowContextMenuCheckBoxClick(ActionEvent event)
+	public void handleEnableRowContextMenuCheckBoxClick(final ActionEvent event)
 	{
-		CheckBox sourceCheckBox = ((CheckBox) event.getSource());
+		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
 		try
 		{
 			if(sourceCheckBox.isSelected())
@@ -179,7 +179,7 @@ public class PreferencesController implements Initializable
 				LOGGER.info("Hereafter, Row context menu will be disabled.");
 			}
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			exception.printStackTrace();
 		}

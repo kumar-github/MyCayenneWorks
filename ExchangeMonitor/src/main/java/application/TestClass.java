@@ -17,14 +17,14 @@ import javafx.stage.Stage;
 public class TestClass extends Application
 {
 	//private Rectangle2D primaryMonitor = Screen.getPrimary().getVisualBounds();
-	private static final Logger LOGGER = LogManager.getLogger(TestClass.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public TestClass()
 	{
 		LOGGER.debug("ExchangeMonitorApplication constructor called by ", Thread.currentThread().getName());
 	}
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		//com.sun.security.auth.module.NTSystem NTSystem = new com.sun.security.auth.module.NTSystem();
 		//System.out.println(NTSystem.getName());
@@ -42,7 +42,7 @@ public class TestClass extends Application
 	}
 
 	@Override
-	public void start(Stage primaryStage)
+	public void start(final Stage primaryStage)
 	{
 		LOGGER.debug("ExchangeMonitorApplication start called by ", Thread.currentThread().getName());
 		// Do all the heavy lifting stuff. One Question. Can we do the heavy lifting stuff in init() instead here?
@@ -50,8 +50,8 @@ public class TestClass extends Application
 		try
 		{
 			//VBox root = FXMLLoader.load(this.getClass().getResource("LoginView.fxml"));
-			HBox root = FXMLLoader.load(this.getClass().getResource("TestView.fxml"));
-			Scene scene = new Scene(root);
+			final HBox root = FXMLLoader.load(this.getClass().getResource("TestView.fxml"));
+			final Scene scene = new Scene(root);
 			//Scene scene = new Scene(vbox);
 			primaryStage.setScene(scene);
 			//primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -59,7 +59,7 @@ public class TestClass extends Application
 			//primaryStage.initModality(Modality.APPLICATION_MODAL);
 			primaryStage.show();
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			LOGGER.error(ex);
 			Injector.forgetAll();

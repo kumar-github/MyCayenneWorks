@@ -20,7 +20,7 @@ import com.tc.app.exchangemonitor.model.Portfolio;
 
 public class ReferenceDataCache
 {
-	private static final Logger LOGGER = LogManager.getLogger(ReferenceDataCache.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public ReferenceDataCache()
 	{

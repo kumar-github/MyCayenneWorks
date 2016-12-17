@@ -76,7 +76,7 @@ import javafx.util.Duration;
  */
 public class MainApplicationMonitorTabController implements IMainApplicationMonitorTabController
 {
-	private static final Logger LOGGER = LogManager.getLogger(MainApplicationMonitorTabController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * ============================================================================================================================================================================
@@ -971,16 +971,22 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 
 	private void doThisIfFetchSucceeded()
 	{
-		new FadeInUpTransition(this.externalTradesTableView).play();
+		/* Here we are checking for null. May not be a great idea but we are doing bcoz, we will return null only if we didn't hit the DB and want to retain the existing data in the table view.
+		 * If we hit the DB then we will get a non null value but with count 0 or greater than 0 depends on the records fetched.
+		 */
+		if(this.fetchExternalTradesScheduledService.getValue() != null)
+		{
+			new FadeInUpTransition(this.externalTradesTableView).play();
 
-		this.externalTradesObservableList.clear();
-		this.externalTradesObservableList.addAll(this.fetchExternalTradesScheduledService.getValue());
-		//dummyExternalTrades.addAll(fetchExternalTradesScheduledService.getLastValue());
-		//dummyExternalTrades.addAll(fetchExternalTradesScheduledService.getLastValue() != null ? fetchExternalTradesScheduledService.getLastValue() : fetchExternalTradesScheduledService.getValue());
-		ApplicationHelper.controllersMap.getInstance(MainWindowController.class).pendingTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Pending")).count());
-		ApplicationHelper.controllersMap.getInstance(MainWindowController.class).completedTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Completed")).count());
-		ApplicationHelper.controllersMap.getInstance(MainWindowController.class).failedTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Failed")).count());
-		ApplicationHelper.controllersMap.getInstance(MainWindowController.class).skippedTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Skipped")).count());
+			this.externalTradesObservableList.clear();
+			this.externalTradesObservableList.addAll(this.fetchExternalTradesScheduledService.getValue());
+			//dummyExternalTrades.addAll(fetchExternalTradesScheduledService.getLastValue());
+			//dummyExternalTrades.addAll(fetchExternalTradesScheduledService.getLastValue() != null ? fetchExternalTradesScheduledService.getLastValue() : fetchExternalTradesScheduledService.getValue());
+			ApplicationHelper.controllersMap.getInstance(MainWindowController.class).pendingTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Pending")).count());
+			ApplicationHelper.controllersMap.getInstance(MainWindowController.class).completedTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Completed")).count());
+			ApplicationHelper.controllersMap.getInstance(MainWindowController.class).failedTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Failed")).count());
+			ApplicationHelper.controllersMap.getInstance(MainWindowController.class).skippedTradesCountProperty().set((int) this.externalTradesObservableList.stream().filter((a) -> a.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Skipped")).count());
+		}
 	}
 
 	private void updateFailedExternalTrades(final ObservableList<IExternalTradeEntity> selectedItems)
@@ -1005,11 +1011,11 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 			session.clear();
 			session.getTransaction().commit();
 			//session.close();
-			LOGGER.info(selectedExternalTradeOids.size() + "External Trade(s) updated successfully.");
+			LOGGER.info("{} External Trade(s) updated successfully.", selectedExternalTradeOids.size());
 		}
 		catch(final Exception exception)
 		{
-			LOGGER.error("Update Failed." + exception);
+			LOGGER.error("Update Failed. {}", exception);
 			session.getTransaction().rollback();
 			throw new RuntimeException("Update Failed.", exception);
 		}

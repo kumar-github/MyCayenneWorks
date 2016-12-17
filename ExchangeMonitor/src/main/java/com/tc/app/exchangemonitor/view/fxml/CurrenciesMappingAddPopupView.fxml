@@ -8,19 +8,14 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <?import com.tc.app.exchangemonitor.controller.IctsCurrencyButtonCell?>
 <?import com.tc.app.exchangemonitor.controller.IctsCurrencyCellFactory?>
 
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.CurrenciesMappingAddPopupController">
 <children>
-	<Label text="Add Currency Mapping" fx:id="titleLabel">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</Label>
-	<TextField promptText="External Source Currency" fx:id="externalSourceCurrencyTextField">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
+	<Label text="Add Currency Mapping" fx:id="titleLabel" />
+	<TextField promptText="External Source Currency" fx:id="externalSourceCurrencyTextField" />
 	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Currency" fx:id="ictsCurrencyComboBox">
 	<cellFactory><IctsCurrencyCellFactory/></cellFactory>
 	<buttonCell><IctsCurrencyButtonCell/></buttonCell>

@@ -1,5 +1,7 @@
 package com.tc.app.exchangemonitor.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 
 import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
@@ -11,6 +13,8 @@ import javafx.util.Duration;
 
 public class FetchExternalTradesScheduledService extends ScheduledService<ObservableList<IExternalTradeEntity>>
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	//private final SQLQuery sqlQuery;
 	private Query sqlQuery;
 	//private final Duration DELAY = Duration.seconds(5);
@@ -21,7 +25,7 @@ public class FetchExternalTradesScheduledService extends ScheduledService<Observ
 		this(null, Duration.seconds(5.0), Duration.seconds(30.0));
 	}
 
-	public FetchExternalTradesScheduledService(Query sqlQuery, Duration delay, Duration period)
+	public FetchExternalTradesScheduledService(final Query sqlQuery, final Duration delay, final Duration period)
 	{
 		super();
 		this.sqlQuery = sqlQuery;
@@ -29,7 +33,7 @@ public class FetchExternalTradesScheduledService extends ScheduledService<Observ
 		this.setPeriod(period);
 	}
 
-	public void setSQLQuery(Query sqlQuery)
+	public void setSQLQuery(final Query sqlQuery)
 	{
 		this.sqlQuery = sqlQuery;
 	}
@@ -37,7 +41,7 @@ public class FetchExternalTradesScheduledService extends ScheduledService<Observ
 	@Override
 	protected Task<ObservableList<IExternalTradeEntity>> createTask()
 	{
-		FetchExternalTradesTask fetchExternalTradesTask = new FetchExternalTradesTask(sqlQuery);
+		final FetchExternalTradesTask fetchExternalTradesTask = new FetchExternalTradesTask(this.sqlQuery);
 		return fetchExternalTradesTask;
 	}
 
@@ -45,41 +49,41 @@ public class FetchExternalTradesScheduledService extends ScheduledService<Observ
 	protected void failed()
 	{
 		super.failed();
-		System.out.println("Inside Failed.");
+		LOGGER.debug("Inside Failed.");
 	}
 
 	@Override
 	protected void cancelled()
 	{
 		super.cancelled();
-		System.out.println("Inside Cancelled.");
+		LOGGER.debug("Inside Cancelled.");
 	}
 
 	@Override
 	protected void succeeded()
 	{
 		super.succeeded();
-		System.out.println("Inside Succeeded.");
+		LOGGER.debug("Inside Succeeded.");
 	}
 
 	@Override
 	protected void scheduled()
 	{
 		super.scheduled();
-		System.out.println("Inside Scheduled.");
+		LOGGER.debug("Inside Scheduled.");
 	}
 
 	@Override
 	protected void ready()
 	{
 		super.ready();
-		System.out.println("Inside Ready.");
+		LOGGER.debug("Inside Ready.");
 	}
 
 	@Override
 	protected void running()
 	{
 		super.running();
-		System.out.println("Inside Running.");
+		LOGGER.debug("Inside Running.");
 	}
 }

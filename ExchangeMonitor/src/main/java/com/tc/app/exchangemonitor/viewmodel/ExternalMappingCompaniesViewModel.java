@@ -6,6 +6,8 @@ package com.tc.app.exchangemonitor.viewmodel;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,5 +27,16 @@ public class ExternalMappingCompaniesViewModel
 	public final ObservableList<ExternalMapping> getExternalMappingCompaniesObservableList()
 	{
 		return this.externalMappingCompaniesObservableList;
+	}
+
+	/* This is to get the selected record. When the user select any record and click update button then we need to show the "Update Mapping" popup with the selected record details. */
+	private ObjectProperty<ExternalMapping> selectedRecord = null;
+	public ObjectProperty<ExternalMapping> selectedRecordProperty()
+	{
+		if(this.selectedRecord == null)
+		{
+			this.selectedRecord = new SimpleObjectProperty<>();
+		}
+		return this.selectedRecord;
 	}
 }

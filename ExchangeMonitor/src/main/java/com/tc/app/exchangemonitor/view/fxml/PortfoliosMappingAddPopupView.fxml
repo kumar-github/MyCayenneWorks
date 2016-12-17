@@ -8,28 +8,17 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <?import com.tc.app.exchangemonitor.controller.IctsPortfolioButtonCell?>
 <?import com.tc.app.exchangemonitor.controller.IctsPortfolioCellFactory?>
 
 <VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.PortfoliosMappingAddPopupController">
 <children>
-	<Label text="Add Portfolio Mapping" fx:id="titleLabel">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</Label>
-	<TextField promptText="External Source Commodity" fx:id="externalSourceCommodityTextField">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
-	<TextField layoutX="20.0" layoutY="48.0" promptText="External Source Trader" fx:id="externalSourceTraderTextField">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
-	<TextField layoutX="20.0" layoutY="86.0" promptText="External Source TradingPeriod" fx:id="externalSourceTradingPeriodTextField">
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
-	<TextField layoutX="20.0" layoutY="124.0" promptText="External Source Account" fx:id="externalSourceAccountTextField" >
-	<font><Font name="Calibri Bold" size="15.0" /></font>
-	</TextField>
+	<Label text="Add Portfolio Mapping" fx:id="titleLabel" />
+	<TextField promptText="External Source Commodity" fx:id="externalSourceCommodityTextField" />
+	<TextField layoutX="20.0" layoutY="48.0" promptText="External Source Trader" fx:id="externalSourceTraderTextField" />
+	<TextField layoutX="20.0" layoutY="86.0" promptText="External Source TradingPeriod" fx:id="externalSourceTradingPeriodTextField" />
+	<TextField layoutX="20.0" layoutY="124.0" promptText="External Source Account" fx:id="externalSourceAccountTextField"  />
 	<ComboBox prefHeight="28.0" prefWidth="200.0" promptText="ICTS Portfolio" fx:id="ictsPortfolioComboBox">
 	<cellFactory><IctsPortfolioCellFactory/></cellFactory>
 	<buttonCell><IctsPortfolioButtonCell/></buttonCell>

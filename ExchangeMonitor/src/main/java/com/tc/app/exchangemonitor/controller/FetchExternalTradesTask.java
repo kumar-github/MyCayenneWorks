@@ -2,9 +2,14 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.util.List;
 
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.MappedSelect;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 
 import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,19 +17,22 @@ import javafx.concurrent.Task;
 
 public class FetchExternalTradesTask extends Task<ObservableList<IExternalTradeEntity>>
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean IS_DEBUG_ENABLED = LOGGER.isDebugEnabled();
+
 	private final Query sqlQuery;
 
 	public FetchExternalTradesTask()
 	{
-		updateMessage("");
-		updateProgress(0.0, 0.0);
-		sqlQuery = null;
+		this.updateMessage("");
+		this.updateProgress(0.0, 0.0);
+		this.sqlQuery = null;
 	}
 
-	public FetchExternalTradesTask(Query sqlQuery)
+	public FetchExternalTradesTask(final Query sqlQuery)
 	{
-		updateMessage("");
-		updateProgress(0.0, 0.0);
+		this.updateMessage("");
+		this.updateProgress(0.0, 0.0);
 		this.sqlQuery = sqlQuery;
 	}
 
@@ -33,48 +41,54 @@ public class FetchExternalTradesTask extends Task<ObservableList<IExternalTradeE
 	{
 		try
 		{
-			return FXCollections.observableArrayList(fetchExternalTradesForQuery(sqlQuery));
+			if(this.isAnythingChangedInDB())
+				return FXCollections.observableArrayList(this.fetchExternalTradesForQuery(this.sqlQuery));
+			return null;
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			throw exception;
 		}
 	}
 
-	private List<IExternalTradeEntity> fetchExternalTradesForQuery(Query sqlQuery)
+	private List<IExternalTradeEntity> fetchExternalTradesForQuery(final Query sqlQuery)
 	{
 		List<IExternalTradeEntity> externalTrades = null;
 
 		try
 		{
-			updateMessage("Task Started...");
-			updateProgress(-1.0, -1.0);
+			this.updateMessage("Task Started...");
+			this.updateProgress(-1.0, -1.0);
 
+			/*
 			try
 			{
 				Thread.sleep(1000);
 			}
-			catch(InterruptedException ex)
+			catch(final InterruptedException ex)
 			{
-				updateMessage(ex.toString());
+				this.updateMessage(ex.toString());
 			}
+			 */
 
-			long startTime = System.currentTimeMillis();
+			final long startTime = System.currentTimeMillis();
 			externalTrades = sqlQuery.list();
-			long endTime = System.currentTimeMillis();
-			updateMessage("Task Completed. It took " + (endTime - startTime) + " milliseconds to fetch " + externalTrades.size() + " record(s).");
-			updateProgress(1.0, 1.0);
+			final long endTime = System.currentTimeMillis();
+			this.updateMessage("Task Completed. It took " + (endTime - startTime) + " milli seconds to fetch " + externalTrades.size() + " record(s).");
+			this.updateProgress(1.0, 1.0);
 
+			/*
 			try
 			{
 				Thread.sleep(1000);
 			}
-			catch(InterruptedException ex)
+			catch(final InterruptedException ex)
 			{
-				updateMessage(ex.toString());
+				this.updateMessage(ex.toString());
 			}
+			 */
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			throw exception;
 		}
@@ -85,39 +99,68 @@ public class FetchExternalTradesTask extends Task<ObservableList<IExternalTradeE
 	protected void failed()
 	{
 		super.failed();
-		/*System.out.println("inside failed.");
-		updateMessage("Failed");*/
+		LOGGER.debug("Inside Failed.");
+		//this.updateMessage("Failed");
 	}
 
 	@Override
 	protected void cancelled()
 	{
 		super.cancelled();
-		/*System.out.println("inside cancelled.");
-		updateMessage("Task Cancelled.");*/
+		LOGGER.debug("Inside Cancelled.");
+		//this.updateMessage("Task Cancelled.");
 	}
 
 	@Override
 	protected void running()
 	{
 		super.running();
-		/*System.out.println("inside running.");
-		updateMessage("Task Running.");*/
+		LOGGER.debug("Inside Running.");
+		//this.updateMessage("Task Running.");
 	}
 
 	@Override
 	protected void succeeded()
 	{
 		super.succeeded();
-		/*System.out.println("inside succeeded.");
-		updateMessage("Task Succeeded.");*/
+		LOGGER.debug("Inside Succeeded.");
+		//updateMessage("Task Succeeded.");
 	}
 
 	@Override
 	protected void scheduled()
 	{
 		super.scheduled();
-		/*System.out.println("inside scheduled.");
-		updateMessage("Task Scheduled.");*/
+		LOGGER.debug("Inside Scheduled.");
+		//updateMessage("Task Scheduled.");
+	}
+
+	private static Integer previousMaxTransId = 0;
+	private static Integer previousRecordCount = 0;
+	private boolean isAnythingChangedInDB()
+	{
+		boolean isAnythingChangedInDB = false;
+
+		//final String query = "SELECT MAX(trans_id) AS MaxTransID, COUNT(*) AS RecordCount from  external_trade";
+		//final List<DataRow> data = SQLSelect.dataRowQuery(query).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		final List<DataRow> data = MappedSelect.query("IsAnythingChangedInDB", DataRow.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		final Integer currentMaxTransId = (Integer) data.get(0).get("MaxTransID");
+		final Integer currentRecordCount = (Integer) data.get(0).get("RecordCount");
+
+		if(IS_DEBUG_ENABLED)
+		{
+			LOGGER.debug("Previous Max Trans Id {} Current Max Trans Id in DB {}", previousMaxTransId, currentMaxTransId);
+			LOGGER.debug("Previous Total Records Count {} Current Total Records Count in DB {}", previousRecordCount, currentRecordCount);
+		}
+
+		if((currentMaxTransId.longValue() != previousMaxTransId.longValue()) || (currentRecordCount.longValue() != previousRecordCount.longValue()))
+		{
+			LOGGER.info("Something has changed in DB.");
+			isAnythingChangedInDB = true;
+			previousMaxTransId = currentMaxTransId;
+			previousRecordCount = currentRecordCount;
+		}
+
+		return isAnythingChangedInDB;
 	}
 }

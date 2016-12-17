@@ -37,7 +37,7 @@ import javafx.stage.Stage;
  */
 public class TradersMappingAddPopupController implements IGenericController
 {
-	private static final Logger LOGGER = LogManager.getLogger(TradersMappingAddPopupController.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String TRADER_MAPPING_TYPE = "T";
 
 	@Inject
@@ -56,9 +56,6 @@ public class TradersMappingAddPopupController implements IGenericController
 
 	private final ObservableList<IctsUser> observableIctsTradersList = FXCollections.observableArrayList();
 
-	/* (non-Javadoc)
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-	 */
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
 	{
@@ -113,12 +110,12 @@ public class TradersMappingAddPopupController implements IGenericController
 	@Override
 	public void attachListeners()
 	{
-		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.doThis(newValue));
+		this.externalSourceTraderTextField.textProperty().addListener((observable, oldValue, newValue) -> this.convertToUpperCase(this.externalSourceTraderTextField, newValue));
 	}
 
-	private void doThis(final String newValue)
+	private void convertToUpperCase(final TextField aTextField, final String newValue)
 	{
-		this.externalSourceTraderTextField.setText(newValue.toUpperCase());
+		aTextField.setText(newValue.toUpperCase());
 	}
 
 	private void fetchIctsTraders()
@@ -199,17 +196,17 @@ public class TradersMappingAddPopupController implements IGenericController
 		{
 			if(!doesTraderMappingExistsAlready)
 			{
-				MappedExec.query("InsertNewMapping")
-				.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum())
-				.param("externalTradeSourceOidParam", externalTradeSourceOid)
-				.param("mappingTypeParam", TRADER_MAPPING_TYPE)
-				.param("externalValue1Param", externalSourceTrader)
-				.param("externalValue2Param", null)
-				.param("externalValue3Param", null)
-				.param("externalValue4Param", null)
-				.param("aliasValueParam", ictsTrader)
-				.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction())
-				.execute(CayenneHelper.getCayenneServerRuntime().newContext());
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
+				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
+				insertMappingQuery.param("mappingTypeParam", TRADER_MAPPING_TYPE);
+				insertMappingQuery.param("externalValue1Param", externalSourceTrader);
+				insertMappingQuery.param("externalValue2Param", null);
+				insertMappingQuery.param("externalValue3Param", null);
+				insertMappingQuery.param("externalValue4Param", null);
+				insertMappingQuery.param("aliasValueParam", ictsTrader);
+				insertMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				/*
 				final ObjectContext context = CayenneHelper.getCayenneServerRuntime().newContext();
@@ -237,7 +234,7 @@ public class TradersMappingAddPopupController implements IGenericController
 		}
 		catch(final Exception exception)
 		{
-			LOGGER.error("Save Failed." + exception);
+			LOGGER.error("Save Failed.", exception);
 			throw new RuntimeException("Save Failed.", exception);
 		}
 		finally

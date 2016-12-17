@@ -23,7 +23,6 @@ import com.tc.app.exchangemonitor.viewmodel.ExternalMappingTradersViewModel;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -33,10 +32,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class ExternalMappingTradersController implements Initializable
+public class ExternalMappingTradersController implements IGenericController
 {
-	private static final Logger LOGGER = LogManager.getLogger(ExternalMappingTradersController.class);
-	private static final String TRADER_MAPPING_TYPE = "T";
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/*
 	 * This is the ViewModel instance. Moved the externalMappingTradersObservableList property to the view model, so that other controllers which need can access from there.
@@ -71,6 +69,7 @@ public class ExternalMappingTradersController implements Initializable
 		this.doAssertion();
 		this.doInitialDataBinding();
 		this.initializeGUI();
+		this.setAnyUIComponentStateIfNeeded();
 		this.createListeners();
 		this.attachListeners();
 	}
@@ -82,16 +81,19 @@ public class ExternalMappingTradersController implements Initializable
 		this.externalMappingTradersSortedList = new SortedList<>(this.externalMappingTradersFilteredList);
 	}
 
-	private void addThisControllerToControllersMap()
+	@Override
+	public void addThisControllerToControllersMap()
 	{
 		ApplicationHelper.controllersMap.putInstance(ExternalMappingTradersController.class, this);
 	}
 
-	private void doAssertion()
+	@Override
+	public void doAssertion()
 	{
 	}
 
-	private void doInitialDataBinding()
+	@Override
+	public void doInitialDataBinding()
 	{
 		this.externalMappingTradersViewModel.selectedRecordProperty().bind(this.externalMappingTradersTableView.getSelectionModel().selectedItemProperty());
 
@@ -103,17 +105,25 @@ public class ExternalMappingTradersController implements Initializable
 		this.updateMappingButton.disableProperty().bind(this.externalMappingTradersTableView.getSelectionModel().selectedItemProperty().isNull());
 	}
 
-	private void initializeGUI()
+	@Override
+	public void initializeGUI()
 	{
 		this.fetchExternalMapping();
 		//this.fetchTradersExternalMapping();
 	}
 
-	private void createListeners()
+	@Override
+	public void setAnyUIComponentStateIfNeeded()
 	{
 	}
 
-	private void attachListeners()
+	@Override
+	public void createListeners()
+	{
+	}
+
+	@Override
+	public void attachListeners()
 	{
 	}
 
@@ -158,45 +168,23 @@ public class ExternalMappingTradersController implements Initializable
 		alert.getDialogPane().setContent(new VBox(new TextField("welcome")));
 		alert.showAndWait();
 		 */
+
+		/* commented the below line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
+		//this.externalMappingTradersViewModel.isAddProperty().set(true);
 		this.showAddTradersMappingView();
 	}
 
 	@FXML
 	private void handleDeleteMapingButtonClick()
 	{
-		final ExternalMapping selectedMappingToDelete = this.externalMappingTradersTableView.getSelectionModel().getSelectedItem();
-
-		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
-
-		try
-		{
-			/* Read the delete mapping query from datamap.xml file, set the paramters and keep it ready. */
-			final MappedExec deleteMappingQuery = MappedExec.query("DeleteSelectedMapping")
-			.param("externalTradeSourceOidParam", externalTradeSourceOid)
-			.param("mappingTypeParam", TRADER_MAPPING_TYPE)
-			.param("externalValue1Param", selectedMappingToDelete.getExternalValue1())
-			.param("externalValue2Param", null)
-			.param("externalValue3Param", null)
-			.param("externalValue4Param", null)
-			.param("aliasValueParam", selectedMappingToDelete.getAliasValue());
-
-			/* Fire the gen_new_transaction SP first and immediately the delete query. */
-			CayenneReferenceDataFetchUtil.generateNewTransaction();
-			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
-
-			LOGGER.info("Mapping Deleted Successfully.");
-			this.refreshExternalMappingTradersTableView();
-		}
-		catch(final Exception exception)
-		{
-			LOGGER.error("Unable to delete the mapping.", exception);
-		}
+		this.deleteSelectedMapping();
 	}
 
 	@FXML
 	private void handleUpdateMapingButtonClick()
 	{
+		/* commented the below line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
+		//this.externalMappingTradersViewModel.isAddProperty().set(false);
 		this.showUpdateTradersMappingView();
 	}
 
@@ -216,7 +204,7 @@ public class ExternalMappingTradersController implements Initializable
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		System.out.println("Stage Operation Completed.");
+		LOGGER.info("Stage Operation Completed.");
 
 		//final Optional<String> x = tradersMappingAddPopup.showAndWait();
 		// Convert the result to a username-password-pair when the login button is clicked.
@@ -238,13 +226,49 @@ public class ExternalMappingTradersController implements Initializable
 	{
 		final Stage tempStage = new Stage(StageStyle.TRANSPARENT);
 		/* To make this stage appears on top of the application window. Else, if the application is displayed in the secondary monitor the child stage will still visible on the primary monitor. */
-		tempStage.initOwner(this.addMappingButton.getScene().getWindow());
+		tempStage.initOwner(this.updateMappingButton.getScene().getWindow());
 		tempStage.initModality(Modality.APPLICATION_MODAL);
 		tempStage.setScene(new Scene(new TradersMappingUpdatePopupView().getView()));
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		System.out.println("Stage Operation Completed.");
+		LOGGER.info("Stage Operation Completed.");
+	}
+
+	private void deleteSelectedMapping()
+	{
+		final ExternalMapping selectedMappingToDelete = this.externalMappingTradersTableView.getSelectionModel().getSelectedItem();
+		final Integer externalMappingOid = selectedMappingToDelete.getExternalMappingOid();
+
+		try
+		{
+			/* Read the delete mapping query from datamap.xml file, set the paramters and keep it ready. */
+			/*final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("DeleteMapping");
+			deleteMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
+			deleteMappingQuery.param("mappingTypeParam", TRADER_MAPPING_TYPE);
+			deleteMappingQuery.param("externalValue1Param", selectedMappingToDelete.getExternalValue1());
+			deleteMappingQuery.param("externalValue2Param", null);
+			deleteMappingQuery.param("externalValue3Param", null);
+			deleteMappingQuery.param("externalValue4Param", null);
+			deleteMappingQuery.param("aliasValueParam", selectedMappingToDelete.getAliasValue());*/
+
+			/* Fire the gen_new_transaction SP first and immediately the delete query. */
+			/*CayenneReferenceDataFetchUtil.generateNewTransaction();
+			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());*/
+
+			/* Commented the above logic, we don't need all these information to just delete a mapping. oid is enough. SHAME ON ME. WHY DID I WRITE THAT?  */
+			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("DeleteMapping");
+			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
+			CayenneReferenceDataFetchUtil.generateNewTransaction();
+			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
+
+			LOGGER.info("{} Mapping Deleted Successfully.", (externalMappingOid + "<-->" + selectedMappingToDelete));
+			this.refreshExternalMappingTradersTableView();
+		}
+		catch(final Exception exception)
+		{
+			LOGGER.error("Unable to delete the mapping {}.", externalMappingOid, exception);
+		}
 	}
 
 	private void refreshExternalMappingTradersTableView()
@@ -252,10 +276,5 @@ public class ExternalMappingTradersController implements Initializable
 		LOGGER.debug("ExternalMappingTradersViewModel Instance {}", this.externalMappingTradersViewModel);
 		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().clear();
 		this.externalMappingTradersViewModel.getExternalMappingTradersObservableList().addAll(CayenneReferenceDataCache.reloadExternalMappings());
-	}
-
-	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
-	{
-		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 }

@@ -8,27 +8,39 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.Button?>
 
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
 <VBox spacing="10.0"  id="portfoliosMappingVBox" fillWidth="false" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.ExternalMappingPortfoliosController">
 <BorderPane.margin><Insets bottom="5.0" left="0.0" right="5.0" top="5.0" /></BorderPane.margin>
 <padding><Insets bottom="2.0" left="2.0" right="2.0" top="2.0" /></padding>
 <children>
 	<HBox spacing="10.0">
 	<children>
-		<Button text="Add" fx:id="addMappingButton" onAction="#handleAddMapingButtonClick"/>
-		<Button disable="true" text="Delete" fx:id="deleteMappingButton"/>
-		<Button disable="true" text="Update" fx:id="updateMappingButton"/>
-		<Button text="Refresh" fx:id="refreshMappingButton"/>
+		<Button text="Add" fx:id="addMappingButton" onAction="#handleAddMappingButtonClick"/>
+		<Button disable="true" text="Delete" fx:id="deleteMappingButton" onAction="#handleDeleteMappingButtonClick"/>
+		<Button disable="true" text="Update" fx:id="updateMappingButton" onAction="#handleUpdateMappingButtonClick"/>
+		<Button text="Refresh" fx:id="refreshMappingButton" onAction="#handleRefreshMappingButtonClick"/>
 	</children>
 	</HBox>
 	<TableView fx:id="externalMappingPortfoliosTableView" cache="true" prefWidth="1100.0" VBox.vgrow="ALWAYS" focusTraversable="false">
 	<columns>
 		<TableColumn text="Portfolios" styleClass="tableTitle">
 		<columns>
-			<TableColumn fx:id="externalSourceCommodityTableColumn" minWidth="200.0" text="External Source Commodity"/>
-			<TableColumn fx:id="externalSourceTraderTableColumn" minWidth="200.0" text="External Source Trader"/>
-			<TableColumn fx:id="externalSourceTradingPeriodTableColumn" minWidth="200.0" text="External Source Trading Period"/>
-			<TableColumn fx:id="externalSourceAccountTableColumn" minWidth="200.0" text="External Source Account"/>
-			<TableColumn fx:id="ictsPortfolioTableColumn" minWidth="200.0" text="ICTS Portfolio"/>
+			<TableColumn fx:id="externalSourceCommodityTableColumn" minWidth="200.0" text="External Source Commodity">
+			<cellValueFactory><PropertyValueFactory property="externalValue1" /></cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="externalSourceTraderTableColumn" minWidth="200.0" text="External Source Trader">
+			<cellValueFactory><PropertyValueFactory property="externalValue2" /></cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="externalSourceTradingPeriodTableColumn" minWidth="200.0" text="External Source Trading Period">
+			<cellValueFactory><PropertyValueFactory property="externalValue3" /></cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="externalSourceAccountTableColumn" minWidth="200.0" text="External Source Account">
+			<cellValueFactory><PropertyValueFactory property="externalValue4" /></cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="ictsPortfolioTableColumn" minWidth="200.0" text="ICTS Portfolio">
+			<cellValueFactory><PropertyValueFactory property="aliasValue" /></cellValueFactory>
+			</TableColumn>
 		</columns>
 		</TableColumn>
 	</columns>
