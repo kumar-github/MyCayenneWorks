@@ -224,8 +224,9 @@ public class CompaniesMappingAddPopupController implements IGenericController
 
 		final String externalSourceCompany = this.externalSourceCompanyTextField.getText().isEmpty() ? null : this.externalSourceCompanyTextField.getText().trim().toUpperCase();
 		final String companyType = this.companyTypeComboBox.getSelectionModel().getSelectedItem();
-		final String companyCountry = this.companyCountryComboBox.getSelectionModel().getSelectedItem().getCountryName().trim().toUpperCase();
-		final String ictsCompany = this.ictsCompanyComboBox.getSelectionModel().getSelectedItem().getAcctShortName().trim().toUpperCase();
+		//final String companyCountryCode = this.companyCountryComboBox.getSelectionModel().getSelectedItem().getCountryCode();
+		final String companyCountryCode = this.companyCountryComboBox.getSelectionModel().getSelectedItem().getIsoCountryCode();
+		final String ictsCompany = this.ictsCompanyComboBox.getSelectionModel().getSelectedItem().getAccountNum().toString();
 
 		final boolean doesBrokerMappingExistsAlready = false;
 
@@ -243,7 +244,7 @@ public class CompaniesMappingAddPopupController implements IGenericController
 				insertMappingQuery.param("externalValue1Param", externalSourceCompany);
 				insertMappingQuery.param("externalValue2Param", companyType);
 				insertMappingQuery.param("externalValue3Param", null);
-				insertMappingQuery.param("externalValue4Param", companyCountry);
+				insertMappingQuery.param("externalValue4Param", companyCountryCode);
 				insertMappingQuery.param("aliasValueParam", ictsCompany);
 				insertMappingQuery.param("transIdParam", transid);
 				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());

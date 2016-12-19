@@ -154,10 +154,10 @@ public class PortfoliosMappingAddPopupController implements IGenericController
 		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
 		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
 
-		final String externalSourceCommodity = this.externalSourceCommodityTextField.getText().isEmpty() ? null : this.externalSourceCommodityTextField.getText().trim().toUpperCase();
-		final String externalSourceTrader = this.externalSourceTraderTextField.getText().isEmpty() ? null : this.externalSourceTraderTextField.getText().trim().toUpperCase();
-		final String externalSourceTradingPeriod = this.externalSourceTradingPeriodTextField.getText().isEmpty() ? null : this.externalSourceTradingPeriodTextField.getText().trim().toUpperCase();
-		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim().toUpperCase();
+		final String externalSourceCommodity = this.externalSourceCommodityTextField.getText().isEmpty() ? null : this.externalSourceCommodityTextField.getText().trim();
+		final String externalSourceTrader = this.externalSourceTraderTextField.getText().isEmpty() ? null : this.externalSourceTraderTextField.getText().trim();
+		final String externalSourceTradingPeriod = this.externalSourceTradingPeriodTextField.getText().isEmpty() ? null : this.externalSourceTradingPeriodTextField.getText().trim();
+		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim();
 		final String ictsPortfolio = this.ictsPortfolioComboBox.getSelectionModel().getSelectedItem().getPortNum().toString();
 
 		final boolean doesBrokerMappingExistsAlready = false;
@@ -166,10 +166,8 @@ public class PortfoliosMappingAddPopupController implements IGenericController
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
 				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
-				insertMappingQuery.param("oidParam", newNum);
+				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", PORTFOLIO_MAPPING_TYPE);
 				insertMappingQuery.param("externalValue1Param", externalSourceCommodity);
@@ -177,7 +175,7 @@ public class PortfoliosMappingAddPopupController implements IGenericController
 				insertMappingQuery.param("externalValue3Param", externalSourceTradingPeriod);
 				insertMappingQuery.param("externalValue4Param", externalSourceAccount);
 				insertMappingQuery.param("aliasValueParam", ictsPortfolio);
-				insertMappingQuery.param("transIdParam", transid);
+				insertMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
 				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				LOGGER.info("Mapping Saved Successfully.");

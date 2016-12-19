@@ -54,15 +54,15 @@
 		<content>
 			<VBox spacing="5.0">
 			<children>
-				<Button fx:id="tradersMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Traders"  onAction="#handleTradersMappingButtonClick" disable="true"/>
-				<Button fx:id="brokersMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Brokers" onAction="#handleBrokersMappingButtonClick" disable="true"/>
-				<Button fx:id="companiesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Companies" onAction="#handleCompaniesMappingButtonClick" disable="true"/>
-				<Button fx:id="currenciesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Currencies" onAction="#handleCurrenciesMappingButtonClick" disable="true"/>
-				<Button fx:id="portfoliosMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Portfolios" onAction="#handlePortfoliosMappingButtonClick" disable="true"/>
-				<Button fx:id="templateTradesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Template Trades" onAction="#handleTemplateTradesMappingButtonClick" disable="true"/>
-				<Button fx:id="accountsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Accounts" onAction="#handleAccountsMappingButtonClick" disable="true"/>
-				<Button fx:id="uomConversionsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="UOM Conversions" onAction="#handleUOMConversionsMappingButtonClick" disable="true"/>
-				<Button fx:id="tradingPeriodsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Trading Periods" onAction="#handleTradingPeriodsMappingButtonClick" disable="true"/>
+				<Button fx:id="tradersMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Traders"  onAction="#handleTradersMappingButtonClick" disable="true"/>
+				<Button fx:id="brokersMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Brokers" onAction="#handleBrokersMappingButtonClick" disable="true"/>
+				<Button fx:id="companiesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Companies" onAction="#handleCompaniesMappingButtonClick" disable="true"/>
+				<Button fx:id="currenciesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="C_urrencies" onAction="#handleCurrenciesMappingButtonClick" disable="true"/>
+				<Button fx:id="portfoliosMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Portfolios" onAction="#handlePortfoliosMappingButtonClick" disable="true"/>
+				<Button fx:id="templateTradesMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="T_emplate Trades" onAction="#handleTemplateTradesMappingButtonClick" disable="true"/>
+				<Button fx:id="accountsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Accounts" onAction="#handleAccountsMappingButtonClick" disable="true"/>
+				<Button fx:id="uomConversionsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="U_OM Conversions" onAction="#handleUOMConversionsMappingButtonClick" disable="true"/>
+				<Button fx:id="tradingPeriodsMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="T_rading Periods" onAction="#handleTradingPeriodsMappingButtonClick" disable="true"/>
 			</children>
 			<padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding>
 			</VBox>
@@ -76,9 +76,9 @@
 		<content>
 			<HBox spacing="3.0">
 			<children>
-				<Button text="Add" disable="true" fx:id="addMappingButton" onAction="#handleAddMapingButtonClick" />
-				<Button text="Delete" disable="true" fx:id="deleteMappingButton" />
-				<Button text="Update" disable="true" fx:id="updateMappingButton" />
+				<Button text="_Add" mnemonicParsing="true" disable="true" fx:id="addMappingButton" onAction="#handleAddMapingButtonClick" />
+				<Button text="_Delete" mnemonicParsing="true" disable="true" fx:id="deleteMappingButton" />
+				<Button text="_Update" mnemonicParsing="true" disable="true" fx:id="updateMappingButton" />
 			</children>
 			</HBox>
 		</content>

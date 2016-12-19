@@ -20,44 +20,43 @@ public abstract class _CommodityType extends CayenneDataObject
 
 	public static final String CMDTY_TYPE_CODE_PK_COLUMN = "cmdty_type_code";
 
-	public static final Property<String> CMDTY_TYPE_DESC = new Property<String>("cmdtyTypeDesc");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<List<Commodity>> COMMODITIES = new Property<List<Commodity>>("commodities");
+	public static final Property<String> CMDTY_TYPE_DESC = new Property<>("cmdtyTypeDesc");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<List<Commodity>> COMMODITIES = new Property<>("commodities");
 
-	public void setCmdtyTypeDesc(String cmdtyTypeDesc)
+	public void setCmdtyTypeDesc(final String cmdtyTypeDesc)
 	{
-		writeProperty("cmdtyTypeDesc", cmdtyTypeDesc);
+		this.writeProperty("cmdtyTypeDesc", cmdtyTypeDesc);
 	}
 
 	public String getCmdtyTypeDesc()
 	{
-		return (String) readProperty("cmdtyTypeDesc");
+		return (String) this.readProperty("cmdtyTypeDesc");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void addToCommodities(Commodity obj)
+	public void addToCommodities(final Commodity obj)
 	{
-		addToManyTarget("commodities", obj, true);
+		this.addToManyTarget("commodities", obj, true);
 	}
 
-	public void removeFromCommodities(Commodity obj)
+	public void removeFromCommodities(final Commodity obj)
 	{
-		removeToManyTarget("commodities", obj, true);
+		this.removeToManyTarget("commodities", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Commodity> getCommodities()
 	{
-		return (List<Commodity>) readProperty("commodities");
+		return (List<Commodity>) this.readProperty("commodities");
 	}
-
 }

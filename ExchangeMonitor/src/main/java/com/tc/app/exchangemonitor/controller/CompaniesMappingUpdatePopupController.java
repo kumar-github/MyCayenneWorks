@@ -96,14 +96,19 @@ public class CompaniesMappingUpdatePopupController implements IGenericController
 	@Override
 	public void doInitialDataBinding()
 	{
-		this.externalSourceCompanyTextField.setText(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue1());
-		this.companyTypeComboBox.getSelectionModel().select(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue2());
-		this.companyCountryComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveCountries().get(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue4()));
-		this.ictsCompanyComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveAccounts().get(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getAliasValue()));
-
 		this.companyCountryComboBox.setItems(this.observableCompanyCountriesList);
 		this.ictsCompanyComboBox.setItems(this.sortedIctsCompaniesList);
-		this.updateButton.disableProperty().bind(this.externalSourceCompanyTextField.textProperty().isEmpty().or(this.companyTypeComboBox.valueProperty().isNull()).or(this.companyCountryComboBox.valueProperty().isNull()).or(this.ictsCompanyComboBox.valueProperty().isNull()));
+
+		this.externalSourceCompanyTextField.setText(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue1());
+		this.companyTypeComboBox.getSelectionModel().select(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue2());
+
+		//this.companyCountryComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveCountries().get(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue4()));
+		this.companyCountryComboBox.getSelectionModel().select(CayenneReferenceDataCache.getCountryForISOCode(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getExternalValue4()));
+
+		this.ictsCompanyComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveAccounts().get(Integer.parseInt(this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getAliasValue())));
+
+		//this.updateButton.disableProperty().bind(this.externalSourceCompanyTextField.textProperty().isEmpty().or(this.companyTypeComboBox.valueProperty().isNull()).or(this.companyCountryComboBox.valueProperty().isNull()).or(this.ictsCompanyComboBox.valueProperty().isNull()));
+		this.updateButton.disableProperty().bind(this.externalSourceCompanyTextField.textProperty().isEmpty().or(this.companyTypeComboBox.valueProperty().isNull()).or(this.ictsCompanyComboBox.valueProperty().isNull()));
 	}
 
 	@Override
@@ -165,7 +170,7 @@ public class CompaniesMappingUpdatePopupController implements IGenericController
 	private void updateCompanyMapping()
 	{
 		final String oldValue = this.externalMappingCompaniesViewModel.selectedRecordProperty().get().getAliasValue();
-		final String ictsCompany = this.ictsCompanyComboBox.getSelectionModel().getSelectedItem().getAcctShortName();
+		final String ictsCompany = this.ictsCompanyComboBox.getSelectionModel().getSelectedItem().getAccountNum().toString();
 
 		if(IS_DEBUG_ENABLED)
 		{

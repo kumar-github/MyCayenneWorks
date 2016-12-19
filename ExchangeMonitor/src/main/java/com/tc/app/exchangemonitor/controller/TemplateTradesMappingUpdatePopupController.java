@@ -85,7 +85,7 @@ public class TemplateTradesMappingUpdatePopupController implements IGenericContr
 	public void doInitialDataBinding()
 	{
 		this.externalSourceCommodityTextField.setText(this.externalMappingTemplateTradesViewModel.selectedRecordProperty().get().getExternalValue1());
-		this.ictsTemplateTradeComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllTemplateTrades().get(this.externalMappingTemplateTradesViewModel.selectedRecordProperty().get().getAliasValue()));
+		this.ictsTemplateTradeComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllTemplateTrades().get(Integer.parseInt(this.externalMappingTemplateTradesViewModel.selectedRecordProperty().get().getAliasValue())));
 
 		this.ictsTemplateTradeComboBox.setItems(this.observableIctsTemplateTradesList);
 		this.updateButton.disableProperty().bind(this.externalSourceCommodityTextField.textProperty().isEmpty().or(this.ictsTemplateTradeComboBox.valueProperty().isNull()));
@@ -116,8 +116,8 @@ public class TemplateTradesMappingUpdatePopupController implements IGenericContr
 	private void fetchIctsTemplateTrades()
 	{
 		this.observableIctsTemplateTradesList.clear();
-		//this.observableIctsTemplateTradesList.addAll(CayenneReferenceDataCache.fetchAllTemplateTrades().values());
-		this.observableIctsTemplateTradesList.addAll(this.filter(CayenneReferenceDataCache.loadAllTemplateTrades().values(), (final Trade aTrade) -> !aTrade.getTradeStatus().getTradeStatusCode().trim().equals("DELETE")));
+		//this.observableIctsTemplateTradesList.addAll(this.filter(CayenneReferenceDataCache.loadAllTemplateTrades().values(), (final Trade aTrade) -> !aTrade.getTradeStatus().getTradeStatusCode().trim().equals("DELETE")));
+		this.observableIctsTemplateTradesList.addAll(CayenneReferenceDataCache.loadAllTemplateTrades().values());
 		LOGGER.debug("Template Trades Count {}", this.observableIctsTemplateTradesList.size());
 	}
 

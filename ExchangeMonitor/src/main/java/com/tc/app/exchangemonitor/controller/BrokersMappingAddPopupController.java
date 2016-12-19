@@ -221,7 +221,8 @@ public class BrokersMappingAddPopupController implements IGenericController
 		final String brokerType = this.brokerTypeComboBox.getSelectionModel().getSelectedItem();
 		final String externalSourceTrader = this.externalSourceTraderTextField.getText().isEmpty() ? null : this.externalSourceTraderTextField.getText().trim().toUpperCase();
 		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim().toUpperCase();
-		final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAcctShortName();
+		//final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAcctShortName();
+		final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAccountNum().toString();
 
 		final boolean doesBrokerMappingExistsAlready = false;
 

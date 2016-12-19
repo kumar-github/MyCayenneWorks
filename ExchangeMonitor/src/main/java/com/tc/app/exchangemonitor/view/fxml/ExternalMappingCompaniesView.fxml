@@ -16,27 +16,29 @@
 <children>
 	<HBox spacing="10.0">
 	<children>
-		<Button text="Add" fx:id="addMappingButton" onAction="#handleAddMappingButtonClick"/>
-		<Button disable="true" text="Delete" fx:id="deleteMappingButton" onAction="#handleDeleteMappingButtonClick"/>
-		<Button disable="true" text="Update" fx:id="updateMappingButton" onAction="#handleUpdateMappingButtonClick"/>
-		<Button text="Refresh" fx:id="refreshMappingButton" onAction="#handleRefreshMappingButtonClick"/>
+		<Button text="_Add" mnemonicParsing="true" fx:id="addMappingButton" onAction="#handleAddMappingButtonClick"/>
+		<Button disable="true" text="_Delete" mnemonicParsing="true" fx:id="deleteMappingButton" onAction="#handleDeleteMappingButtonClick"/>
+		<Button disable="true" text="_Update" mnemonicParsing="true" fx:id="updateMappingButton" onAction="#handleUpdateMappingButtonClick"/>
+		<Button text="_Refresh" mnemonicParsing="true" fx:id="refreshMappingButton" onAction="#handleRefreshMappingButtonClick"/>
 	</children>
 	</HBox>
-	<TableView fx:id="externalMappingCompaniesTableView" cache="true" prefWidth="680.0" VBox.vgrow="ALWAYS" focusTraversable="false">
+	<TableView fx:id="externalMappingCompaniesTableView" cache="true" prefWidth="820.0" VBox.vgrow="ALWAYS" focusTraversable="false">
 	<columns>
 		<TableColumn text="Companies" styleClass="tableTitle">
 		<columns>
-			<TableColumn fx:id="externalSourceCompanyTableColumn" minWidth="220.0" text="External Source Company">
+			<TableColumn fx:id="externalSourceCompanyTableColumn" minWidth="300.0" text="External Source Company">
 			<cellValueFactory><PropertyValueFactory property="externalValue1" /></cellValueFactory>
 			</TableColumn>
 			<TableColumn fx:id="companyTypeTableColumn" minWidth="150.0" text="Company Type">
 			<cellValueFactory><PropertyValueFactory property="externalValue2" /></cellValueFactory>
 			</TableColumn>
 			<TableColumn fx:id="companyCountryTableColumn" minWidth="120.0" text="Company Country">
-			<cellValueFactory><PropertyValueFactory property="externalValue4" /></cellValueFactory>
+			<!--  <cellValueFactory><PropertyValueFactory property="externalValue4" /></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="externalValue4ForForCompanies" /></cellValueFactory>
 			</TableColumn>
-			<TableColumn fx:id="ictsCompanyTableColumn" minWidth="160.0" text="ICTS Company">
-			<cellValueFactory><PropertyValueFactory property="aliasValue" /></cellValueFactory>
+			<TableColumn fx:id="ictsCompanyTableColumn" minWidth="220.0" text="ICTS Company">
+			<!--  <cellValueFactory><PropertyValueFactory property="aliasValue" /></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="aliasValueForCompanies" /></cellValueFactory>
 			</TableColumn>
 		</columns>
 		</TableColumn>

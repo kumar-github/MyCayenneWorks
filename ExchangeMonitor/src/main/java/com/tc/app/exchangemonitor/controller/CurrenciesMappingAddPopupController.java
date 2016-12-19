@@ -119,7 +119,9 @@ public class CurrenciesMappingAddPopupController implements IGenericController
 	private void fetchIctsCurrencies()
 	{
 		this.observableIctsCurrencyList.clear();
-		this.observableIctsCurrencyList.addAll(CayenneReferenceDataCache.loadAllActiveCommodities().values());
+		//this.observableIctsCurrencyList.addAll(CayenneReferenceDataCache.loadAllActiveCommodities().values());
+		//this.observableIctsCurrencyList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveCommodities().values(), (aCommodity) -> aCommodity.getCommodityType().getCommodityTypeCode().equals("C")));
+		this.observableIctsCurrencyList.addAll(CayenneReferenceDataCache.loadAllActiveCurrencies().values());
 		LOGGER.debug("Currencies Count {}", this.observableIctsCurrencyList.size());
 	}
 
@@ -145,8 +147,8 @@ public class CurrenciesMappingAddPopupController implements IGenericController
 		final String externalTradeSourceName = ((RadioButton) ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
 		final Integer externalTradeSourceOid = this.getOidForExternalSourceName(externalTradeSourceName);
 
-		final String externalSourceCurrency = this.externalSourceCurrencyTextField.getText().isEmpty() ? null : this.externalSourceCurrencyTextField.getText().trim().toUpperCase();
-		final String ictsCurrency = this.ictsCurrencyComboBox.getSelectionModel().getSelectedItem().getCmdtyShortName();
+		final String externalSourceCurrency = this.externalSourceCurrencyTextField.getText().isEmpty() ? null : this.externalSourceCurrencyTextField.getText().trim();
+		final String ictsCurrency = this.ictsCurrencyComboBox.getSelectionModel().getSelectedItem().getCmdtyCode();
 
 		final boolean doesBrokerMappingExistsAlready = false;
 
@@ -154,10 +156,8 @@ public class CurrenciesMappingAddPopupController implements IGenericController
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
 				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
-				insertMappingQuery.param("oidParam", newNum);
+				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", CURRENCY_MAPPING_TYPE);
 				insertMappingQuery.param("externalValue1Param", externalSourceCurrency);
@@ -165,7 +165,7 @@ public class CurrenciesMappingAddPopupController implements IGenericController
 				insertMappingQuery.param("externalValue3Param", null);
 				insertMappingQuery.param("externalValue4Param", null);
 				insertMappingQuery.param("aliasValueParam", ictsCurrency);
-				insertMappingQuery.param("transIdParam", transid);
+				insertMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
 				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				LOGGER.info("Mapping Saved Successfully.");

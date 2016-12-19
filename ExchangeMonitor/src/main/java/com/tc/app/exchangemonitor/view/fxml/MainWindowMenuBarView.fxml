@@ -16,16 +16,10 @@
 <children>
 	<MenuBar>
 		<menus>
-			<Menu mnemonicParsing="false" text="File">
+			<Menu mnemonicParsing="true" text="_File">
 				<items>
 					<MenuItem accelerator="Shortcut+P" mnemonicParsing="false" text="Preferences"/>
 					<MenuItem accelerator="Shortcut+S" mnemonicParsing="false" text="Exit"/>
-				</items>
-			</Menu>
-			
-			<Menu mnemonicParsing="false" text="Edit">
-				<items>
-					<MenuItem mnemonicParsing="false" text="Delete" />
 				</items>
 			</Menu>
 			

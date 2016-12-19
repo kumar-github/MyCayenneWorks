@@ -6,6 +6,7 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
@@ -23,8 +24,6 @@ import com.tc.app.exchangemonitor.viewmodel.ExternalMappingBrokersViewModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -40,6 +39,12 @@ public class BrokersMappingUpdatePopupController implements IGenericController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final boolean IS_DEBUG_ENABLED = LOGGER.isDebugEnabled();
+
+	//predicates in the form of functions
+	final Predicate<Account> isActiveAccountPredicate = (anAccount) -> anAccount.getAcctStatus().trim().equals("A");
+	final Predicate<Account> isBrokerPredicate = this.isActiveAccountPredicate.and((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("BROKER"));
+	final Predicate<Account> isExchangeBrokerPredicate = this.isActiveAccountPredicate.and((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("EXCHBRKR"));
+	final Predicate<Account> isFloorBrokerPredicate = this.isActiveAccountPredicate.and((anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("FLRBRKR"));
 
 	@Inject
 	private ExternalMappingBrokersViewModel externalMappingBrokersViewModel;
@@ -64,8 +69,8 @@ public class BrokersMappingUpdatePopupController implements IGenericController
 	private Button statusButton;
 
 	private final ObservableList<Account> observableBrokersList = FXCollections.observableArrayList();
-	private final FilteredList<Account> filteredBrokersList = new FilteredList<>(this.observableBrokersList, null);
-	private final SortedList<Account> sortedBrokersList = new SortedList<>(this.filteredBrokersList);
+	//private final FilteredList<Account> filteredBrokersList = new FilteredList<>(this.observableBrokersList, null);
+	//private final SortedList<Account> sortedBrokersList = new SortedList<>(this.filteredBrokersList);
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
@@ -94,13 +99,16 @@ public class BrokersMappingUpdatePopupController implements IGenericController
 	@Override
 	public void doInitialDataBinding()
 	{
+		//this.ictsBrokerComboBox.setItems(this.sortedBrokersList);
+		this.ictsBrokerComboBox.setItems(this.observableBrokersList);
+
 		this.externalSourceBrokerTextField.setText(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getExternalValue1());
 		this.brokerTypeComboBox.getSelectionModel().select(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getExternalValue2());
 		this.externalSourceTraderTextField.setText(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getExternalValue3());
 		this.externalSourceAccountTextField.setText(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getExternalValue4());
-		this.ictsBrokerComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveAccounts().get(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getAliasValue()));
+		//this.ictsBrokerComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveAccounts().get(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getAliasValue()));
+		this.ictsBrokerComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveAccounts().get(Integer.parseInt(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getAliasValue())));
 
-		this.ictsBrokerComboBox.setItems(this.sortedBrokersList);
 		//this.updateButton.disableProperty().bind(this.externalSourceBrokerTextField.textProperty().isEmpty().or(this.brokerTypeComboBox.valueProperty().isNull()).or(this.externalSourceTraderTextField.textProperty().isEmpty()).or(this.externalSourceAccountTextField.textProperty().isEmpty()).or(this.ictsBrokerComboBox.valueProperty().isNull()));
 		//modified the above line as below. We should not disable the update button if an optional field is left empty.
 		this.updateButton.disableProperty().bind(this.externalSourceBrokerTextField.textProperty().isEmpty().or(this.brokerTypeComboBox.valueProperty().isNull()).or(this.ictsBrokerComboBox.valueProperty().isNull()));
@@ -131,7 +139,21 @@ public class BrokersMappingUpdatePopupController implements IGenericController
 	private void fetchIctsBrokers()
 	{
 		this.observableBrokersList.clear();
-		this.observableBrokersList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
+		//this.observableBrokersList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
+		//this.observableBrokersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveAccounts().values(), (final Account anAccount) -> anAccount.getAccountType().getAccountTypeCode().trim().equals("EXCHBRKR") || anAccount.getAccountType().getAccountTypeCode().trim().equals("FLRBRKR")));
+
+		if(this.brokerTypeComboBox.getSelectionModel().getSelectedItem().equals("EXCHANGE"))
+		{
+			this.observableBrokersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveAccounts().values(), this.isExchangeBrokerPredicate.or(this.isFloorBrokerPredicate)));
+		}
+		else if(this.brokerTypeComboBox.getSelectionModel().getSelectedItem().equals("OTC"))
+		{
+			this.observableBrokersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveAccounts().values(), this.isBrokerPredicate));
+		}
+		else if(this.brokerTypeComboBox.getSelectionModel().getSelectedItem().equals("CLEARING"))
+		{
+			this.observableBrokersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveAccounts().values(), this.isExchangeBrokerPredicate));
+		}
 		LOGGER.debug("Brokers Count : {}", this.observableBrokersList.size());
 	}
 
@@ -155,7 +177,7 @@ public class BrokersMappingUpdatePopupController implements IGenericController
 	private void updateBrokerMapping()
 	{
 		final String oldValue = this.externalMappingBrokersViewModel.selectedRecordProperty().get().getAliasValue();
-		final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAcctShortName();
+		final String ictsBroker = this.ictsBrokerComboBox.getSelectionModel().getSelectedItem().getAccountNum().toString();
 
 		if(IS_DEBUG_ENABLED)
 		{

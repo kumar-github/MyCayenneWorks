@@ -49,7 +49,6 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
 		HibernateUtil.getSessionFactory();
 		CayenneHelper.initializeCayenneServerRuntime();
-		this.testCall();
 		ReferenceDataCache.loadAllReferenceData();
 		CayenneReferenceDataCache.fetchAllReferenceData();
 		for(int i = 0; i < 1000; i++)
@@ -164,77 +163,5 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.info("Application Terminated.");
 		Platform.exit();
 		System.exit(0);
-	}
-
-	private void testCall()
-	{
-		/*
-		final String query = "SELECT MAX(trans_id) AS MaxTransID, COUNT(*) AS RecordCount from  external_trade";
-		final List<DataRow> data = SQLSelect.dataRowQuery(query).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		final Integer a = (Integer) data.get(0).get("MaxTransID");
-		final Integer b = (Integer) data.get(0).get("RecordCount");
-		System.out.println(a);
-		System.out.println(b);
-		System.exit(0);
-		 */
-
-		//final EJBQLQuery query = new EJBQLQuery("select user FROM IctsUser user JOIN user.userJobTitle title");
-		/*final EJBQLQuery query = new EJBQLQuery("select account FROM Account account JOIN account.accountType code");
-		long startTime = System.currentTimeMillis();
-		CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
-		long endTime = System.currentTimeMillis();
-		System.out.println("Time : " + (endTime - startTime));
-
-		startTime = System.currentTimeMillis();
-		CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
-		endTime = System.currentTimeMillis();
-		System.out.println("Time : " + (endTime - startTime));
-		System.exit(0);
-		 */
-
-		/*
-		final ProcedureQuery getNewNumProcedureQuery = new ProcedureQuery("get_new_num");
-		getNewNumProcedureQuery.addParameter("key_name", "external_mapping_oid");
-		getNewNumProcedureQuery.addParameter("location_num", 0);
-
-		final List data = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(getNewNumProcedureQuery);
-		if(!data.isEmpty())
-		{
-			final Integer newNum = ((Map<String, Integer>) data.get(0)).get("");
-			System.out.println(newNum);
-		}
-		 */
-
-		/*
-		long startTime = System.currentTimeMillis();
-		ObjectSelect.query(Account.class).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		long endTime = System.currentTimeMillis();
-		System.out.println("Time : " + (endTime - startTime));
-
-		startTime = System.currentTimeMillis();
-		ObjectSelect.query(Account.class).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		endTime = System.currentTimeMillis();
-		System.out.println("Time : " + (endTime - startTime));
-		 */
-
-		/*
-		final EJBQLQuery query = new EJBQLQuery("select ets FROM ExternalTradeSource ets");
-		final List<ExternalTradeSource> x = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
-		System.out.println(x);
-		x.forEach((a) -> System.out.println(a.getExternalTradeSrcName()));
-		final SQLTemplate select = new SQLTemplate(ExternalTradeState.class, "select * from external_trade_state");
-		final List<ExternalTradeState> y = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(select);
-		System.out.println(x);
-		y.forEach((a) -> System.out.println(a.getExternalTradeStateName()));
-		//final String ss = "SELECT et.* FROM dbo.external_trade AS et LEFT OUTER JOIN dbo.external_comment AS ec ON et.external_comment_oid = ec.oid INNER JOIN dbo.exch_tools_trade AS ett ON et.oid = ett.external_trade_oid WHERE (et.external_trade_source_oid IN (:externalTradeSourcesParam)) AND (et.external_trade_status_oid IN (:externalTradeStatusesParam)) AND (et.external_trade_state_oid IN (:externalTradeStatesParam)) AND (ett.buyer_account IN (:buyerAccountsParam)) AND (ett.creation_date >= (:startDate)) AND (ett.creation_date <= (:endDate)) ORDER BY ett.creation_date DESC";
-		final String ss = "SELECT et.* FROM dbo.external_trade AS et LEFT OUTER JOIN dbo.external_comment AS ec ON et.external_comment_oid = ec.oid INNER JOIN dbo.exch_tools_trade AS ett ON et.oid = ett.external_trade_oid WHERE (et.oid = 18853833)";
-		final SQLTemplate select1 = new SQLTemplate(ExternalTrade.class, ss);
-		final List<ExternalTrade> ab = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(select1);
-		System.out.println(ab);
-		ab.forEach((a) -> System.out.println(a.getExternalTradeStateO()));
-		final List<ExternalTrade> abcd = ObjectSelect.query(ExternalTrade.class).where(ExternalTrade.EXTERNAL_TRADE_STATUS_O.dot(ExternalTradeStatus.EXTERNAL_TRADE_STATUS_NAME).eq("Pending")).prefetch(ExternalTrade.EXTERNAL_TRADE_O1.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		System.out.println(abcd);
-		abcd.forEach((a) -> System.out.println(a.getExternalTradeO1().getExchToolsTradeNum()));
-		System.exit(0);*/
 	}
 }

@@ -7,6 +7,7 @@ import org.apache.cayenne.CayenneDataObject;
 import org.apache.cayenne.exp.Property;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExchToolsTrade;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalComment;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalPosition;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeState;
@@ -22,186 +23,197 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.IceTrade;
  */
 public abstract class _ExternalTrade extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String OID_PK_COLUMN = "oid";
 
-	public static final Property<Date> ENTRY_DATE = new Property<Date>("entryDate");
-	public static final Property<Integer> EXTERNAL_COMMENT_OID = new Property<Integer>("externalCommentOid");
-	public static final Property<Integer> INHOUSE_PORT_NUM = new Property<Integer>("inhousePortNum");
-	public static final Property<Short> ITEM_NUM = new Property<Short>("itemNum");
-	public static final Property<Short> ORDER_NUM = new Property<Short>("orderNum");
-	public static final Property<Integer> PORT_NUM = new Property<Integer>("portNum");
-	public static final Property<BigDecimal> SEQUENCE = new Property<BigDecimal>("sequence");
-	public static final Property<Integer> TRADE_NUM = new Property<Integer>("tradeNum");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<ExternalPosition> EXTERNAL_POSITION = new Property<ExternalPosition>("externalPosition");
-	public static final Property<IceTrade> EXTERNAL_TRADE_O = new Property<IceTrade>("externalTradeO");
-	public static final Property<ExchToolsTrade> EXTERNAL_TRADE_O1 = new Property<ExchToolsTrade>("externalTradeO1");
-	public static final Property<ExternalTradeSource> EXTERNAL_TRADE_SOURCE_O = new Property<ExternalTradeSource>("externalTradeSourceO");
-	public static final Property<ExternalTradeState> EXTERNAL_TRADE_STATE_O = new Property<ExternalTradeState>("externalTradeStateO");
-	public static final Property<ExternalTradeStatus> EXTERNAL_TRADE_STATUS_O = new Property<ExternalTradeStatus>("externalTradeStatusO");
-	public static final Property<ExternalTradeSystem> EXTERNAL_TRADE_SYSTEM_O = new Property<ExternalTradeSystem>("externalTradeSystemO");
+	public static final Property<Date> ENTRY_DATE = new Property<>("entryDate");
 
-	public void setEntryDate(Date entryDate)
+	public static final Property<Integer> EXTERNAL_COMMENT_OID = new Property<>("externalCommentOid");
+	public static final Property<ExternalComment> EXTERNAL_COMMENT = new Property<>("externalComment");
+
+	public static final Property<Integer> INHOUSE_PORT_NUM = new Property<>("inhousePortNum");
+	public static final Property<Short> ITEM_NUM = new Property<>("itemNum");
+	public static final Property<Short> ORDER_NUM = new Property<>("orderNum");
+	public static final Property<Integer> PORT_NUM = new Property<>("portNum");
+	public static final Property<BigDecimal> SEQUENCE = new Property<>("sequence");
+	public static final Property<Integer> TRADE_NUM = new Property<>("tradeNum");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<ExternalPosition> EXTERNAL_POSITION = new Property<>("externalPosition");
+	public static final Property<IceTrade> EXTERNAL_TRADE_O = new Property<>("externalTradeO");
+	public static final Property<ExchToolsTrade> EXTERNAL_TRADE_O1 = new Property<>("externalTradeO1");
+	public static final Property<ExternalTradeSource> EXTERNAL_TRADE_SOURCE_O = new Property<>("externalTradeSourceO");
+	public static final Property<ExternalTradeState> EXTERNAL_TRADE_STATE_O = new Property<>("externalTradeStateO");
+	public static final Property<ExternalTradeStatus> EXTERNAL_TRADE_STATUS_O = new Property<>("externalTradeStatusO");
+	public static final Property<ExternalTradeSystem> EXTERNAL_TRADE_SYSTEM_O = new Property<>("externalTradeSystemO");
+
+	public void setEntryDate(final Date entryDate)
 	{
-		writeProperty("entryDate", entryDate);
+		this.writeProperty("entryDate", entryDate);
 	}
 
 	public Date getEntryDate()
 	{
-		return (Date) readProperty("entryDate");
+		return (Date) this.readProperty("entryDate");
 	}
 
-	public void setExternalCommentOid(Integer externalCommentOid)
+	public void setExternalCommentOid(final Integer externalCommentOid)
 	{
-		writeProperty("externalCommentOid", externalCommentOid);
+		this.writeProperty("externalCommentOid", externalCommentOid);
 	}
 
 	public Integer getExternalCommentOid()
 	{
-		return (Integer) readProperty("externalCommentOid");
+		return (Integer) this.readProperty("externalCommentOid");
 	}
 
-	public void setInhousePortNum(Integer inhousePortNum)
+	public void setInhousePortNum(final Integer inhousePortNum)
 	{
-		writeProperty("inhousePortNum", inhousePortNum);
+		this.writeProperty("inhousePortNum", inhousePortNum);
 	}
 
 	public Integer getInhousePortNum()
 	{
-		return (Integer) readProperty("inhousePortNum");
+		return (Integer) this.readProperty("inhousePortNum");
 	}
 
-	public void setItemNum(Short itemNum)
+	public void setItemNum(final Short itemNum)
 	{
-		writeProperty("itemNum", itemNum);
+		this.writeProperty("itemNum", itemNum);
 	}
 
 	public Short getItemNum()
 	{
-		return (Short) readProperty("itemNum");
+		return (Short) this.readProperty("itemNum");
 	}
 
-	public void setOrderNum(Short orderNum)
+	public void setOrderNum(final Short orderNum)
 	{
-		writeProperty("orderNum", orderNum);
+		this.writeProperty("orderNum", orderNum);
 	}
 
 	public Short getOrderNum()
 	{
-		return (Short) readProperty("orderNum");
+		return (Short) this.readProperty("orderNum");
 	}
 
-	public void setPortNum(Integer portNum)
+	public void setPortNum(final Integer portNum)
 	{
-		writeProperty("portNum", portNum);
+		this.writeProperty("portNum", portNum);
 	}
 
 	public Integer getPortNum()
 	{
-		return (Integer) readProperty("portNum");
+		return (Integer) this.readProperty("portNum");
 	}
 
-	public void setSequence(BigDecimal sequence)
+	public void setSequence(final BigDecimal sequence)
 	{
-		writeProperty("sequence", sequence);
+		this.writeProperty("sequence", sequence);
 	}
 
 	public BigDecimal getSequence()
 	{
-		return (BigDecimal) readProperty("sequence");
+		return (BigDecimal) this.readProperty("sequence");
 	}
 
-	public void setTradeNum(Integer tradeNum)
+	public void setTradeNum(final Integer tradeNum)
 	{
-		writeProperty("tradeNum", tradeNum);
+		this.writeProperty("tradeNum", tradeNum);
 	}
 
 	public Integer getTradeNum()
 	{
-		return (Integer) readProperty("tradeNum");
+		return (Integer) this.readProperty("tradeNum");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setExternalPosition(ExternalPosition externalPosition)
+	public void setExternalPosition(final ExternalPosition externalPosition)
 	{
-		setToOneTarget("externalPosition", externalPosition, true);
+		this.setToOneTarget("externalPosition", externalPosition, true);
 	}
 
 	public ExternalPosition getExternalPosition()
 	{
-		return (ExternalPosition) readProperty("externalPosition");
+		return (ExternalPosition) this.readProperty("externalPosition");
 	}
 
-	public void setExternalTradeO(IceTrade externalTradeO)
+	public void setExternalTradeO(final IceTrade externalTradeO)
 	{
-		setToOneTarget("externalTradeO", externalTradeO, true);
+		this.setToOneTarget("externalTradeO", externalTradeO, true);
 	}
 
 	public IceTrade getExternalTradeO()
 	{
-		return (IceTrade) readProperty("externalTradeO");
+		return (IceTrade) this.readProperty("externalTradeO");
 	}
 
-	public void setExternalTradeO1(ExchToolsTrade externalTradeO1)
+	public void setExternalTradeO1(final ExchToolsTrade externalTradeO1)
 	{
-		setToOneTarget("externalTradeO1", externalTradeO1, true);
+		this.setToOneTarget("externalTradeO1", externalTradeO1, true);
 	}
 
 	public ExchToolsTrade getExternalTradeO1()
 	{
-		return (ExchToolsTrade) readProperty("externalTradeO1");
+		return (ExchToolsTrade) this.readProperty("externalTradeO1");
 	}
 
-	public void setExternalTradeSourceO(ExternalTradeSource externalTradeSourceO)
+	public void setExternalTradeSourceO(final ExternalTradeSource externalTradeSourceO)
 	{
-		setToOneTarget("externalTradeSourceO", externalTradeSourceO, true);
+		this.setToOneTarget("externalTradeSourceO", externalTradeSourceO, true);
 	}
 
 	public ExternalTradeSource getExternalTradeSourceO()
 	{
-		return (ExternalTradeSource) readProperty("externalTradeSourceO");
+		return (ExternalTradeSource) this.readProperty("externalTradeSourceO");
 	}
 
-	public void setExternalTradeStateO(ExternalTradeState externalTradeStateO)
+	public void setExternalTradeStateO(final ExternalTradeState externalTradeStateO)
 	{
-		setToOneTarget("externalTradeStateO", externalTradeStateO, true);
+		this.setToOneTarget("externalTradeStateO", externalTradeStateO, true);
 	}
 
 	public ExternalTradeState getExternalTradeStateO()
 	{
-		return (ExternalTradeState) readProperty("externalTradeStateO");
+		return (ExternalTradeState) this.readProperty("externalTradeStateO");
 	}
 
-	public void setExternalTradeStatusO(ExternalTradeStatus externalTradeStatusO)
+	public void setExternalTradeStatusO(final ExternalTradeStatus externalTradeStatusO)
 	{
-		setToOneTarget("externalTradeStatusO", externalTradeStatusO, true);
+		this.setToOneTarget("externalTradeStatusO", externalTradeStatusO, true);
 	}
 
 	public ExternalTradeStatus getExternalTradeStatusO()
 	{
-		return (ExternalTradeStatus) readProperty("externalTradeStatusO");
+		return (ExternalTradeStatus) this.readProperty("externalTradeStatusO");
 	}
 
-	public void setExternalTradeSystemO(ExternalTradeSystem externalTradeSystemO)
+	public void setExternalTradeSystemO(final ExternalTradeSystem externalTradeSystemO)
 	{
-		setToOneTarget("externalTradeSystemO", externalTradeSystemO, true);
+		this.setToOneTarget("externalTradeSystemO", externalTradeSystemO, true);
 	}
 
 	public ExternalTradeSystem getExternalTradeSystemO()
 	{
-		return (ExternalTradeSystem) readProperty("externalTradeSystemO");
+		return (ExternalTradeSystem) this.readProperty("externalTradeSystemO");
 	}
 
+	public void setExternalComment(final ExternalComment externalComment)
+	{
+		this.setToOneTarget("externalComment", externalComment, true);
+	}
+
+	public ExternalComment getExternalComment()
+	{
+		return (ExternalComment) this.readProperty("externalComment");
+	}
 }

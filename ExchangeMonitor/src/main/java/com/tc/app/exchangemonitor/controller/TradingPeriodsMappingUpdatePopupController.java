@@ -78,6 +78,9 @@ public class TradingPeriodsMappingUpdatePopupController implements IGenericContr
 	@Override
 	public void doInitialDataBinding()
 	{
+		this.externalSourceCommodityTextField.setText(this.externalMappingTradingPeriodsViewModel.selectedRecordProperty().get().getExternalValue1());
+		this.tradingPeriodOffsetMonthTextField.setText(this.externalMappingTradingPeriodsViewModel.selectedRecordProperty().get().getAliasValue());
+
 		this.updateButton.disableProperty().bind(this.externalSourceCommodityTextField.textProperty().isEmpty().or(this.tradingPeriodOffsetMonthTextField.textProperty().isEmpty()));
 	}
 

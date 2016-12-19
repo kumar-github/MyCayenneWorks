@@ -15,49 +15,47 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
  */
 public abstract class _ExternalTradeStatus extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String OID_PK_COLUMN = "oid";
 
-	public static final Property<String> EXTERNAL_TRADE_STATUS_NAME = new Property<String>("externalTradeStatusName");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<List<ExternalTrade>> EXTERNAL_TRADES = new Property<List<ExternalTrade>>("externalTrades");
+	public static final Property<String> EXTERNAL_TRADE_STATUS_NAME = new Property<>("externalTradeStatusName");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<List<ExternalTrade>> EXTERNAL_TRADES = new Property<>("externalTrades");
 
-	public void setExternalTradeStatusName(String externalTradeStatusName)
+	public void setExternalTradeStatusName(final String externalTradeStatusName)
 	{
-		writeProperty("externalTradeStatusName", externalTradeStatusName);
+		this.writeProperty("externalTradeStatusName", externalTradeStatusName);
 	}
 
 	public String getExternalTradeStatusName()
 	{
-		return (String) readProperty("externalTradeStatusName");
+		return (String) this.readProperty("externalTradeStatusName");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void addToExternalTrades(ExternalTrade obj)
+	public void addToExternalTrades(final ExternalTrade obj)
 	{
-		addToManyTarget("externalTrades", obj, true);
+		this.addToManyTarget("externalTrades", obj, true);
 	}
 
-	public void removeFromExternalTrades(ExternalTrade obj)
+	public void removeFromExternalTrades(final ExternalTrade obj)
 	{
-		removeToManyTarget("externalTrades", obj, true);
+		this.removeToManyTarget("externalTrades", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ExternalTrade> getExternalTrades()
 	{
-		return (List<ExternalTrade>) readProperty("externalTrades");
+		return (List<ExternalTrade>) this.readProperty("externalTrades");
 	}
-
 }

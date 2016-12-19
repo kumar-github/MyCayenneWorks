@@ -100,6 +100,12 @@ public class AccountsMappingUpdatePopupController implements IGenericController
 	@Override
 	public void attachListeners()
 	{
+		this.externalSourceAccountTextField.textProperty().addListener((observable, oldValue, newValue) -> this.convertToUpperCase(this.externalSourceAccountTextField, newValue));
+	}
+
+	private void convertToUpperCase(final TextField aTextField, final String newValue)
+	{
+		aTextField.setText(newValue.toUpperCase());
 	}
 
 	@FXML
@@ -122,7 +128,7 @@ public class AccountsMappingUpdatePopupController implements IGenericController
 	private void updateAccountMapping()
 	{
 		final String oldValue = this.externalMappingAccountsViewModel.selectedRecordProperty().get().getExternalValue1();
-		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim().toUpperCase();
+		final String externalSourceAccount = this.externalSourceAccountTextField.getText().isEmpty() ? null : this.externalSourceAccountTextField.getText().trim();
 
 		if(IS_DEBUG_ENABLED)
 		{
@@ -145,8 +151,9 @@ public class AccountsMappingUpdatePopupController implements IGenericController
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("UpdateMapping");
+				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("UpdateAccountMapping");
 				updateMappingQuery.param("externalValue1Param", externalSourceAccount);
+				updateMappingQuery.param("aliasValueParam", "NONE");
 				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);
 				updateMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());

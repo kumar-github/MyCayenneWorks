@@ -1,4 +1,3 @@
-
 package com.tc.app.exchangemonitor.model.predicates;
 
 import java.util.List;

@@ -67,7 +67,6 @@ public class TradingPeriodsMappingAddPopupController implements IGenericControll
 	public void addThisControllerToControllersMap()
 	{
 		ApplicationHelper.controllersMap.putInstance(TradingPeriodsMappingAddPopupController.class, this);
-		System.out.println(TRADINGPERIOD_MAPPING_TYPE);
 	}
 
 	@Override

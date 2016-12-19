@@ -90,16 +90,18 @@ public class PortfoliosMappingUpdatePopupController implements IGenericControlle
 	@Override
 	public void doInitialDataBinding()
 	{
+		this.ictsPortfolioComboBox.setItems(this.observablePortfoliosList);
+
 		//this.externalSourceBrokerTextField.setText(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getExternalValue1());
 		//this.ictsBrokerComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveAccounts().get(this.externalMappingBrokersViewModel.selectedRecordProperty().get().getAliasValue()));
 		this.externalSourceCommodityTextField.setText(this.externalMappingPortfoliosViewModel.selectedRecordProperty().get().getExternalValue1());
 		this.externalSourceTraderTextField.setText(this.externalMappingPortfoliosViewModel.selectedRecordProperty().get().getExternalValue2());
 		this.externalSourceTradingPeriodTextField.setText(this.externalMappingPortfoliosViewModel.selectedRecordProperty().get().getExternalValue3());
 		this.externalSourceAccountTextField.setText(this.externalMappingPortfoliosViewModel.selectedRecordProperty().get().getExternalValue4());
-		this.ictsPortfolioComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllPortfolios().get(this.externalMappingPortfoliosViewModel.selectedRecordProperty().get().getAliasValue()));
+		this.ictsPortfolioComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllPortfolios().get(Integer.parseInt(this.externalMappingPortfoliosViewModel.selectedRecordProperty().get().getAliasValue())));
 
-		this.ictsPortfolioComboBox.setItems(this.observablePortfoliosList);
-		this.updateButton.disableProperty().bind(this.externalSourceCommodityTextField.textProperty().isEmpty().or(this.externalSourceTraderTextField.textProperty().isEmpty()).or(this.externalSourceTradingPeriodTextField.textProperty().isEmpty()).or(this.externalSourceAccountTextField.textProperty().isEmpty()).or(this.ictsPortfolioComboBox.valueProperty().isNull()));
+		//this.updateButton.disableProperty().bind(this.externalSourceCommodityTextField.textProperty().isEmpty().or(this.externalSourceTraderTextField.textProperty().isEmpty()).or(this.externalSourceTradingPeriodTextField.textProperty().isEmpty()).or(this.externalSourceAccountTextField.textProperty().isEmpty()).or(this.ictsPortfolioComboBox.valueProperty().isNull()));
+		this.updateButton.disableProperty().bind(this.externalSourceCommodityTextField.textProperty().isEmpty().or(this.ictsPortfolioComboBox.valueProperty().isNull()));
 	}
 
 	@Override

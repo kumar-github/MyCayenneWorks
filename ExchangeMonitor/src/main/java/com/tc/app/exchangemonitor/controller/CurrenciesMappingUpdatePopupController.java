@@ -84,10 +84,11 @@ public class CurrenciesMappingUpdatePopupController implements IGenericControlle
 	@Override
 	public void doInitialDataBinding()
 	{
-		this.externalSourceCurrencyTextField.setText(this.externalMappingCurrenciesViewModel.selectedRecordProperty().get().getExternalValue1());
-		this.ictsCurrencyComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveCommodities().get(this.externalMappingCurrenciesViewModel.selectedRecordProperty().get().getAliasValue()));
-
 		this.ictsCurrencyComboBox.setItems(this.observableIctsCurrencyList);
+
+		this.externalSourceCurrencyTextField.setText(this.externalMappingCurrenciesViewModel.selectedRecordProperty().get().getExternalValue1());
+		this.ictsCurrencyComboBox.getSelectionModel().select(CayenneReferenceDataCache.loadAllActiveCurrencies().get(this.externalMappingCurrenciesViewModel.selectedRecordProperty().get().getAliasValue()));
+
 		this.updateButton.disableProperty().bind(this.externalSourceCurrencyTextField.textProperty().isEmpty().or(this.ictsCurrencyComboBox.valueProperty().isNull()));
 	}
 

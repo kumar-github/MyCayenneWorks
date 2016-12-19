@@ -2,6 +2,7 @@ package com.tc.app.exchangemonitor.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -40,6 +41,13 @@ public class CayenneReferenceDataCache
 		fetchIctsUsersReferenceData();
 		fetchCountriesReferenceData();
 		fetchCommoditiesReferenceData();
+
+		/* The below is not needed since we already loaded all the commodities and a currency is nothing but a commodity of type "C".
+		 * But still we are doing because we want to maintain a  seperate map for currencies which we use it directly at some situations instead of getting the commodities map an d filtering it.
+		 * Also believing that the previuos fetch for commodities will be in the cache, hence this won't affect the performance much.
+		 */
+		//fetchCurrenciesReferenceData();
+
 		fetchPortfoliosReferenceData();
 		fetchTemplateTradesReferenceData();
 		fetchUomsReferenceData();
@@ -203,11 +211,15 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<String, Country> countriesReferenceDataHashMap = null;
+	private static ConcurrentMap<String, Country> isoCountriesReferenceDataHashMap = null;
+	private static ConcurrentMap<String, Country> countriesReferenceDataHashMapWithCountryName = null;
 	private static void fetchCountriesReferenceData()
 	{
 		if(countriesReferenceDataHashMap == null)
 		{
 			countriesReferenceDataHashMap = new ConcurrentHashMap<>();
+			isoCountriesReferenceDataHashMap = new ConcurrentHashMap<>();
+			countriesReferenceDataHashMapWithCountryName = new ConcurrentHashMap<>();
 
 			final long startTime = System.currentTimeMillis();
 			final List<Country> countriesList = ObjectSelect.query(Country.class).where(Country.COUNTRY_STATUS.eq("A")).and(Country.ISO_COUNTRY_CODE.isNotNull()).select(CayenneHelper.getCayenneServerRuntime().newContext());
@@ -216,9 +228,14 @@ public class CayenneReferenceDataCache
 
 			countriesReferenceDataHashMap = countriesList.stream().collect(Collectors.toConcurrentMap(Country::getCountryCode, theCountry -> theCountry));
 
+			//isoCountriesReferenceDataHashMap = countriesList.stream().collect(Collectors.toConcurrentMap(Country::getIsoCountryCode, theCountry -> theCountry));
+			isoCountriesReferenceDataHashMap = countriesList.stream().collect(Collectors.toConcurrentMap(Country::getIsoCountryCode, theCountry -> theCountry, (theExistingCountry, theNewCountry) -> theExistingCountry));
+
 			if(IS_DEBUG_ENABLED)
 			{
 				doSomeExtraLogginIfNeeded(countriesList, countriesReferenceDataHashMap);
+				doSomeExtraLogginIfNeeded(countriesList, isoCountriesReferenceDataHashMap);
+				doSomeExtraLogginIfNeeded(countriesList, countriesReferenceDataHashMapWithCountryName);
 			}
 		}
 	}
@@ -231,7 +248,8 @@ public class CayenneReferenceDataCache
 			commoditiesReferenceDataHashMap = new ConcurrentHashMap<>();
 
 			final long startTime = System.currentTimeMillis();
-			final List<Commodity> commoditiesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
+			//final List<Commodity> commoditiesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
+			final List<Commodity> commoditiesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).prefetch(Commodity.COMMODITY_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} commodities.", (endTime - startTime), commoditiesList.size());
 
@@ -243,6 +261,30 @@ public class CayenneReferenceDataCache
 			}
 		}
 	}
+
+	/*
+	private static ConcurrentMap<String, Commodity> currenciesReferenceDataHashMap = null;
+	private static void fetchCurrenciesReferenceData()
+	{
+		if(currenciesReferenceDataHashMap == null)
+		{
+			currenciesReferenceDataHashMap = new ConcurrentHashMap<>();
+
+			final long startTime = System.currentTimeMillis();
+			final List<Commodity> currenciesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).prefetch(Commodity.COMMODITY_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+			//final EJBQLQuery query = new EJBQLQuery("select commodity FROM Commodity commodity JOIN commodity.commodityType commodityType where commodityType = 'C'");
+			final long endTime = System.currentTimeMillis();
+			LOGGER.info("It took {} milli seconds to fetch {} currencies.", (endTime - startTime), currenciesList.size());
+
+			currenciesReferenceDataHashMap = currenciesList.stream().collect(Collectors.toConcurrentMap(Commodity::getCmdtyCode, theCommodity -> theCommodity));
+
+			if(IS_DEBUG_ENABLED)
+			{
+				doSomeExtraLogginIfNeeded(currenciesList, currenciesReferenceDataHashMap);
+			}
+		}
+	}
+	 */
 
 	private static ConcurrentMap<Integer, Portfolio> portfoliosReferenceDataHashMap = null;
 	private static void fetchPortfoliosReferenceData()
@@ -275,17 +317,21 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			/* Actually we need to filter even the deleted trades but dont know how to do. We can go for query method to fetch the required trades. But leaving it for now. */
 			final List<Trade> templateTradesList = ObjectSelect.query(Trade.class).where(Trade.CONCLUSION_TYPE.eq("I")).prefetch(Trade.TRADE_STATUS.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+			final List<Trade> undeletedTemplateTradesList = templateTradesList.stream().filter((aTrade) -> !aTrade.getTradeStatus().getTradeStatusCode().trim().equals("DELETE")).collect(Collectors.toList());
+
 			//final EJBQLQuery queryToFetchTradeNums = new EJBQLQuery("select trade.trade_num FROM Trade trade where trade.copyType <> 'FULL'");
 			//final List<String> tradeNums = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(queryToFetchTradeNums);
 			//tradeNums.forEach(System.out::println);
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} template trades.", (endTime - startTime), templateTradesList.size());
 
-			templateTradesReferenceDataHashMap = templateTradesList.stream().collect(Collectors.toConcurrentMap(Trade::getTradeNum, theTrade -> theTrade));
+			//templateTradesReferenceDataHashMap = templateTradesList.stream().collect(Collectors.toConcurrentMap(Trade::getTradeNum, theTrade -> theTrade));
+			templateTradesReferenceDataHashMap = undeletedTemplateTradesList.stream().collect(Collectors.toConcurrentMap(Trade::getTradeNum, theTrade -> theTrade));
 
 			if(IS_DEBUG_ENABLED)
 			{
 				doSomeExtraLogginIfNeeded(templateTradesList, templateTradesReferenceDataHashMap);
+				doSomeExtraLogginIfNeeded(undeletedTemplateTradesList, templateTradesReferenceDataHashMap);
 			}
 		}
 	}
@@ -429,6 +475,21 @@ public class CayenneReferenceDataCache
 	{
 		externalMappingReferenceDataList = null;
 		return loadExternalMappings();
+	}
+
+	public static Country getCountryForISOCode(final String isoCode)
+	{
+		if((isoCountriesReferenceDataHashMap != null) && (isoCode != null))
+			return isoCountriesReferenceDataHashMap.get(isoCode);
+		return null;
+	}
+
+	public static ConcurrentMap<String, Commodity> loadAllActiveCurrencies()
+	{
+		//return loadAllActiveCommodities().entrySet().stream().collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
+		//return loadAllActiveCommodities().entrySet().stream().filter(map -> map.getValue().getCommodityType().getCommodityTypeCode().equals("C")).collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
+		return loadAllActiveCommodities().entrySet().stream().filter(map -> map.getValue().getCommodityType().getCommodityTypeCode().equals("C")).collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
+		//return loadAllActiveCommodities().entrySet().stream().collect(Collectors.toConcurrentMap(Function.identity(), key -> function.apply(input.get(key))));
 	}
 
 	/**
