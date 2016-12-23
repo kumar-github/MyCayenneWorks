@@ -200,7 +200,7 @@ public class BrokersMappingUpdatePopupController implements IGenericController
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("UpdateMapping");
+				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateMapping");
 				updateMappingQuery.param("aliasValueParam", ictsBroker);
 
 				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());

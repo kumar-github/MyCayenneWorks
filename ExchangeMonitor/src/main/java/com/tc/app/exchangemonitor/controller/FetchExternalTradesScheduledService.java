@@ -1,22 +1,21 @@
 package com.tc.app.exchangemonitor.controller;
 
+import org.apache.cayenne.query.ObjectSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Query;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 
-public class FetchExternalTradesScheduledService extends ScheduledService<ObservableList<IExternalTradeEntity>>
+public class FetchExternalTradesScheduledService extends ScheduledService<ObservableList<ExternalTrade>>
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	//private final SQLQuery sqlQuery;
-	private Query sqlQuery;
+	private ObjectSelect<ExternalTrade> objectSelect;
 	//private final Duration DELAY = Duration.seconds(5);
 	//private final Duration PERIOD = Duration.seconds(30);
 
@@ -25,23 +24,23 @@ public class FetchExternalTradesScheduledService extends ScheduledService<Observ
 		this(null, Duration.seconds(5.0), Duration.seconds(30.0));
 	}
 
-	public FetchExternalTradesScheduledService(final Query sqlQuery, final Duration delay, final Duration period)
+	public FetchExternalTradesScheduledService(final ObjectSelect<ExternalTrade> objectSelect, final Duration delay, final Duration period)
 	{
 		super();
-		this.sqlQuery = sqlQuery;
+		this.objectSelect = objectSelect;
 		this.setDelay(delay);
 		this.setPeriod(period);
 	}
 
-	public void setSQLQuery(final Query sqlQuery)
+	public void setObjectSelect(final ObjectSelect<ExternalTrade> objectSelect)
 	{
-		this.sqlQuery = sqlQuery;
+		this.objectSelect = objectSelect;
 	}
 
 	@Override
-	protected Task<ObservableList<IExternalTradeEntity>> createTask()
+	protected Task<ObservableList<ExternalTrade>> createTask()
 	{
-		final FetchExternalTradesTask fetchExternalTradesTask = new FetchExternalTradesTask(this.sqlQuery);
+		final FetchExternalTradesTask fetchExternalTradesTask = new FetchExternalTradesTask(this.objectSelect);
 		return fetchExternalTradesTask;
 	}
 

@@ -193,7 +193,7 @@ public class CompaniesMappingUpdatePopupController implements IGenericController
 		{
 			if(!doesCompanyMappingExistsAlready)
 			{
-				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("UpdateMapping");
+				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateMapping");
 				updateMappingQuery.param("aliasValueParam", ictsCompany);
 				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);

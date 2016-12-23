@@ -156,7 +156,7 @@ public class CurrenciesMappingAddPopupController implements IGenericController
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("InsertMapping");
 				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", CURRENCY_MAPPING_TYPE);

@@ -3,11 +3,18 @@ package com.tc.app.exchangemonitor.controller;
 import java.util.Date;
 import java.util.Objects;
 
+import org.apache.cayenne.DataRow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
 public class DummyPosition
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean IS_DEBUG_ENABLED = LOGGER.isDebugEnabled();
+
 	private String externalTradeStateName;
 	private Date creationDate;
 	private Date entryDate;
@@ -28,7 +35,7 @@ public class DummyPosition
 	{
 	}
 
-	public DummyPosition(String commodity, String tradingPeriod, String callPut, Double strikePrice)
+	public DummyPosition(final String commodity, final String tradingPeriod, final String callPut, final Double strikePrice)
 	{
 		this.commodity = commodity;
 		this.tradingPeriod = tradingPeriod;
@@ -36,84 +43,143 @@ public class DummyPosition
 		this.strikePrice = strikePrice;
 	}
 
-	public String getExternalTradeStateName()
+	/**
+	 * @param externalTradeStateName2
+	 * @param creationDate2
+	 * @param entryDate2
+	 * @param exchToolsTradeNum2
+	 * @param commodity2
+	 * @param tradingPeriod2
+	 * @param callPut2
+	 * @param strikePrice2
+	 * @param quantity2
+	 * @param price2
+	 * @param inputAction2
+	 * @param inputCompany2
+	 * @param acceptedAction2
+	 * @param acceptedCompany2
+	 * @param buyerAccount2
+	 */
+	public DummyPosition(final String externalTradeStateName, final Date creationDate, final Date entryDate, final String exchToolsTradeNum, final String commodity, final String tradingPeriod, final String callPut, final Double strikePrice, final Double quantity, final Double price, final String inputAction, final String inputCompany, final String acceptedAction, final String acceptedCompany, final String buyerAccount)
 	{
-		return externalTradeStateName;
+		this.externalTradeStateName = externalTradeStateName;
+		this.creationDate = creationDate;
+		this.entryDate = entryDate;
+		this.exchToolsTradeNum = exchToolsTradeNum;
+		this.commodity = commodity;
+		this.tradingPeriod = tradingPeriod;
+		this.callPut = callPut;
+		this.strikePrice = strikePrice;
+		this.quantity = quantity;
+		this.price = price;
+		this.inputAction = inputAction;
+		this.inputCompany = inputCompany;
+		this.acceptedAction = acceptedAction;
+		this.acceptedCompany = acceptedCompany;
+		this.buyerAccount = buyerAccount;
 	}
 
-	public void setExternalTradeStateName(String externalTradeStateName)
+	public DummyPosition(final DataRow aPositionDataRow)
+	{
+		this.externalTradeStateName = aPositionDataRow.get("externalTradeStateName") != null ? aPositionDataRow.get("externalTradeStateName").toString() : null;
+		this.creationDate = aPositionDataRow.get("creationDate") != null ? (Date) aPositionDataRow.get("creationDate") : null;
+		this.entryDate = aPositionDataRow.get("entryDate") != null ? (Date) aPositionDataRow.get("entryDate") : null;
+		this.exchToolsTradeNum = aPositionDataRow.get("exchToolsTradeNum") != null ? aPositionDataRow.get("exchToolsTradeNum").toString() : null;
+		this.commodity = aPositionDataRow.get("commodity") != null ? aPositionDataRow.get("commodity").toString() : null;
+		this.tradingPeriod = aPositionDataRow.get("tradingPeriod") != null ? aPositionDataRow.get("tradingPeriod").toString() : null;
+		this.callPut = aPositionDataRow.get("callPut") != null ? aPositionDataRow.get("callPut").toString() : "";
+		this.strikePrice = aPositionDataRow.get("strikePrice") != null ? (Double) (aPositionDataRow.get("strikePrice")) : 0.0;
+		this.quantity = aPositionDataRow.get("quantity") != null ? (Double) aPositionDataRow.get("quantity") : null;
+		this.price = aPositionDataRow.get("price") != null ? (Double) aPositionDataRow.get("price") : null;
+		this.inputAction = aPositionDataRow.get("inputAction") != null ? aPositionDataRow.get("inputAction").toString() : null;
+		this.inputCompany = aPositionDataRow.get("inputCompany") != null ? aPositionDataRow.get("inputCompany").toString() : null;
+		this.acceptedAction = aPositionDataRow.get("acceptedAction") != null ? aPositionDataRow.get("acceptedAction").toString() : "";
+		this.acceptedCompany = aPositionDataRow.get("acceptedCompany") != null ? aPositionDataRow.get("acceptedCompany").toString() : null;
+		this.buyerAccount = aPositionDataRow.get("buyerAccount") != null ? aPositionDataRow.get("buyerAccount").toString() : null;
+
+		if(IS_DEBUG_ENABLED)
+		{
+			LOGGER.debug("A Position object constructed : {}", this.externalTradeStateName + "," + this.creationDate + "," + this.entryDate + "," + this.exchToolsTradeNum + "," + this.commodity + "," + this.tradingPeriod + "," + this.callPut + "," + this.strikePrice + "," + this.quantity + "," + this.price + "," + this.inputAction + "," + this.inputCompany + "," + this.acceptedAction + "," + this.acceptedCompany + "," + this.buyerAccount);
+		}
+	}
+
+	public String getExternalTradeStateName()
+	{
+		return this.externalTradeStateName;
+	}
+
+	public void setExternalTradeStateName(final String externalTradeStateName)
 	{
 		this.externalTradeStateName = externalTradeStateName;
 	}
 
 	public Date getCreationDate()
 	{
-		return creationDate;
+		return this.creationDate;
 	}
 
-	public void setCreationDate(Date creationDate)
+	public void setCreationDate(final Date creationDate)
 	{
 		this.creationDate = creationDate;
 	}
 
 	public Date getEntryDate()
 	{
-		return entryDate;
+		return this.entryDate;
 	}
 
-	public void setEntryDate(Date entryDate)
+	public void setEntryDate(final Date entryDate)
 	{
 		this.entryDate = entryDate;
 	}
 
 	public String getExchToolsTradeNum()
 	{
-		return exchToolsTradeNum;
+		return this.exchToolsTradeNum;
 	}
 
-	public void setExchToolsTradeNum(String exchToolsTradeNum)
+	public void setExchToolsTradeNum(final String exchToolsTradeNum)
 	{
 		this.exchToolsTradeNum = exchToolsTradeNum;
 	}
 
 	public String getCommodity()
 	{
-		return commodity;
+		return this.commodity;
 	}
 
-	public void setCommodity(String commodity)
+	public void setCommodity(final String commodity)
 	{
 		this.commodity = commodity;
 	}
 
 	public String getTradingPeriod()
 	{
-		return tradingPeriod;
+		return this.tradingPeriod;
 	}
 
-	public void setTradingPeriod(String tradingPeriod)
+	public void setTradingPeriod(final String tradingPeriod)
 	{
 		this.tradingPeriod = tradingPeriod;
 	}
 
 	public String getCallPut()
 	{
-		return callPut;
+		return this.callPut;
 	}
 
-	public void setCallPut(String callPut)
+	public void setCallPut(final String callPut)
 	{
 		//this.callPut = callPut;
-		//if(callPut == null)
 		this.callPut = (callPut == null) ? "" : callPut;
 	}
 
 	public Double getStrikePrice()
 	{
-		return strikePrice;
+		return this.strikePrice;
 	}
 
-	public void setStrikePrice(Double strikePrice)
+	public void setStrikePrice(final Double strikePrice)
 	{
 		//this.strikePrice = strikePrice;
 		this.strikePrice = (strikePrice == null) ? 0.0 : strikePrice;
@@ -121,76 +187,76 @@ public class DummyPosition
 
 	public Double getQuantity()
 	{
-		return quantity;
+		return this.quantity;
 	}
 
-	public void setQuantity(Double quantity)
+	public void setQuantity(final Double quantity)
 	{
 		this.quantity = quantity;
 	}
 
 	public Double getPrice()
 	{
-		return price;
+		return this.price;
 	}
 
-	public void setPrice(Double price)
+	public void setPrice(final Double price)
 	{
 		this.price = price;
 	}
 
 	public String getInputAction()
 	{
-		return inputAction;
+		return this.inputAction;
 	}
 
-	public void setInputAction(String inputAction)
+	public void setInputAction(final String inputAction)
 	{
 		this.inputAction = inputAction;
 	}
 
 	public String getInputCompany()
 	{
-		return inputCompany;
+		return this.inputCompany;
 	}
 
-	public void setInputCompany(String inputCompany)
+	public void setInputCompany(final String inputCompany)
 	{
 		this.inputCompany = inputCompany;
 	}
 
 	public String getAcceptedAction()
 	{
-		return acceptedAction;
+		return this.acceptedAction;
 	}
 
-	public void setAcceptedAction(String acceptedAction)
+	public void setAcceptedAction(final String acceptedAction)
 	{
 		this.acceptedAction = acceptedAction;
 	}
 
 	public String getAcceptedCompany()
 	{
-		return acceptedCompany;
+		return this.acceptedCompany;
 	}
 
-	public void setAcceptedCompany(String acceptedCompany)
+	public void setAcceptedCompany(final String acceptedCompany)
 	{
 		this.acceptedCompany = acceptedCompany;
 	}
 
 	public String getBuyerAccount()
 	{
-		return buyerAccount;
+		return this.buyerAccount;
 	}
 
-	public void setBuyerAccount(String buyerAccount)
+	public void setBuyerAccount(final String buyerAccount)
 	{
 		this.buyerAccount = buyerAccount;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if(obj == null)
 			return false;
@@ -198,10 +264,10 @@ public class DummyPosition
 			return false;
 
 		final DummyPosition other = (DummyPosition) obj;
-		return Objects.equals(this.exchToolsTradeNum, other.exchToolsTradeNum) && 
-					Objects.equals(this.commodity, other.commodity) && 
-					Objects.equals(this.externalTradeStateName, other.externalTradeStateName) && 
-					Objects.equals(this.buyerAccount, other.buyerAccount) && 
+		return Objects.equals(this.exchToolsTradeNum, other.exchToolsTradeNum) &&
+					Objects.equals(this.commodity, other.commodity) &&
+					Objects.equals(this.externalTradeStateName, other.externalTradeStateName) &&
+					Objects.equals(this.buyerAccount, other.buyerAccount) &&
 					Objects.equals(this.creationDate, other.creationDate);
 		//(this.creationDate.compareTo(other.creationDate) == 0);
 	}
@@ -219,10 +285,10 @@ public class DummyPosition
 	private String buySell;
 	public String getBuySell()
 	{
-		return buySell;
+		return this.buySell;
 	}
 
-	public void setBuySell(String buySell)
+	public void setBuySell(final String buySell)
 	{
 		this.buySell = buySell.trim();
 	}
@@ -233,7 +299,7 @@ public class DummyPosition
 	{
 		return buyPosition != null ? buyPosition : 0.0;
 	}
-	
+
 	public void setBuyPosition(Double buyPosition)
 	{
 		this.buyPosition = buyPosition;
@@ -242,10 +308,10 @@ public class DummyPosition
 	private Double buyPositionPrice;
 	public Double getBuyPositionPrice()
 	{
-		return buyPositionPrice != null ? buyPositionPrice : 0.0;
+		return this.buyPositionPrice != null ? this.buyPositionPrice : 0.0;
 	}
 
-	public void setBuyPositionPrice(Double buyPositionPrice)
+	public void setBuyPositionPrice(final Double buyPositionPrice)
 	{
 		this.buyPositionPrice = buyPositionPrice;
 	}
@@ -253,10 +319,10 @@ public class DummyPosition
 	private Double buyPositionValue;
 	public Double getBuyPositionValue()
 	{
-		return buyPositionValue != null ? buyPositionValue : 0.0;
+		return this.buyPositionValue != null ? this.buyPositionValue : 0.0;
 	}
 
-	public void setBuyPositionValue(Double buyPositionValue)
+	public void setBuyPositionValue(final Double buyPositionValue)
 	{
 		this.buyPositionValue = buyPositionValue;
 	}
@@ -268,7 +334,7 @@ public class DummyPosition
 	{
 		return sellPosition != null ? sellPosition : 0.0;
 	}
-	
+
 	public void setSellPosition(Double sellPosition)
 	{
 		this.sellPosition = sellPosition;
@@ -277,10 +343,10 @@ public class DummyPosition
 	private Double sellPositionPrice;
 	public Double getSellPositionPrice()
 	{
-		return sellPositionPrice != null ? sellPositionPrice : 0.0;
+		return this.sellPositionPrice != null ? this.sellPositionPrice : 0.0;
 	}
 
-	public void setSellPositionPrice(Double sellPositionPrice)
+	public void setSellPositionPrice(final Double sellPositionPrice)
 	{
 		this.sellPositionPrice = sellPositionPrice;
 	}
@@ -288,10 +354,10 @@ public class DummyPosition
 	private Double sellPositionValue;
 	public Double getSellPositionValue()
 	{
-		return sellPositionValue != null ? sellPositionValue : 0.0;
+		return this.sellPositionValue != null ? this.sellPositionValue : 0.0;
 	}
 
-	public void setSellPositionValue(Double sellPositionValue)
+	public void setSellPositionValue(final Double sellPositionValue)
 	{
 		this.sellPositionValue = sellPositionValue;
 	}
@@ -299,10 +365,10 @@ public class DummyPosition
 	private Double averageBuyPrice;
 	public Double getAverageBuyPrice()
 	{
-		return averageBuyPrice;
+		return this.averageBuyPrice;
 	}
 
-	public void setAverageBuyPrice(Double averageBuyPrice)
+	public void setAverageBuyPrice(final Double averageBuyPrice)
 	{
 		this.averageBuyPrice = averageBuyPrice;
 	}
@@ -310,10 +376,10 @@ public class DummyPosition
 	private Double averageSellPrice;
 	public Double getAverageSellPrice()
 	{
-		return averageSellPrice;
+		return this.averageSellPrice;
 	}
 
-	public void setAverageSellPrice(Double averageSellPrice)
+	public void setAverageSellPrice(final Double averageSellPrice)
 	{
 		this.averageSellPrice = averageSellPrice;
 	}
@@ -321,10 +387,10 @@ public class DummyPosition
 	private Double lastPrice;
 	public Double getLastPrice()
 	{
-		return lastPrice;
+		return this.lastPrice;
 	}
 
-	public void setLastPrice(Double lastPrice)
+	public void setLastPrice(final Double lastPrice)
 	{
 		this.lastPrice = lastPrice;
 		/*
@@ -339,7 +405,7 @@ public class DummyPosition
 	{
 		return netQuantity;
 	}
-	
+
 	public void setNetQuantity(Double netQuantity)
 	{
 		this.netQuantity = netQuantity;
@@ -352,7 +418,7 @@ public class DummyPosition
 	{
 		return Math.round(pl * 1000);
 	}
-	
+
 	public void setPL(Double pl)
 	{
 		this.pl = pl;
@@ -365,7 +431,7 @@ public class DummyPosition
 	{
 		return this.total.getReadOnlyProperty();
 	}
-	
+
 	public final java.lang.Double getTotal()
 	{
 		return this.totalProperty().get();
@@ -383,7 +449,7 @@ public class DummyPosition
 		return this.buyPositionProperty().get();
 	}
 
-	public void setBuyPosition(Double buyPosition)
+	public void setBuyPosition(final Double buyPosition)
 	{
 		this.buyPosition.set(buyPosition);
 	}
@@ -399,7 +465,7 @@ public class DummyPosition
 		return this.sellPositionProperty().get();
 	}
 
-	public void setSellPosition(Double sellPosition)
+	public void setSellPosition(final Double sellPosition)
 	{
 		this.sellPosition.set(sellPosition);
 	}
@@ -415,7 +481,7 @@ public class DummyPosition
 		return this.netQuantityProperty().get();
 	}
 
-	public void setNetQuantity(Double netQuantity)
+	public void setNetQuantity(final Double netQuantity)
 	{
 		this.netQuantity.set(netQuantity);
 	}
@@ -433,7 +499,7 @@ public class DummyPosition
 		//return Math.round(total.get() * 1000);
 	}
 
-	public void setTotal(Double total)
+	public void setTotal(final Double total)
 	{
 		//this.total.set(total * 1000);
 		//this.total.set(2.0);
@@ -442,13 +508,13 @@ public class DummyPosition
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return getCommodity() + " <--> " + getBuySell() + " <--> " + getCallPut() + " <--> " + getExchToolsTradeNum() + " <--> " + getExternalTradeStateName() + " <--> " + getTradingPeriod() + " <--> " + getStrikePrice() + " <--> " + getPrice();
+		return this.getCommodity() + " <--> " + this.getBuySell() + " <--> " + this.getCallPut() + " <--> " + this.getExchToolsTradeNum() + " <--> " + this.getExternalTradeStateName() + " <--> " + this.getTradingPeriod() + " <--> " + this.getStrikePrice() + " <--> " + this.getPrice();
 	}
 }
 

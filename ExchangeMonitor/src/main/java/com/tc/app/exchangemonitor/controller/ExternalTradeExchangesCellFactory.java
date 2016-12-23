@@ -1,12 +1,12 @@
 package com.tc.app.exchangemonitor.controller;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-public class ExternalTradeExchangesCellFactory implements Callback<TableColumn<IExternalTradeEntity, String>, TableCell<IExternalTradeEntity, String>>
+public class ExternalTradeExchangesCellFactory implements Callback<TableColumn<ExternalTrade, String>, TableCell<ExternalTrade, String>>
 {
 	/*
 	// 1st way of implementing
@@ -29,63 +29,63 @@ public class ExternalTradeExchangesCellFactory implements Callback<TableColumn<I
 			}
 		};
 	}
-	*/
+	 */
 
 	//2nd way of implementing
 	@Override
-	public TableCell<IExternalTradeEntity, String> call(TableColumn<IExternalTradeEntity, String> param)
+	public TableCell<ExternalTrade, String> call(final TableColumn<ExternalTrade, String> param)
 	{
-		final TableCell<IExternalTradeEntity, String> aTableCell = new TableCell<IExternalTradeEntity, String>(){
+		final TableCell<ExternalTrade, String> aTableCell = new TableCell<ExternalTrade, String>(){
 			@Override
-			protected void updateItem(String item, boolean empty)
+			protected void updateItem(final String item, final boolean empty)
 			{
 				super.updateItem(item, empty);
-				if(empty || item == null)
+				if(empty || (item == null))
 				{
-					setText(null);
+					this.setText(null);
 				}
 				else
 				{
 					switch(item)
 					{
 						case "1":
-							setText("NYMEX");
+							this.setText("NYMEX");
 							break;
 						case "2":
-							setText("IPE");
+							this.setText("IPE");
 							break;
 						case "3":
-							setText("ICE");
+							this.setText("ICE");
 							break;
 						case "4":
-							setText("ExchangeTools");
+							this.setText("ExchangeTools");
 							break;
 						case "5":
-							setText("DashBoard");
+							this.setText("DashBoard");
 							break;
 						case "6":
-							setText("Excel");
+							this.setText("Excel");
 							break;
 						case "7":
-							setText("DME");
+							this.setText("DME");
 							break;
 						case "8":
-							setText("ECONFIRM");
+							this.setText("ECONFIRM");
 							break;
 						case "9":
-							setText("CEE");
+							this.setText("CEE");
 							break;
 						case "10":
-							setText("Olympus");
+							this.setText("Olympus");
 							break;
 						case "11":
-							setText("CBT");
+							this.setText("CBT");
 							break;
 						case "12":
-							setText("NonDefined");
+							this.setText("NonDefined");
 							break;
 						default:
-							setText(null);
+							this.setText(null);
 					}
 				}
 			}

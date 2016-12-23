@@ -1,6 +1,7 @@
 package com.tc.app.exchangemonitor.model.cayenne.persistent.auto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.apache.cayenne.CayenneDataObject;
@@ -17,7 +18,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
  */
 public abstract class _ExchToolsTrade extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String EXTERNAL_TRADE_OID_PK_COLUMN = "external_trade_oid";
@@ -205,7 +205,7 @@ public abstract class _ExchToolsTrade extends CayenneDataObject
 		return (String) this.readProperty("commodity");
 	}
 
-	public void setCreationDate(final Date creationDate)
+	public void setCreationDate(final LocalDate creationDate)
 	{
 		this.writeProperty("creationDate", creationDate);
 	}
@@ -594,5 +594,4 @@ public abstract class _ExchToolsTrade extends CayenneDataObject
 	{
 		return (ExternalTrade) this.readProperty("externalTradeO");
 	}
-
 }

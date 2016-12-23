@@ -5,18 +5,18 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.MappedSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckListView;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalMapping;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
@@ -26,8 +26,8 @@ import com.tc.app.exchangemonitor.model.predicates.ExternalMappingPredicates;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.util.DatePickerConverter;
-import com.tc.app.exchangemonitor.util.HibernateUtil;
 
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -113,7 +113,6 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 	private Accordion queryFilterAccordion;
 
 	@FXML
-	//private CheckListView<IExternalTradeSourceEntity> externalTradeSourcesListView;
 	private CheckListView<ExternalTradeSource> externalTradeSourcesListView;
 
 	@FXML
@@ -123,7 +122,6 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 	private CheckListView<ExternalTradeStatus> externalTradeStatusesListView;
 
 	@FXML
-	//private CheckListView<IExternalMappingEntity> externalTradeAccountsListView;
 	private CheckListView<ExternalMapping> externalTradeAccountsListView;
 
 	@FXML
@@ -647,79 +645,49 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 
 	private void fetchPositionsFromDBForTableView()
 	{
-		Query sqlQueryToFetchPositions = null;
+		MappedSelect<DataRow> mappedSelectQueryToFetchPositions = null;
+		final Map parametersMap = new HashMap<>();
 		String selectedStartDate = null;
 		String selectedEndDate = null;
 
-		final List<ExternalTradeSource> externalTradeSourceObjectsSelectedByUserFromUI = this.getExternalTradeSourcesSelectedByUserFromUI();
+		final String selectedExternalTradeSourceName = this.getExternalTradeSourcesSelectedByUserFromUI().getText();
 		final List<ExternalTradeState> externalTradeStateObjectsSelectedByUserFromUI = this.getExternalTradeStatesSelectedByUserFromUI();
 		final List<ExternalTradeStatus> externalTradeStatusObjectsSelectedByUserFromUI = this.getExternalTradeStatusesSelectedByUserFromUI();
 		final List<ExternalMapping> externalTradeAccountObjectsSelectedByUserFromUI = this.getExternalTradeAccountsSelectedByUserFromUI();
 
+		/*
+		final List<String> selectedExternalTradeSourceNames = new ArrayList<>();
+		externalTradeSourceObjectsSelectedByUserFromUI.forEach((anExternalTradeSourceEntity) -> selectedExternalTradeSourceNames.add(anExternalTradeSourceEntity.getExternalTradeSourceOid().toString()));
+		*/
+		// The above 2 lines are commented and implemented as below.
+		//final List<String> selectedExternalTradeSourceNames = externalTradeSourceObjectsSelectedByUserFromUI.stream().map(ExternalTradeSource::getExternalTradeSrcName).map(String::trim).collect(Collectors.toList());
+		final Integer selectedExternalTradeSourceOid = CayenneReferenceDataCache.loadExternalTradeSources().get(selectedExternalTradeSourceName).getExternalTradeSourceOid();
+		final List<Integer> selectedExternalTradeStates = externalTradeStateObjectsSelectedByUserFromUI.stream().map(ExternalTradeState::getExternalTradeStateOid).collect(Collectors.toList());
+		final List<Integer> selectedExternalTradeStatuses = externalTradeStatusObjectsSelectedByUserFromUI.stream().map(ExternalTradeStatus::getExternalTradeStatusOid).collect(Collectors.toList());
+		final List<String> selectedExternalTradeAccounts = externalTradeAccountObjectsSelectedByUserFromUI.stream().map(ExternalMapping::getExternalValue1).map(String::trim).collect(Collectors.toList());
 		selectedStartDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.startDateDatePicker.getValue() != null ? this.startDateDatePicker.getValue() : LocalDate.now());
 		selectedEndDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.endDateDatePicker.getValue() != null ? this.endDateDatePicker.getValue() : LocalDate.now());
 
-		final List<String> selectedExternalTradeSourceNames = new ArrayList<>();
-		externalTradeSourceObjectsSelectedByUserFromUI.forEach((anExternalTradeSourceEntity) -> selectedExternalTradeSourceNames.add(anExternalTradeSourceEntity.getExternalTradeSourceOid().toString()));
-
-		final List<String> selectedExternalTradeStateNames = new ArrayList<>();
-		externalTradeStateObjectsSelectedByUserFromUI.forEach((anExternalTradeState) -> selectedExternalTradeStateNames.add(anExternalTradeState.getExternalTradeStateOid().toString()));
-
-		final List<String> selectedExternalTradeStatusNames = new ArrayList<>();
-		externalTradeStatusObjectsSelectedByUserFromUI.forEach((anExternalTradeStatus) -> selectedExternalTradeStatusNames.add(anExternalTradeStatus.getExternalTradeStatusOid().toString()));
-
-		final Session session = HibernateUtil.beginTransaction();
-		final List<String> selectedExternalTradeAccountNames = new ArrayList<>();
-		if(this.externalTradeAccountsListView.getCheckModel().getCheckedItems().size() == 0)
+		//if(this.externalTradeAccountsListView.getCheckModel().getCheckedItems().size() == 0)
+		if((selectedExternalTradeAccounts.size() == 0) || selectedExternalTradeAccounts.contains("Any"))
 		{
-			sqlQueryToFetchPositions = session.getNamedQuery("positionsWithoutBuyerAccount");
-			sqlQueryToFetchPositions.setParameter("buyerAccountsParam", null);
-		}
-		else if(this.externalTradeAccountsListView.getCheckModel().getCheckedIndices().contains(0))
-		{
-			sqlQueryToFetchPositions = session.getNamedQuery("positionsWithoutBuyerAccount");
-			sqlQueryToFetchPositions.setParameter("buyerAccountsParam", "");
+			/* We are here bcoz, user didn't select any account or selected "Any" as account. So we should not care about the buyer account in the qulaifier. */
+			mappedSelectQueryToFetchPositions = CayenneReferenceDataFetchUtil.getSelectQueryForName("PositionWithoutBuyerAccount");
 		}
 		else
 		{
-			externalTradeAccountObjectsSelectedByUserFromUI.forEach((anExternalMapping) -> selectedExternalTradeAccountNames.add(anExternalMapping.getExternalValue1()));
-			sqlQueryToFetchPositions = session.getNamedQuery("positionsWithBuyerAccount");
-			sqlQueryToFetchPositions.setParameterList("buyerAccountsParam", selectedExternalTradeAccountNames);
+			mappedSelectQueryToFetchPositions = CayenneReferenceDataFetchUtil.getSelectQueryForName("PositionWithBuyerAccount");
+			parametersMap.put("buyerAccountsParam", selectedExternalTradeAccounts);
 		}
-		if(selectedExternalTradeSourceNames.size() == 0)
-		{
-			sqlQueryToFetchPositions.setParameter("externalTradeSourcesParam", null);
-		}
-		else
-		{
-			sqlQueryToFetchPositions.setParameterList("externalTradeSourcesParam", selectedExternalTradeSourceNames);
-		}
-
-		if(selectedExternalTradeStateNames.size() == 0)
-		{
-			sqlQueryToFetchPositions.setParameter("externalTradeStatesParam", null);
-		}
-		else
-		{
-			sqlQueryToFetchPositions.setParameterList("externalTradeStatesParam", selectedExternalTradeStateNames);
-		}
-
-		if(selectedExternalTradeStatusNames.size() == 0)
-		{
-			sqlQueryToFetchPositions.setParameter("externalTradeStatusesParam", null);
-		}
-		else
-		{
-			sqlQueryToFetchPositions.setParameterList("externalTradeStatusesParam", selectedExternalTradeStatusNames);
-		}
-
-		sqlQueryToFetchPositions.setParameter("startDate", selectedStartDate);
-		sqlQueryToFetchPositions.setParameter("endDate", selectedEndDate);
-
-		sqlQueryToFetchPositions.setResultTransformer(Transformers.aliasToBean(com.tc.app.exchangemonitor.controller.DummyPosition.class));
+		parametersMap.put("externalTradeSourcesParam", selectedExternalTradeSourceOid);
+		parametersMap.put("externalTradeStatusesParam", selectedExternalTradeStatuses);
+		parametersMap.put("externalTradeStatesParam", selectedExternalTradeStates);
+		parametersMap.put("startDateParam", selectedStartDate);
+		parametersMap.put("endDateParam", selectedEndDate);
+		mappedSelectQueryToFetchPositions.params(parametersMap);
 
 		/* This will fetch the data in a background thread, so UI will not be freezed and user can interact with the UI. Here we use a scheduled service which will invoke the task recurringly. */
-		this.fetchPositionsScheduledService.setSQLQuery(sqlQueryToFetchPositions);
+		this.fetchPositionsScheduledService.setMappedSelect(mappedSelectQueryToFetchPositions);
 		this.fetchPositionsScheduledService.setDelay(Duration.seconds(1));
 		this.fetchPositionsScheduledService.setPeriod(Duration.seconds(10));
 
@@ -740,10 +708,9 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		this.fetchPositionsScheduledService.setOnSucceeded((final WorkerStateEvent workerStateEvent) -> { this.doThisIfFetchSucceeded(); });
 	}
 
-	//public ObservableList<IExternalTradeSourceEntity> getExternalTradeSourcesSelectedByUserFromUI()
-	public ObservableList<ExternalTradeSource> getExternalTradeSourcesSelectedByUserFromUI()
+	public RadioButton getExternalTradeSourcesSelectedByUserFromUI()
 	{
-		return this.externalTradeSourcesListView.getCheckModel().getCheckedItems();
+		return (RadioButton) ExternalTradeSourceRadioCellForPositionsTab.toggleGroup.getSelectedToggle();
 	}
 
 	public List<ExternalTradeState> getExternalTradeStatesSelectedByUserFromUI()
@@ -764,16 +731,11 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 	private void doThisIfFetchSucceeded()
 	{
 		String selectedSource = null;
-		// List<DummyPosition> listOfUniquePositions = fetchPositionsScheduledService.getValue().stream().distinct().collect(Collectors.toList());
-		final List<DummyPosition> listOfUniquePositions = this.fetchPositionsScheduledService.getValue().stream().collect(Collectors.toSet()).stream().collect(Collectors.toList());
+		//List<DummyPosition> listOfUniquePositions = fetchPositionsScheduledService.getValue().stream().distinct().collect(Collectors.toList());
+		//final List<DummyPosition> listOfUniquePositions = this.fetchPositionsScheduledService.getValue().stream().collect(Collectors.toSet()).stream().collect(Collectors.toList());
 
-		if(ExternalTradeSourceRadioCellForPositionsTab.toggleGroup.getSelectedToggle() == null)
-			return;
-
-		//selectedSource = ((RadioButton) toggleGroup.getSelectedToggle()).getText();
-		selectedSource = ((RadioButton) ExternalTradeSourceRadioCellForPositionsTab.toggleGroup.getSelectedToggle()).getText();
-		final List<String> homeCompanyNames = this.getHomeCompaniesForSource(selectedSource);
-		LOGGER.info("homeCompanyNames : {}", homeCompanyNames);
+		final List<DummyPosition> allPositions = this.createDummyPositionObjectsForPositionDataRows(this.fetchPositionsScheduledService.getValue());
+		final List<DummyPosition> listOfUniquePositions = allPositions.stream().collect(Collectors.toSet()).stream().collect(Collectors.toList());
 
 		/*
 		 * NEVER EVER DO THIS. Logging the entire collection leads to enormous amount of toString() calls and that leads to Out of memory, N+1 select problem, thread starvation (logging is
@@ -784,6 +746,14 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		{
 			LOGGER.debug("listOfUniquePositions : {}", listOfUniquePositions);
 		}
+
+		if(ExternalTradeSourceRadioCellForPositionsTab.toggleGroup.getSelectedToggle() == null)
+			return;
+
+		selectedSource = ((RadioButton) ExternalTradeSourceRadioCellForPositionsTab.toggleGroup.getSelectedToggle()).getText();
+		final List<String> homeCompanyNames = this.getHomeCompaniesForSource(selectedSource);
+		LOGGER.info("HomeCompanies Count : {} HomeCompanies : {}", homeCompanyNames.size(), homeCompanyNames);
+
 
 		listOfUniquePositions.stream().forEach((aPosition) -> {
 			if(homeCompanyNames.contains(aPosition.getInputCompany()))
@@ -830,12 +800,6 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 			}
 			this.dummyPositionsObservableList.add(this.doThis(listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice));
 		}))));
-
-		/*
-		 * dummyPositionsObservableList.clear(); dummyPositionsObservableList.addAll(fetchPositionsScheduledService.getValue());
-		 */
-		// dummyExternalTrades.addAll(fetchExternalTradesScheduledService.getLastValue());
-		// dummyExternalTrades.addAll(fetchExternalTradesScheduledService.getLastValue() != null ? fetchExternalTradesScheduledService.getLastValue() : fetchExternalTradesScheduledService.getValue());
 	}
 
 	private DummyPosition doThis(final List<DummyPosition> listOfPositionGroupedByCommodityTradingPeriodCallputStrikePrice)
@@ -984,6 +948,13 @@ public class MainApplicationPositionsTabController implements IMainApplicationMo
 		final List<ExternalMapping> homeCompanyObjects = ExternalMappingPredicates.filterExternalMappings(CayenneReferenceDataCache.loadExternalMappings(), homeCompanyPredicate);
 		final List<String> homeCompanyNames = homeCompanyObjects.stream().map(ExternalMapping::getExternalValue1).collect(Collectors.toList());
 		return homeCompanyNames;
+	}
+
+	private List<DummyPosition> createDummyPositionObjectsForPositionDataRows(final ObservableList<DataRow> positionDataRows)
+	{
+		if(positionDataRows == null)
+			return null;
+		return positionDataRows.stream().map(DummyPosition::new).collect(Collectors.toList());
 	}
 }
 

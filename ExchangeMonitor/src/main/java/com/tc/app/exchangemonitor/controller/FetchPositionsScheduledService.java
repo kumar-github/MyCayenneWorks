@@ -1,16 +1,18 @@
 package com.tc.app.exchangemonitor.controller;
 
-import org.hibernate.Query;
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.MappedSelect;
 
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 
-public class FetchPositionsScheduledService extends ScheduledService<ObservableList<DummyPosition>>
+// public class FetchPositionsScheduledService extends ScheduledService<ObservableList<DummyPosition>>
+public class FetchPositionsScheduledService extends ScheduledService<ObservableList<DataRow>>
 {
 	//private final SQLQuery sqlQuery;
-	private Query sqlQuery;
+	private MappedSelect<DataRow> mappedSelect;
 	//private final Duration DELAY = Duration.seconds(5);
 	//private final Duration PERIOD = Duration.seconds(30);
 
@@ -19,23 +21,23 @@ public class FetchPositionsScheduledService extends ScheduledService<ObservableL
 		this(null, Duration.seconds(5.0), Duration.seconds(30.0));
 	}
 
-	public FetchPositionsScheduledService(Query sqlQuery, Duration delay, Duration period)
+	public FetchPositionsScheduledService(final MappedSelect<DataRow> mappedSelect, final Duration delay, final Duration period)
 	{
 		super();
-		this.sqlQuery = sqlQuery;
+		this.mappedSelect = mappedSelect;
 		this.setDelay(delay);
 		this.setPeriod(period);
 	}
 
-	public void setSQLQuery(Query sqlQuery)
+	public void setMappedSelect(final MappedSelect<DataRow> mappedSelect)
 	{
-		this.sqlQuery = sqlQuery;
+		this.mappedSelect = mappedSelect;
 	}
 
 	@Override
-	protected Task<ObservableList<DummyPosition>> createTask()
+	protected Task<ObservableList<DataRow>> createTask()
 	{
-		FetchPositionsTask fetchPositionsTask = new FetchPositionsTask(sqlQuery);
+		final FetchPositionsTask fetchPositionsTask = new FetchPositionsTask(this.mappedSelect);
 		return fetchPositionsTask;
 	}
 

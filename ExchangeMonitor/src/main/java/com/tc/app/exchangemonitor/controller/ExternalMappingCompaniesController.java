@@ -190,7 +190,7 @@ public class ExternalMappingCompaniesController implements Initializable
 
 		try
 		{
-			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("DeleteMapping");
+			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
 			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
 			CayenneReferenceDataFetchUtil.generateNewTransaction();
 			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());

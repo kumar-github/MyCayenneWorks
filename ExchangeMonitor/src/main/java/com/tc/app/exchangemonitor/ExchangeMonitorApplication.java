@@ -7,7 +7,6 @@ import com.sun.javafx.application.LauncherImpl;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.HibernateUtil;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
 import com.tc.app.exchangemonitor.view.java.MainWindowView;
 import com.tc.framework.injection.Injector;
 
@@ -36,9 +35,13 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.debug("ExchangeMonitorApplication constructor called by ", Thread.currentThread().getName());
 	}
 
+	private static long startTime;
+	private static long endTime;
 	public static void main(final String[] args)
 	{
 		LOGGER.debug("ExchangeMonitorApplication main called by ", Thread.currentThread().getName());
+		startTime = System.currentTimeMillis();
+		LOGGER.error("App Launch Initiated Time {}", startTime);
 		Application.launch();
 		//LauncherImpl.launchApplication(ExchangeMonitorApplication.class, ExchangeMonitionApplicationPreloader.class, args);
 	}
@@ -47,9 +50,9 @@ public class ExchangeMonitorApplication extends Application
 	public void init()
 	{
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
-		HibernateUtil.getSessionFactory();
+		//HibernateUtil.getSessionFactory();
+		//ReferenceDataCache.loadAllReferenceData();
 		CayenneHelper.initializeCayenneServerRuntime();
-		ReferenceDataCache.loadAllReferenceData();
 		CayenneReferenceDataCache.fetchAllReferenceData();
 		for(int i = 0; i < 1000; i++)
 		{
@@ -83,6 +86,9 @@ public class ExchangeMonitorApplication extends Application
 			this.primaryStage.setScene(this.primaryScene);
 			this.animateStageIfNeeded();
 
+			endTime = System.currentTimeMillis();
+			LOGGER.error("UI Displayed Time {}", endTime);
+			LOGGER.error("It took {} milli seconds to load the UI.", (endTime - startTime));
 			primaryStage.show();
 			primaryStage.toFront();
 		}

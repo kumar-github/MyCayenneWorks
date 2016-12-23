@@ -2,14 +2,14 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.time.ZonedDateTime;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 // public class TradeCreationDateCellFactory implements Callback<TableColumn<DummyExternalTrade, ZonedDateTime>, TableCell<DummyExternalTrade, ZonedDateTime>>
-public class TradeEntryDateCellFactory extends DateCellFactory implements Callback<TableColumn<IExternalTradeEntity, ZonedDateTime>, TableCell<IExternalTradeEntity, ZonedDateTime>>
+public class TradeEntryDateCellFactory extends DateCellFactory implements Callback<TableColumn<ExternalTrade, ZonedDateTime>, TableCell<ExternalTrade, ZonedDateTime>>
 {
 	/*
 	// 1st way of implementing
@@ -56,11 +56,11 @@ public class TradeEntryDateCellFactory extends DateCellFactory implements Callba
 		};
 		return aTableCell;
 	}
-	*/
+	 */
 
 	//3rd way of implementing. Just move the logic to a base class and call it.
 	@Override
-	public TableCell<IExternalTradeEntity, ZonedDateTime> call(TableColumn<IExternalTradeEntity, ZonedDateTime> param)
+	public TableCell<ExternalTrade, ZonedDateTime> call(final TableColumn<ExternalTrade, ZonedDateTime> param)
 	{
 		return super.call(param);
 	}

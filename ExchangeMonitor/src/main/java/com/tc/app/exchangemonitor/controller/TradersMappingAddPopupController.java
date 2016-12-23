@@ -196,7 +196,7 @@ public class TradersMappingAddPopupController implements IGenericController
 		{
 			if(!doesTraderMappingExistsAlready)
 			{
-				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("InsertMapping");
 				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", TRADER_MAPPING_TYPE);

@@ -2704,5 +2704,4 @@ public abstract class _Account extends CayenneDataObject
 	{
 		return (List<Voucher>) this.readProperty("vouchers1");
 	}
-
 }

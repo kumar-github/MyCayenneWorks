@@ -3,7 +3,7 @@ package com.tc.app.exchangemonitor.controller;
 import java.util.List;
 import java.util.StringJoiner;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 import com.tc.app.exchangemonitor.util.StaticConstantsHelper;
 
 import javafx.beans.value.ObservableValue;
@@ -210,13 +210,13 @@ public class CustomRowFactory<T> implements Callback<TableView<T>, TableRow<T>>
 		}
 		else
 		{
-			if(newValue instanceof IExternalTradeEntity)
+			if(newValue instanceof ExternalTrade)
 			{
-				final IExternalTradeEntity anExternalTrade = (IExternalTradeEntity) newValue;
-				theRow.pseudoClassStateChanged(this.pendingStyle, anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Pending"));
-				theRow.pseudoClassStateChanged(this.completedStyle, anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Completed"));
-				theRow.pseudoClassStateChanged(this.failedStyle, anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Failed"));
-				theRow.pseudoClassStateChanged(this.skippedStyle, anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().equals("Skipped"));
+				final ExternalTrade anExternalTrade = (ExternalTrade) newValue;
+				theRow.pseudoClassStateChanged(this.pendingStyle, anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Pending"));
+				theRow.pseudoClassStateChanged(this.completedStyle, anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Completed"));
+				theRow.pseudoClassStateChanged(this.failedStyle, anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed"));
+				theRow.pseudoClassStateChanged(this.skippedStyle, anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Skipped"));
 			}
 		}
 	}
@@ -229,7 +229,7 @@ public class CustomRowFactory<T> implements Callback<TableView<T>, TableRow<T>>
 		}
 		else
 		{
-			if(newValue instanceof IExternalTradeEntity)
+			if(newValue instanceof ExternalTrade)
 			{
 				//theRow.setTooltip(new Tooltip(((ExternalTrade)newValue).getOid().toString()));
 				theRow.setTooltip(new Tooltip(this.getToolTipString(newValue)));
@@ -248,18 +248,18 @@ public class CustomRowFactory<T> implements Callback<TableView<T>, TableRow<T>>
 
 	private String getToolTipString(final T newValue)
 	{
-		final IExternalTradeEntity anExternalTrade = (IExternalTradeEntity) newValue;
+		final ExternalTrade anExternalTrade = (ExternalTrade) newValue;
 
 		//1st Method
 		//return String.format("External Trade: %s\nStatus: %s\nState: %s", anExternalTrade.getOid(), anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName(), anExternalTrade.getExternalTradeStateOid().getExternalTradeStateName());
 
 		//2nd Method
 		final StringJoiner newLineJoiner = new StringJoiner("\n");
-		newLineJoiner.add(String.format("External Trade OID : %s", anExternalTrade.getOid()));
-		newLineJoiner.add(String.format("External Trade State : %s", anExternalTrade.getExternalTradeStateOid().getExternalTradeStateName()));
+		newLineJoiner.add(String.format("External Trade OID : %s", anExternalTrade.getExternalTradeOid()));
+		newLineJoiner.add(String.format("External Trade State : %s", anExternalTrade.getExternalTradeStateO().getExternalTradeStateName()));
 		//newLineJoiner.add(String.format("External Trade Status : %s", anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName()));
-		newLineJoiner.add(String.format("External Trade Status : %s", anExternalTrade.getExternalTradeStatusOid()));
-		newLineJoiner.add(String.format("Exch Tools Trade Num  : %s", anExternalTrade.getExchToolsTrade().getExchToolsTradeNum()));
+		newLineJoiner.add(String.format("External Trade Status : %s", anExternalTrade.getExternalTradeStatusO()));
+		newLineJoiner.add(String.format("Exch Tools Trade Num  : %s", anExternalTrade.getExternalTradeO1().getExchToolsTradeNum()));
 		return newLineJoiner.toString();
 	}
 }

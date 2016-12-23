@@ -166,7 +166,7 @@ public class UOMConversionsMappingUpdatePopupController implements IGenericContr
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("UpdateMapping");
+				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateMapping");
 				updateMappingQuery.param("aliasValueParam", toUOMConversionRate);
 				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);

@@ -243,7 +243,7 @@ public class ExternalMappingTradersController implements IGenericController
 		try
 		{
 			/* Read the delete mapping query from datamap.xml file, set the paramters and keep it ready. */
-			/*final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("DeleteMapping");
+			/*final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
 			deleteMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 			deleteMappingQuery.param("mappingTypeParam", TRADER_MAPPING_TYPE);
 			deleteMappingQuery.param("externalValue1Param", selectedMappingToDelete.getExternalValue1());
@@ -257,7 +257,7 @@ public class ExternalMappingTradersController implements IGenericController
 			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());*/
 
 			/* Commented the above logic, we don't need all these information to just delete a mapping. oid is enough. SHAME ON ME. WHY DID I WRITE THAT?  */
-			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("DeleteMapping");
+			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
 			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
 			CayenneReferenceDataFetchUtil.generateNewTransaction();
 			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());

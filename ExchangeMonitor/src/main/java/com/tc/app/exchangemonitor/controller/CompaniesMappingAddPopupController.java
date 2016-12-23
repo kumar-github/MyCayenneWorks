@@ -237,7 +237,7 @@ public class CompaniesMappingAddPopupController implements IGenericController
 				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
 				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
 
-				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("InsertMapping");
 				insertMappingQuery.param("oidParam", newNum);
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", COMPANY_MAPPING_TYPE);

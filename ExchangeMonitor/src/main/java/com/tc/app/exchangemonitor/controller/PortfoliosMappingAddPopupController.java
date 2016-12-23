@@ -166,7 +166,7 @@ public class PortfoliosMappingAddPopupController implements IGenericController
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getQueryForName("InsertMapping");
+				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("InsertMapping");
 				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", PORTFOLIO_MAPPING_TYPE);

@@ -5,7 +5,8 @@ import com.tc.app.exchangemonitor.entity.ExternalTradeEntity;
 @SuppressWarnings("serial")
 public class ExternalTradeBusiness extends ExternalTradeEntity
 {
-	public String getCommodity()
+	/* so sad. PropertyValueFactory is looking exactly for the below format. */
+	public String get_commodity()
 	{
 		return this.getExchToolsTrade().getCommodity();
 	}

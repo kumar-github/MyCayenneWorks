@@ -19,7 +19,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.Facility;
  */
 public abstract class _AccountAddress extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String ACCT_ADDR_NUM_PK_COLUMN = "acct_addr_num";
@@ -359,5 +358,4 @@ public abstract class _AccountAddress extends CayenneDataObject
 	{
 		return (List<Facility>) this.readProperty("facilities1");
 	}
-
 }

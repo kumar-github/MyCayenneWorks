@@ -1,31 +1,31 @@
 package com.tc.app.exchangemonitor.controller;
 
-import org.hibernate.SQLQuery;
+import org.apache.cayenne.query.ObjectSelect;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class FetchExternalTradesService extends Service<ObservableList<IExternalTradeEntity>>
+public class FetchExternalTradesService extends Service<ObservableList<ExternalTrade>>
 {
-	private final SQLQuery sqlQuery;
+	private final ObjectSelect<ExternalTrade> objectSelect;
 
 	public FetchExternalTradesService()
 	{
-		sqlQuery = null;
+		this.objectSelect = null;
 	}
 
-	public FetchExternalTradesService(SQLQuery sqlQuery)
+	public FetchExternalTradesService(final ObjectSelect<ExternalTrade> objectSelect)
 	{
-		this.sqlQuery = sqlQuery;
+		this.objectSelect = objectSelect;
 	}
 
 	@Override
-	protected Task<ObservableList<IExternalTradeEntity>> createTask()
+	protected Task<ObservableList<ExternalTrade>> createTask()
 	{
-		FetchExternalTradesTask fetchExternalTradesTask = new FetchExternalTradesTask(sqlQuery);
+		final FetchExternalTradesTask fetchExternalTradesTask = new FetchExternalTradesTask(this.objectSelect);
 		return fetchExternalTradesTask;
 	}
 

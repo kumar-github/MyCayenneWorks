@@ -21,6 +21,7 @@ public class ExternalTradeSourceRadioCellForPositionsTab extends ListCell<Extern
 	//private static final ToggleGroup toggleGroup = new ToggleGroup();
 	public static final ToggleGroup toggleGroup = new ToggleGroup();
 	private static String selectedRadioButtonName;
+	//private static ExternalTradeSource selectedRadioButtonObject;
 
 	public ExternalTradeSourceRadioCellForPositionsTab()
 	{
@@ -29,6 +30,7 @@ public class ExternalTradeSourceRadioCellForPositionsTab extends ListCell<Extern
 			if(isSelected)
 			{
 				selectedRadioButtonName = this.getItem().getExternalTradeSrcName();
+				//selectedRadioButtonObject = this.getItem();
 			}
 		});
 	}
@@ -50,6 +52,7 @@ public class ExternalTradeSourceRadioCellForPositionsTab extends ListCell<Extern
 		{
 			this.radioButton.setText(item.getExternalTradeSrcName().trim().toUpperCase());
 			this.radioButton.setSelected(Objects.equals(item.getExternalTradeSrcName(), selectedRadioButtonName));
+			//this.radioButton.setSelected(Objects.equals(item, selectedRadioButtonObject));
 			this.setGraphic(this.radioButton);
 		}
 	}

@@ -1,6 +1,6 @@
 package com.tc.app.exchangemonitor.controller;
 
-import com.tc.app.exchangemonitor.model.ExternalTradeSource;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -14,24 +14,24 @@ public class ExternalTradeSourceRadioButtonCellFactory implements Callback<ListV
 	private static final ToggleGroup toggleGroup = new ToggleGroup();
 
 	@Override
-	public ListCell<ExternalTradeSource> call(ListView<ExternalTradeSource> param)
+	public ListCell<ExternalTradeSource> call(final ListView<ExternalTradeSource> param)
 	//public ListCell<IExternalTradeSourceEntity> call(ListView<IExternalTradeSourceEntity> param)
 	{
 		final ListCell<ExternalTradeSource> cell = new ListCell<ExternalTradeSource>(){
 			//final ListCell<IExternalTradeSourceEntity> cell = new ListCell<IExternalTradeSourceEntity>(){
 			@Override
 			//protected void updateItem(IExternalTradeSourceEntity item, boolean empty)
-			protected void updateItem(ExternalTradeSource item, boolean empty)
+			protected void updateItem(final ExternalTradeSource item, final boolean empty)
 			{
 				super.updateItem(item, empty);
-				if(item == null || empty)
+				if((item == null) || empty)
 				{
 					this.setText(null);
 					this.setGraphic(null);
 				}
 				else
 				{
-					RadioButton radioButton = new RadioButton(item.getExternalTradeSrcName());
+					final RadioButton radioButton = new RadioButton(item.getExternalTradeSrcName());
 					radioButton.setToggleGroup(toggleGroup);
 					this.setGraphic(radioButton);
 					//Add Listeners if any

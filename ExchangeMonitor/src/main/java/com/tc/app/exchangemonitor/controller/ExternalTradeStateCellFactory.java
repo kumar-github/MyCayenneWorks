@@ -1,12 +1,12 @@
 package com.tc.app.exchangemonitor.controller;
 
-import com.tc.app.exchangemonitor.entitybase.IExternalTradeEntity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-public class ExternalTradeStateCellFactory implements Callback<TableColumn<IExternalTradeEntity, String>, TableCell<IExternalTradeEntity, String>>
+public class ExternalTradeStateCellFactory implements Callback<TableColumn<ExternalTrade, String>, TableCell<ExternalTrade, String>>
 {
 	/*
 	// 1st way of implementing
@@ -29,31 +29,39 @@ public class ExternalTradeStateCellFactory implements Callback<TableColumn<IExte
 			}
 		};
 	}
-	*/
+	 */
 
 	//2nd way of implementing
 	@Override
-	public TableCell<IExternalTradeEntity, String> call(TableColumn<IExternalTradeEntity, String> param)
+	public TableCell<ExternalTrade, String> call(final TableColumn<ExternalTrade, String> param)
 	{
-		final TableCell<IExternalTradeEntity, String> aTableCell = new TableCell<IExternalTradeEntity, String>(){
+		final TableCell<ExternalTrade, String> aTableCell = new TableCell<ExternalTrade, String>(){
 			@Override
-			protected void updateItem(String item, boolean empty)
+			protected void updateItem(final String item, final boolean empty)
 			{
 				super.updateItem(item, empty);
-				if(empty || item == null)
+				if(empty || (item == null))
 				{
-					setText(null);
+					this.setText(null);
 				}
 				else
 				{
 					if(item.equals("1"))
-						setText("Add");
+					{
+						this.setText("Add");
+					}
 					else if(item.equals("2"))
-						setText("Update");
+					{
+						this.setText("Update");
+					}
 					else if(item.equals("3"))
-						setText("Delete");
+					{
+						this.setText("Delete");
+					}
 					else if(item.equals("4"))
-						setText("DeleteAndAdd");
+					{
+						this.setText("DeleteAndAdd");
+					}
 				}
 			}
 		};

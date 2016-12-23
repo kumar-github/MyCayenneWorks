@@ -2,77 +2,81 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.MappedSelect;
+
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-public class FetchPositionsTask extends Task<ObservableList<DummyPosition>>
+// public class FetchPositionsTask extends Task<ObservableList<DummyPosition>>
+public class FetchPositionsTask extends Task<ObservableList<DataRow>>
 {
-	private final Query sqlQuery;
+	private final MappedSelect<DataRow> mappedSelect;
 
 	public FetchPositionsTask()
 	{
-		updateMessage("");
-		updateProgress(0.0, 0.0);
-		sqlQuery = null;
+		this.updateMessage("");
+		this.updateProgress(0.0, 0.0);
+		this.mappedSelect = null;
 	}
 
-	public FetchPositionsTask(Query sqlQuery)
+	public FetchPositionsTask(final MappedSelect<DataRow> mappedSelect)
 	{
-		updateMessage("");
-		updateProgress(0.0, 0.0);
-		this.sqlQuery = sqlQuery;
+		this.updateMessage("");
+		this.updateProgress(0.0, 0.0);
+		this.mappedSelect = mappedSelect;
 	}
 
 	@Override
-	protected ObservableList<DummyPosition> call() throws Exception
+	protected ObservableList<DataRow> call() throws Exception
 	{
 		try
 		{
-			return FXCollections.observableArrayList(fetchPositionsForQuery(sqlQuery));
+			return FXCollections.observableArrayList(this.fetchPositionsForQuery(this.mappedSelect));
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			throw exception;
 		}
 	}
 
-	private List<DummyPosition> fetchPositionsForQuery(Query sqlQuery)
+	private List<DataRow> fetchPositionsForQuery(final MappedSelect<DataRow> mappedSelect)
 	{
-		List<DummyPosition> dummyPositions = null;
+		List<DataRow> dummyPositions = null;
 
 		try
 		{
-			updateMessage("Task Started...");
-			updateProgress(-1.0, -1.0);
+			this.updateMessage("Task Started...");
+			this.updateProgress(-1.0, -1.0);
 
 			try
 			{
 				Thread.sleep(1000);
 			}
-			catch(InterruptedException ex)
+			catch(final InterruptedException ex)
 			{
-				updateMessage(ex.toString());
+				this.updateMessage(ex.toString());
 			}
 
-			long startTime = System.currentTimeMillis();
-			dummyPositions = sqlQuery.list();
-			long endTime = System.currentTimeMillis();
-			updateMessage("Task Completed. It took " + (endTime - startTime) + " milliseconds to fetch " + dummyPositions.size() + " record(s).");
-			updateProgress(1.0, 1.0);
+			final long startTime = System.currentTimeMillis();
+			dummyPositions = mappedSelect.select(CayenneHelper.getCayenneServerRuntime().newContext());
+			final long endTime = System.currentTimeMillis();
+			this.updateMessage("Task Completed. It took " + (endTime - startTime) + " milliseconds to fetch " + dummyPositions.size() + " record(s).");
+			this.updateProgress(1.0, 1.0);
 
 			try
 			{
 				Thread.sleep(1000);
 			}
-			catch(InterruptedException ex)
+			catch(final InterruptedException ex)
 			{
-				updateMessage(ex.toString());
+				this.updateMessage(ex.toString());
 			}
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			throw exception;
 		}

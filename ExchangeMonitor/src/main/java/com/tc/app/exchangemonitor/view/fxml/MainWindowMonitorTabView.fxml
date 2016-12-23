@@ -301,7 +301,8 @@
 		
 		<columns>
 			<TableColumn prefWidth="130.0" text="External Trade Oid">
-			<cellValueFactory><PropertyValueFactory property="oid"/></cellValueFactory>
+			<!-- <cellValueFactory><PropertyValueFactory property="oid"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="externalTradeOid"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Trade Creation Date">
@@ -317,95 +318,117 @@
 			<TableColumn prefWidth="85.0" text="Trade State">
 			<!-- It will be awesome if the below works -->
 			<!-- <cellValueFactory><PropertyValueFactory property="externalTradeStateOid.externalTradeStateName"/></cellValueFactory> -->
-			<cellValueFactory><PropertyValueFactory property="externalTradeStateOid"/></cellValueFactory>
+			<!--  <cellValueFactory><PropertyValueFactory property="externalTradeStateOid"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="externalTradeStateO"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="95.0" text="Trade Status">
-			<cellValueFactory><PropertyValueFactory property="externalTradeStatusOid"/></cellValueFactory>
+			<!--  <cellValueFactory><PropertyValueFactory property="externalTradeStatusOid"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="externalTradeStatusO"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="85.0" text="Exchange">
-			<cellValueFactory><PropertyValueFactory property="externalTradeSourceOid"/></cellValueFactory>
+			<!-- <cellValueFactory><PropertyValueFactory property="externalTradeSourceOid"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="externalTradeSourceO"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="220.0" text="Commodity">
+			<TableColumn prefWidth="330.0" text="Commodity">
 			<!-- <cellValueFactory><CommodityCellValueFactory /></cellValueFactory> -->
-			<cellValueFactory><PropertyValueFactory property="commodity"/></cellValueFactory>
+			<!--  <cellValueFactory><PropertyValueFactory property="_commodity"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="_commodity"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Trading Period">
 			<!-- <cellValueFactory><TradingPeriodCellValueFactory /></cellValueFactory> -->
+			<!--  <cellValueFactory><PropertyValueFactory property="_tradingPeriod" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_tradingPeriod" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Call Put">
 			<!-- <cellValueFactory><CallPutCellValueFactory /></cellValueFactory> -->
+			<!--  <cellValueFactory><PropertyValueFactory property="_callPut" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_callPut" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="Strike Price">
 			<!-- <cellValueFactory><StrikePriceCellValueFactory /></cellValueFactory> -->
+			<!--  <cellValueFactory><PropertyValueFactory property="_strikePrice" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_strikePrice" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Quantity">
 			<!-- <cellValueFactory><QuantityCellValueFactory /></cellValueFactory> -->
+			<!--  <cellValueFactory><PropertyValueFactory property="_quantity" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_quantity" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Price">
+			<!--  <cellValueFactory><PropertyValueFactory property="_price" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_price" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="220.0" text="Exchange Trade#">
+			<TableColumn prefWidth="260.0" text="Exchange Trade#">
+			<!--  <cellValueFactory><PropertyValueFactory property="_exchToolsTradeNum" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_exchToolsTradeNum" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="ICTS Trade#">
+			<!--  <cellValueFactory><PropertyValueFactory property="_ictsTradeNum" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_ictsTradeNum" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="ICTS Port#">
+			<!--  <cellValueFactory><PropertyValueFactory property="_ictsPortNum" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_ictsPortNum" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="120.0" text="Buying Company">
+			<TableColumn prefWidth="150.0" text="Buying Company">
+			<!--  <cellValueFactory><PropertyValueFactory property="_buyingCompany" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyingCompany" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="120.0" text="Selling Company">
+			<TableColumn prefWidth="150.0" text="Selling Company">
+			<!--  <cellValueFactory><PropertyValueFactory property="_sellingCompany" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_sellingCompany" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="120.0" text="Buying Trader">
+			<TableColumn prefWidth="150.0" text="Buying Trader">
+			<!--  <cellValueFactory><PropertyValueFactory property="_buyingTrader" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyingTrader" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="120.0" text="Selling Trader">
+			<TableColumn prefWidth="150.0" text="Selling Trader">
+			<!--  <cellValueFactory><PropertyValueFactory property="_sellingTrader" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_sellingTrader" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="140.0" text="Input Broker">
+			<TableColumn prefWidth="160.0" text="Input Broker">
+			<!--  <cellValueFactory><PropertyValueFactory property="_inputBroker" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_inputBroker" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Buyer Clearing Broker">
+			<!--  <cellValueFactory><PropertyValueFactory property="_buyerClearingBroker" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyerClearingBroker" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Seller Clearing Broker">
+			<!--  <cellValueFactory><PropertyValueFactory property="_sellerClearingBroker" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_sellerClearingBroker" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="75.0" text="Account">
+			<TableColumn prefWidth="150.0" text="Account">
+			<!--  <cellValueFactory><PropertyValueFactory property="_buyerAccount" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyerAccount" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Trade Type">
+			<!--  <cellValueFactory><PropertyValueFactory property="_tradeType" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_tradeType" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="250.0" text="Comment">
+			<TableColumn prefWidth="400.0" text="Comment">
+			<!--  <cellValueFactory><PropertyValueFactory property="_comment" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_comment" /></cellValueFactory>
 			</TableColumn>
 		

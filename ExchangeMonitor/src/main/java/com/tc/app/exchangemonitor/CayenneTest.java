@@ -4,19 +4,23 @@
  */
 package com.tc.app.exchangemonitor;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.cayenne.query.EJBQLQuery;
-import org.apache.cayenne.query.ObjectSelect;
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.map.EntityResult;
+import org.apache.cayenne.map.SQLResult;
+import org.apache.cayenne.query.MappedSelect;
 import org.apache.cayenne.query.SQLTemplate;
 
-import com.tc.app.exchangemonitor.model.cayenne.persistent.ExchToolsTrade;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.AccountAddress;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
-import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
-import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeState;
-import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeStatus;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Trade;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 
 /**
  * @author Saravana Kumar M
@@ -27,11 +31,102 @@ public class CayenneTest
 	public static void main(final String[] args)
 	{
 		CayenneHelper.initializeCayenneServerRuntime();
-		testCall();
+		//testCall();
+		testCall1();
+	}
+
+	private static void testCall1()
+	{
+		final MappedSelect<DataRow> x = CayenneReferenceDataFetchUtil.getSelectQueryForName("PositionWithoutBuyerAccount");
+		final Map<String, String> parametersMap1 = new HashMap<>();
+		parametersMap1.put("externalTradeSourcesParam", "1");
+		parametersMap1.put("externalTradeStatusesParam", "1, 2, 3, 4");
+		parametersMap1.put("externalTradeStatesParam", "1, 2, 3, 4");
+		parametersMap1.put("buyerAccountsParam", "'TC123'");
+		parametersMap1.put("startDateParam", "'2016-01-01'");
+		parametersMap1.put("endDateParam", "'2016-12-22'");
+		x.params(parametersMap1);
+		final List<DataRow> a = x.select(CayenneHelper.getCayenneServerRuntime().newContext());
+
+		a.forEach((b) -> System.out.println(b.get("externalTradeStateName")));
+
+		System.out.println(a.size());
+
+		System.exit(0);
+		final String query = "SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in ($externalTradeSourcesParam)) AND (et.external_trade_status_oid in ($externalTradeStatusesParam)) AND (et.external_trade_state_oid IN ($externalTradeStatesParam)) AND (ett.buyer_account NOT IN ($buyerAccountsParam)) AND (ett.creation_date >= ($startDateParam)) AND (ett.creation_date <= ($endDateParam)) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
+		final SQLTemplate sqlTemplate = new SQLTemplate(ExternalTrade.class, query);
+		final Map<String, String> parametersMap = new HashMap<>();
+		parametersMap.put("externalTradeSourcesParam", "1");
+		parametersMap.put("externalTradeStatusesParam", "1, 2, 3, 4");
+		parametersMap.put("externalTradeStatesParam", "1, 2, 3, 4");
+		parametersMap.put("buyerAccountsParam", "'TC123'");
+		parametersMap.put("startDateParam", "'2016-01-01'");
+		parametersMap.put("endDateParam", "'2016-12-21'");
+		sqlTemplate.setParams(parametersMap);
+		final List<ExternalTrade> externalTrades = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(sqlTemplate);
+		System.out.println(externalTrades.size());
 	}
 
 	private static void testCall()
 	{
+		final String accountQuery = "select #result('aa.acct_addr_line_1' '' 'accountAddresses' 'accountAddresses.acct_addr_line_1'), #result('aa.acct_addr_num' '' 'accountAddresses' 'accountAddresses.acct_addr_num'), #result('a.acct_num' '' 'acct_num' 'acct_num'), #result('aa.acct_num' '' 'accountAddresses' 'accountAddresses.acct_num') from account a join account_address aa on a.acct_num = aa.acct_num where a.acct_num = 1";
+		final SQLTemplate sqlT1 = new SQLTemplate(Account.class, accountQuery);
+		sqlT1.addPrefetch("accountAddresses");
+		final List<Account> accounts = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(sqlT1);
+		System.out.println(accounts.size());
+		System.out.println(accounts.get(0).getAccountAddresses());
+		final List<AccountAddress> aas = accounts.get(0).getAccountAddresses();
+		System.out.println(aas.size());
+		System.exit(0);
+		//final String q = "select t.trade_num, ti.trade_num, ti.order_num, ti.item_num from trade t join trade_item ti on t.trade_num = ti.trade_num where t.trade_num = 193307";
+		//final String q = "select t.* from trade t join account a on t.acct_num = a.acct_num where t.trade_num = 193307";
+		//final String q = "select t.trade_num, a.acct_num from trade t join account a on t.acct_num = a.acct_num where t.trade_num = 193307";
+		final String q = "select #result('t.trade_num' '' '' 'trade_num'), #result('contr_date' 'Date'), #result('a.acct_num' '' '' 'account.acct_num'), #result('a.acct_short_name' '' '' 'account.acct_short_name') from trade t join account a on t.acct_num = a.acct_num where t.trade_num = 193307";
+		final SQLTemplate sqlT = new SQLTemplate(Trade.class, q);
+		sqlT.addPrefetch("account");
+		final List<Trade> y = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(sqlT);
+		System.out.println(y.size());
+		//y.stream().forEach((aTrade) -> System.out.println(aTrade.getTradeNum() + "" + aTrade.getAccount()));
+		y.stream().forEach((aTrade) -> System.out.println(aTrade.getTradeNum() + "" + aTrade.getContrDate()));
+		//System.exit(0);
+
+		//final MappedExec positionsQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("PositionWithoutBuyerAccount");
+		final String query = "SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (1)) AND (et.external_trade_status_oid IN (1, 2, 3, 4)) AND (et.external_trade_state_oid IN (1, 2, 3, 4)) AND (ett.buyer_account NOT IN ('TC123')) AND (ett.creation_date >= ('2016-01-01')) AND (ett.creation_date <= ('2016-12-21')) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
+		final SQLTemplate sqlTemplate = new SQLTemplate(ExternalTrade.class, query);
+		//sqlTemplate.addPrefetch("EXTERNAL_TRADE_O1");
+		//sqlTemplate.addPrefetch("externalTradeO1");
+		final List<ExternalTrade> externalTrades = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(sqlTemplate);
+
+		System.out.println(externalTrades.size());
+		for(final ExternalTrade anExternalTrade : externalTrades)
+		{
+			System.out.println(anExternalTrade.getTradeNum());
+			if(anExternalTrade.getExternalTradeO1() != null)
+			{
+				System.out.println(anExternalTrade.getExternalTradeO1().getCommodity());
+			}
+		}
+
+		//System.exit(0);
+
+		//final String positionQuery = "SELECT ets.external_trade_state_name as externalTradeStateName, ett.creation_date as creationDate, et.entry_date as entryDate, ett.exch_tools_trade_num as exchToolsTradeNum, ett.commodity as commodity, ett.trading_period as tradingPeriod, ett.call_put as callPut, ett.strike_price as strikePrice, ett.quantity as quantity, ett.price as price, ett.input_action as inputAction, ett.input_company as inputCompany, ett.accepted_action as acceptedAction, ett.accepted_company as acceptedCompany, ett.buyer_account as buyerAccount FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (:externalTradeSourcesParam)) AND (et.external_trade_status_oid IN (:externalTradeStatusesParam)) AND (et.external_trade_state_oid IN (:externalTradeStatesParam)) AND (ett.buyer_account NOT IN (:buyerAccountsParam)) AND (ett.creation_date >= (:startDate)) AND (ett.creation_date <= (:endDate)) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
+		final String positionQuery = "SELECT ets.external_trade_state_name as externalTradeStateName, ett.creation_date as creationDate, et.entry_date as entryDate, ett.exch_tools_trade_num as exchToolsTradeNum, ett.commodity as commodity, ett.trading_period as tradingPeriod, ett.call_put as callPut, ett.strike_price as strikePrice, ett.quantity as quantity, ett.price as price, ett.input_action as inputAction, ett.input_company as inputCompany, ett.accepted_action as acceptedAction, ett.accepted_company as acceptedCompany, ett.buyer_account as buyerAccount FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (1)) AND (et.external_trade_status_oid IN (1, 2, 3, 4)) AND (et.external_trade_state_oid IN (1, 2, 3, 4)) AND (ett.creation_date >= ('2016-01-01')) AND (ett.creation_date <= ('2016-12-21')) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
+		//final String positionQuery = "SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (1)) AND (et.external_trade_status_oid IN (1, 2, 3, 4)) AND (et.external_trade_state_oid IN (1, 2, 3, 4)) AND (ett.creation_date >= ('2016-01-01')) AND (ett.creation_date <= ('2016-12-20')) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
+		///final String positionQuery = "SELECT * FROM external_trade et JOIN exch_tools_trade ett ON et.oid = ett.external_trade_oid WHERE et.trade_num = 2494184";
+		//final SQLTemplate querySelect = new SQLTemplate(ExternalTrade.class, positionQuery);
+		final SQLTemplate querySelect = new SQLTemplate(com.tc.app.exchangemonitor.controller.DummyPosition.class, positionQuery);
+		final EntityResult entityResult = new EntityResult(com.tc.app.exchangemonitor.controller.DummyPosition.class);
+		final SQLResult resultDescriptor = new SQLResult();
+		resultDescriptor.addEntityResult(entityResult);
+		querySelect.setResult(resultDescriptor);
+		//querySelect.addPrefetch("externalTradeO1");
+		//querySelect.addPrefetch("EXTERNAL_TRADE_O1");
+		//querySelect.addPrefetch("ExternalTrade.externalTradeO1");
+		final List x = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(querySelect);
+		System.out.println(x);
+		System.exit(0);
+
+		/*
 		//final EJBQLQuery query = new EJBQLQuery("SELECT externalTradeAlias from ExternalTrade externalTradeAlias JOIN externalTradeAlias.externalTradeO1 exch where externalTradeAlias.tradeNum = 2494177");
 		final EJBQLQuery query = new EJBQLQuery("SELECT etAlias from ExternalTrade etAlias LEFT OUTER JOIN etalias.externalTradeO1 ex where etalias.tradeNum = 2494177");
 		final List<ExternalTrade> red = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(query);
@@ -45,6 +140,7 @@ public class CayenneTest
 		//System.out.println(red.get(0).getOrderType());
 
 		//System.exit(0);
+		 */
 
 		/*
 		final ConcurrentMap<String, Commodity> x = CayenneReferenceDataCache.loadAllActiveCurrencies();
@@ -119,16 +215,13 @@ public class CayenneTest
 		}
 		//ab.forEach((a) -> System.out.println(a.getExternalTradeStateO() + a.getExternalTradeO1().getBuyerAccount() + a.getExternalCommentOid()));
 
-		final List<ExternalTradeSource> src = ObjectSelect.query(ExternalTradeSource.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
-		System.out.println(src);
-		System.out.println(src.get(0).getExternalTradeSrcOid());
-
 		final Date startDate = new Date(116, 9, 01);
 		final Date endDate = new Date(116, 11, 18);
 		System.out.println(startDate);
 		System.out.println(endDate);
 
-		final List<ExternalTrade> abcd = ObjectSelect.query(ExternalTrade.class).where(ExternalTrade.EXTERNAL_TRADE_STATUS_O.dot(ExternalTradeStatus.EXTERNAL_TRADE_STATUS_NAME).in("Pending", "Completed", "Failed", "Skipped")).and(ExternalTrade.EXTERNAL_TRADE_SOURCE_O.dot(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME).in("NYMEX", "ICE")).and(ExternalTrade.EXTERNAL_TRADE_STATE_O.dot(ExternalTradeState.EXTERNAL_TRADE_STATE_NAME).in("Add", "Update", "Delete", "DeleteAndAdd")).and(ExternalTrade.EXTERNAL_TRADE_O1.dot(ExchToolsTrade.CREATION_DATE).between(startDate, endDate)).and(ExternalTrade.EXTERNAL_TRADE_O1.dot(ExchToolsTrade.BUYER_ACCOUNT).in("B82B18", "B82B34", "B82A35", "AMPDEMO111", "TEST", "TC123", "VARTEST EXC BRK", "WU500206")).prefetch(ExternalTrade.EXTERNAL_TRADE_O1.joint()).prefetch(ExternalTrade.EXTERNAL_COMMENT.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		//final List<ExternalTrade> abcd = ObjectSelect.query(ExternalTrade.class).where(ExternalTrade.EXTERNAL_TRADE_STATUS_O.dot(ExternalTradeStatus.EXTERNAL_TRADE_STATUS_NAME).in("Pending", "Completed", "Failed", "Skipped")).and(ExternalTrade.EXTERNAL_TRADE_SOURCE_O.dot(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME).in("NYMEX", "ICE")).and(ExternalTrade.EXTERNAL_TRADE_STATE_O.dot(ExternalTradeState.EXTERNAL_TRADE_STATE_NAME).in("Add", "Update", "Delete", "DeleteAndAdd")).and(ExternalTrade.EXTERNAL_TRADE_O1.dot(ExchToolsTrade.CREATION_DATE).between(startDate, endDate)).and(ExternalTrade.EXTERNAL_TRADE_O1.dot(ExchToolsTrade.BUYER_ACCOUNT).in("B82B18", "B82B34", "B82A35", "AMPDEMO111", "TEST", "TC123", "VARTEST EXC BRK", "WU500206")).prefetch(ExternalTrade.EXTERNAL_TRADE_O1.joint()).prefetch(ExternalTrade.EXTERNAL_COMMENT.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+		final List<ExternalTrade> abcd = null;
 		abcd.forEach((a) -> System.out.println(a.getExternalCommentOid()));
 
 		for(final ExternalTrade anExternalTrade : abcd)
