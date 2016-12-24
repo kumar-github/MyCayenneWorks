@@ -5,14 +5,10 @@
 package com.tc.app.exchangemonitor;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.cayenne.DataRow;
 import org.apache.cayenne.map.EntityResult;
 import org.apache.cayenne.map.SQLResult;
-import org.apache.cayenne.query.MappedSelect;
 import org.apache.cayenne.query.SQLTemplate;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
@@ -20,7 +16,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.AccountAddress;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Trade;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
-import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 
 /**
  * @author Saravana Kumar M
@@ -32,39 +27,6 @@ public class CayenneTest
 	{
 		CayenneHelper.initializeCayenneServerRuntime();
 		//testCall();
-		testCall1();
-	}
-
-	private static void testCall1()
-	{
-		final MappedSelect<DataRow> x = CayenneReferenceDataFetchUtil.getSelectQueryForName("PositionWithoutBuyerAccount");
-		final Map<String, String> parametersMap1 = new HashMap<>();
-		parametersMap1.put("externalTradeSourcesParam", "1");
-		parametersMap1.put("externalTradeStatusesParam", "1, 2, 3, 4");
-		parametersMap1.put("externalTradeStatesParam", "1, 2, 3, 4");
-		parametersMap1.put("buyerAccountsParam", "'TC123'");
-		parametersMap1.put("startDateParam", "'2016-01-01'");
-		parametersMap1.put("endDateParam", "'2016-12-22'");
-		x.params(parametersMap1);
-		final List<DataRow> a = x.select(CayenneHelper.getCayenneServerRuntime().newContext());
-
-		a.forEach((b) -> System.out.println(b.get("externalTradeStateName")));
-
-		System.out.println(a.size());
-
-		System.exit(0);
-		final String query = "SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in ($externalTradeSourcesParam)) AND (et.external_trade_status_oid in ($externalTradeStatusesParam)) AND (et.external_trade_state_oid IN ($externalTradeStatesParam)) AND (ett.buyer_account NOT IN ($buyerAccountsParam)) AND (ett.creation_date >= ($startDateParam)) AND (ett.creation_date <= ($endDateParam)) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
-		final SQLTemplate sqlTemplate = new SQLTemplate(ExternalTrade.class, query);
-		final Map<String, String> parametersMap = new HashMap<>();
-		parametersMap.put("externalTradeSourcesParam", "1");
-		parametersMap.put("externalTradeStatusesParam", "1, 2, 3, 4");
-		parametersMap.put("externalTradeStatesParam", "1, 2, 3, 4");
-		parametersMap.put("buyerAccountsParam", "'TC123'");
-		parametersMap.put("startDateParam", "'2016-01-01'");
-		parametersMap.put("endDateParam", "'2016-12-21'");
-		sqlTemplate.setParams(parametersMap);
-		final List<ExternalTrade> externalTrades = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(sqlTemplate);
-		System.out.println(externalTrades.size());
 	}
 
 	private static void testCall()

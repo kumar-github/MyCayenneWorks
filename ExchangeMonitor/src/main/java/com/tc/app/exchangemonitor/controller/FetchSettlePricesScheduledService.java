@@ -1,16 +1,17 @@
 package com.tc.app.exchangemonitor.controller;
 
-import org.hibernate.Query;
+import org.apache.cayenne.query.MappedSelect;
+
+import com.tc.app.exchangemonitor.model.cayenne.persistent.FakeDummySettlePrice;
 
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 
-public class FetchSettlePricesScheduledService extends ScheduledService<ObservableList<DummySettlePrice>>
+public class FetchSettlePricesScheduledService extends ScheduledService<ObservableList<FakeDummySettlePrice>>
 {
-	//private final SQLQuery sqlQuery;
-	private Query sqlQuery;
+	private MappedSelect<FakeDummySettlePrice> mappedSelect;
 	//private final Duration DELAY = Duration.seconds(5);
 	//private final Duration PERIOD = Duration.seconds(30);
 
@@ -19,23 +20,23 @@ public class FetchSettlePricesScheduledService extends ScheduledService<Observab
 		this(null, Duration.seconds(5.0), Duration.seconds(30.0));
 	}
 
-	public FetchSettlePricesScheduledService(Query sqlQuery, Duration delay, Duration period)
+	public FetchSettlePricesScheduledService(final MappedSelect<FakeDummySettlePrice> mappedSelect, final Duration delay, final Duration period)
 	{
 		super();
-		this.sqlQuery = sqlQuery;
+		this.mappedSelect = mappedSelect;
 		this.setDelay(delay);
 		this.setPeriod(period);
 	}
 
-	public void setSQLQuery(Query sqlQuery)
+	public void setMappedSelect(final MappedSelect<FakeDummySettlePrice> mappedSelect)
 	{
-		this.sqlQuery = sqlQuery;
+		this.mappedSelect = mappedSelect;
 	}
 
 	@Override
-	protected Task<ObservableList<DummySettlePrice>> createTask()
+	protected Task<ObservableList<FakeDummySettlePrice>> createTask()
 	{
-		FetchSettlePricesTask fetchSettlePricesTask = new FetchSettlePricesTask(sqlQuery);
+		final FetchSettlePricesTask fetchSettlePricesTask = new FetchSettlePricesTask(this.mappedSelect);
 		return fetchSettlePricesTask;
 	}
 

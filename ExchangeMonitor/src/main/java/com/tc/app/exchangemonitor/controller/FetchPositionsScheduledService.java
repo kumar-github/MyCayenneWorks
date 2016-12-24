@@ -8,10 +8,8 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 
-// public class FetchPositionsScheduledService extends ScheduledService<ObservableList<DummyPosition>>
 public class FetchPositionsScheduledService extends ScheduledService<ObservableList<DataRow>>
 {
-	//private final SQLQuery sqlQuery;
 	private MappedSelect<DataRow> mappedSelect;
 	//private final Duration DELAY = Duration.seconds(5);
 	//private final Duration PERIOD = Duration.seconds(30);

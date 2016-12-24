@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.query.MappedSelect;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 
@@ -11,9 +13,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-// public class FetchPositionsTask extends Task<ObservableList<DummyPosition>>
 public class FetchPositionsTask extends Task<ObservableList<DataRow>>
 {
+	private static final Logger LOGGER = LogManager.getLogger();
 	private final MappedSelect<DataRow> mappedSelect;
 
 	public FetchPositionsTask()
@@ -52,29 +54,12 @@ public class FetchPositionsTask extends Task<ObservableList<DataRow>>
 			this.updateMessage("Task Started...");
 			this.updateProgress(-1.0, -1.0);
 
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch(final InterruptedException ex)
-			{
-				this.updateMessage(ex.toString());
-			}
-
 			final long startTime = System.currentTimeMillis();
 			dummyPositions = mappedSelect.select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
+
 			this.updateMessage("Task Completed. It took " + (endTime - startTime) + " milliseconds to fetch " + dummyPositions.size() + " record(s).");
 			this.updateProgress(1.0, 1.0);
-
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch(final InterruptedException ex)
-			{
-				this.updateMessage(ex.toString());
-			}
 		}
 		catch(final Exception exception)
 		{
@@ -87,39 +72,34 @@ public class FetchPositionsTask extends Task<ObservableList<DataRow>>
 	protected void failed()
 	{
 		super.failed();
-		/*System.out.println("inside failed.");
-		updateMessage("Failed");*/
+		LOGGER.debug("Inside Failed.");
 	}
 
 	@Override
 	protected void cancelled()
 	{
 		super.cancelled();
-		/*System.out.println("inside cancelled.");
-		updateMessage("Task Cancelled.");*/
+		LOGGER.debug("Inside Cancelled.");
 	}
 
 	@Override
 	protected void running()
 	{
 		super.running();
-		/*System.out.println("inside running.");
-		updateMessage("Task Running.");*/
+		LOGGER.debug("Inside Running.");
 	}
 
 	@Override
 	protected void succeeded()
 	{
 		super.succeeded();
-		/*System.out.println("inside succeeded.");
-		updateMessage("Task Succeeded.");*/
+		LOGGER.debug("Inside Succeeded.");
 	}
 
 	@Override
 	protected void scheduled()
 	{
 		super.scheduled();
-		/*System.out.println("inside scheduled.");
-		updateMessage("Task Scheduled.");*/
+		LOGGER.debug("Inside Scheduled.");
 	}
 }

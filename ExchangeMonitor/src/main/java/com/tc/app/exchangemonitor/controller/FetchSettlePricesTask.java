@@ -2,120 +2,107 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.apache.cayenne.query.MappedSelect;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.tc.app.exchangemonitor.model.cayenne.persistent.FakeDummySettlePrice;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-public class FetchSettlePricesTask extends Task<ObservableList<DummySettlePrice>>
+public class FetchSettlePricesTask extends Task<ObservableList<FakeDummySettlePrice>>
 {
-	private final Query sqlQuery;
+	private static final Logger LOGGER = LogManager.getLogger();
+
+	private final MappedSelect<FakeDummySettlePrice> mappedSelect;
 
 	public FetchSettlePricesTask()
 	{
-		updateMessage("");
-		updateProgress(0.0, 0.0);
-		sqlQuery = null;
+		this.updateMessage("");
+		this.updateProgress(0.0, 0.0);
+		this.mappedSelect = null;
 	}
 
-	public FetchSettlePricesTask(Query sqlQuery)
+	public FetchSettlePricesTask(final MappedSelect<FakeDummySettlePrice> mappedSelect)
 	{
-		updateMessage("");
-		updateProgress(0.0, 0.0);
-		this.sqlQuery = sqlQuery;
+		this.updateMessage("");
+		this.updateProgress(0.0, 0.0);
+		this.mappedSelect = mappedSelect;
 	}
 
 	@Override
-	protected ObservableList<DummySettlePrice> call() throws Exception
+	protected ObservableList<FakeDummySettlePrice> call() throws Exception
 	{
 		try
 		{
-			return FXCollections.observableArrayList(fetchSettlePricesForQuery(sqlQuery));
+			return FXCollections.observableArrayList(this.fetchSettlePricesForQuery(this.mappedSelect));
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			throw exception;
 		}
 	}
 
-	private List<DummySettlePrice> fetchSettlePricesForQuery(Query sqlQuery)
+	private List<FakeDummySettlePrice> fetchSettlePricesForQuery(final MappedSelect<FakeDummySettlePrice> mappedSelect)
 	{
-		List<DummySettlePrice> externalTrades = null;
+		List<FakeDummySettlePrice> settlePrices = null;
 
 		try
 		{
-			updateMessage("Task Started...");
-			updateProgress(-1.0, -1.0);
+			this.updateMessage("Task Started...");
+			this.updateProgress(-1.0, -1.0);
 
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch(InterruptedException ex)
-			{
-				updateMessage(ex.toString());
-			}
+			final long startTime = System.currentTimeMillis();
+			//@formatter:off
+			settlePrices = mappedSelect.select(CayenneHelper.getCayenneServerRuntime().newContext());
+			//@formatter:on
+			final long endTime = System.currentTimeMillis();
 
-			long startTime = System.currentTimeMillis();
-			externalTrades = sqlQuery.list();
-			long endTime = System.currentTimeMillis();
-			updateMessage("Task Completed. It took " + (endTime - startTime) + " milliseconds to fetch " + externalTrades.size() + " record(s).");
-			updateProgress(1.0, 1.0);
-
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch(InterruptedException ex)
-			{
-				updateMessage(ex.toString());
-			}
+			this.updateMessage("Task Completed. It took " + (endTime - startTime) + " milli seconds to fetch " + settlePrices.size() + " record(s).");
+			this.updateProgress(1.0, 1.0);
 		}
-		catch(Exception exception)
+		catch(final Exception exception)
 		{
 			throw exception;
 		}
-		return externalTrades;
+		return settlePrices;
 	}
 
 	@Override
 	protected void failed()
 	{
 		super.failed();
-		/*System.out.println("inside failed.");
-		updateMessage("Failed");*/
+		LOGGER.debug("Inside Failed.");
 	}
 
 	@Override
 	protected void cancelled()
 	{
 		super.cancelled();
-		/*System.out.println("inside cancelled.");
-		updateMessage("Task Cancelled.");*/
+		LOGGER.debug("Inside Cancelled.");
 	}
 
 	@Override
 	protected void running()
 	{
 		super.running();
-		/*System.out.println("inside running.");
-		updateMessage("Task Running.");*/
+		LOGGER.debug("Inside Running.");
 	}
 
 	@Override
 	protected void succeeded()
 	{
 		super.succeeded();
-		/*System.out.println("inside succeeded.");
-		updateMessage("Task Succeeded.");*/
+		LOGGER.debug("Inside Succeeded.");
 	}
 
 	@Override
 	protected void scheduled()
 	{
 		super.scheduled();
-		/*System.out.println("inside scheduled.");
-		updateMessage("Task Scheduled.");*/
+		LOGGER.debug("Inside Scheduled.");
 	}
 }
