@@ -17,7 +17,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.Uom;
  */
 public abstract class _TradeItemFill extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String ITEM_FILL_NUM_PK_COLUMN = "item_fill_num";
@@ -25,247 +24,246 @@ public abstract class _TradeItemFill extends CayenneDataObject
 	public static final String ORDER_NUM_PK_COLUMN = "order_num";
 	public static final String TRADE_NUM_PK_COLUMN = "trade_num";
 
-	public static final Property<BigDecimal> BROKER_FIFO_QTY = new Property<BigDecimal>("brokerFifoQty");
-	public static final Property<Integer> BSI_FILL_NUM = new Property<Integer>("bsiFillNum");
-	public static final Property<Date> EFP_POST_DATE = new Property<Date>("efpPostDate");
-	public static final Property<String> EXTERNAL_TRADE_NUM = new Property<String>("externalTradeNum");
-	public static final Property<BigDecimal> FIFO_QTY = new Property<BigDecimal>("fifoQty");
-	public static final Property<Double> FILL_CLOSED_QTY = new Property<Double>("fillClosedQty");
-	public static final Property<Date> FILL_DATE = new Property<Date>("fillDate");
-	public static final Property<Double> FILL_PRICE = new Property<Double>("fillPrice");
-	public static final Property<Double> FILL_QTY = new Property<Double>("fillQty");
-	public static final Property<String> FILL_STATUS = new Property<String>("fillStatus");
-	public static final Property<String> IN_OUT_HOUSE_IND = new Property<String>("inOutHouseInd");
-	public static final Property<Short> INHOUSE_FILL_NUM = new Property<Short>("inhouseFillNum");
-	public static final Property<Short> INHOUSE_ITEM_NUM = new Property<Short>("inhouseItemNum");
-	public static final Property<Short> INHOUSE_ORDER_NUM = new Property<Short>("inhouseOrderNum");
-	public static final Property<Integer> INHOUSE_TRADE_NUM = new Property<Integer>("inhouseTradeNum");
-	public static final Property<String> OUTHOUSE_ACCT_ALLOC = new Property<String>("outhouseAcctAlloc");
-	public static final Property<String> OUTHOUSE_PROFIT_CENTER = new Property<String>("outhouseProfitCenter");
-	public static final Property<BigDecimal> PORT_MATCH_QTY = new Property<BigDecimal>("portMatchQty");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<Commodity> COMMODITY = new Property<Commodity>("commodity");
-	public static final Property<Uom> UOM = new Property<Uom>("uom");
-	public static final Property<Uom> UOM1 = new Property<Uom>("uom1");
+	public static final Property<BigDecimal> BROKER_FIFO_QTY = new Property<>("brokerFifoQty");
+	public static final Property<Integer> BSI_FILL_NUM = new Property<>("bsiFillNum");
+	public static final Property<Date> EFP_POST_DATE = new Property<>("efpPostDate");
+	public static final Property<String> EXTERNAL_TRADE_NUM = new Property<>("externalTradeNum");
+	public static final Property<BigDecimal> FIFO_QTY = new Property<>("fifoQty");
+	public static final Property<Double> FILL_CLOSED_QTY = new Property<>("fillClosedQty");
+	public static final Property<Date> FILL_DATE = new Property<>("fillDate");
+	public static final Property<Double> FILL_PRICE = new Property<>("fillPrice");
+	public static final Property<Double> FILL_QTY = new Property<>("fillQty");
+	public static final Property<String> FILL_STATUS = new Property<>("fillStatus");
+	public static final Property<String> IN_OUT_HOUSE_IND = new Property<>("inOutHouseInd");
+	public static final Property<Short> INHOUSE_FILL_NUM = new Property<>("inhouseFillNum");
+	public static final Property<Short> INHOUSE_ITEM_NUM = new Property<>("inhouseItemNum");
+	public static final Property<Short> INHOUSE_ORDER_NUM = new Property<>("inhouseOrderNum");
+	public static final Property<Integer> INHOUSE_TRADE_NUM = new Property<>("inhouseTradeNum");
+	public static final Property<String> OUTHOUSE_ACCT_ALLOC = new Property<>("outhouseAcctAlloc");
+	public static final Property<String> OUTHOUSE_PROFIT_CENTER = new Property<>("outhouseProfitCenter");
+	public static final Property<BigDecimal> PORT_MATCH_QTY = new Property<>("portMatchQty");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<Commodity> COMMODITY = new Property<>("commodity");
+	public static final Property<Uom> UOM = new Property<>("uom");
+	public static final Property<Uom> UOM1 = new Property<>("uom1");
 
-	public void setBrokerFifoQty(BigDecimal brokerFifoQty)
+	public void setBrokerFifoQty(final BigDecimal brokerFifoQty)
 	{
-		writeProperty("brokerFifoQty", brokerFifoQty);
+		this.writeProperty("brokerFifoQty", brokerFifoQty);
 	}
 
 	public BigDecimal getBrokerFifoQty()
 	{
-		return (BigDecimal) readProperty("brokerFifoQty");
+		return (BigDecimal) this.readProperty("brokerFifoQty");
 	}
 
-	public void setBsiFillNum(Integer bsiFillNum)
+	public void setBsiFillNum(final Integer bsiFillNum)
 	{
-		writeProperty("bsiFillNum", bsiFillNum);
+		this.writeProperty("bsiFillNum", bsiFillNum);
 	}
 
 	public Integer getBsiFillNum()
 	{
-		return (Integer) readProperty("bsiFillNum");
+		return (Integer) this.readProperty("bsiFillNum");
 	}
 
-	public void setEfpPostDate(Date efpPostDate)
+	public void setEfpPostDate(final Date efpPostDate)
 	{
-		writeProperty("efpPostDate", efpPostDate);
+		this.writeProperty("efpPostDate", efpPostDate);
 	}
 
 	public Date getEfpPostDate()
 	{
-		return (Date) readProperty("efpPostDate");
+		return (Date) this.readProperty("efpPostDate");
 	}
 
-	public void setExternalTradeNum(String externalTradeNum)
+	public void setExternalTradeNum(final String externalTradeNum)
 	{
-		writeProperty("externalTradeNum", externalTradeNum);
+		this.writeProperty("externalTradeNum", externalTradeNum);
 	}
 
 	public String getExternalTradeNum()
 	{
-		return (String) readProperty("externalTradeNum");
+		return (String) this.readProperty("externalTradeNum");
 	}
 
-	public void setFifoQty(BigDecimal fifoQty)
+	public void setFifoQty(final BigDecimal fifoQty)
 	{
-		writeProperty("fifoQty", fifoQty);
+		this.writeProperty("fifoQty", fifoQty);
 	}
 
 	public BigDecimal getFifoQty()
 	{
-		return (BigDecimal) readProperty("fifoQty");
+		return (BigDecimal) this.readProperty("fifoQty");
 	}
 
-	public void setFillClosedQty(Double fillClosedQty)
+	public void setFillClosedQty(final Double fillClosedQty)
 	{
-		writeProperty("fillClosedQty", fillClosedQty);
+		this.writeProperty("fillClosedQty", fillClosedQty);
 	}
 
 	public Double getFillClosedQty()
 	{
-		return (Double) readProperty("fillClosedQty");
+		return (Double) this.readProperty("fillClosedQty");
 	}
 
-	public void setFillDate(Date fillDate)
+	public void setFillDate(final Date fillDate)
 	{
-		writeProperty("fillDate", fillDate);
+		this.writeProperty("fillDate", fillDate);
 	}
 
 	public Date getFillDate()
 	{
-		return (Date) readProperty("fillDate");
+		return (Date) this.readProperty("fillDate");
 	}
 
-	public void setFillPrice(Double fillPrice)
+	public void setFillPrice(final Double fillPrice)
 	{
-		writeProperty("fillPrice", fillPrice);
+		this.writeProperty("fillPrice", fillPrice);
 	}
 
 	public Double getFillPrice()
 	{
-		return (Double) readProperty("fillPrice");
+		return (Double) this.readProperty("fillPrice");
 	}
 
-	public void setFillQty(Double fillQty)
+	public void setFillQty(final Double fillQty)
 	{
-		writeProperty("fillQty", fillQty);
+		this.writeProperty("fillQty", fillQty);
 	}
 
 	public Double getFillQty()
 	{
-		return (Double) readProperty("fillQty");
+		return (Double) this.readProperty("fillQty");
 	}
 
-	public void setFillStatus(String fillStatus)
+	public void setFillStatus(final String fillStatus)
 	{
-		writeProperty("fillStatus", fillStatus);
+		this.writeProperty("fillStatus", fillStatus);
 	}
 
 	public String getFillStatus()
 	{
-		return (String) readProperty("fillStatus");
+		return (String) this.readProperty("fillStatus");
 	}
 
-	public void setInOutHouseInd(String inOutHouseInd)
+	public void setInOutHouseInd(final String inOutHouseInd)
 	{
-		writeProperty("inOutHouseInd", inOutHouseInd);
+		this.writeProperty("inOutHouseInd", inOutHouseInd);
 	}
 
 	public String getInOutHouseInd()
 	{
-		return (String) readProperty("inOutHouseInd");
+		return (String) this.readProperty("inOutHouseInd");
 	}
 
-	public void setInhouseFillNum(Short inhouseFillNum)
+	public void setInhouseFillNum(final Short inhouseFillNum)
 	{
-		writeProperty("inhouseFillNum", inhouseFillNum);
+		this.writeProperty("inhouseFillNum", inhouseFillNum);
 	}
 
 	public Short getInhouseFillNum()
 	{
-		return (Short) readProperty("inhouseFillNum");
+		return (Short) this.readProperty("inhouseFillNum");
 	}
 
-	public void setInhouseItemNum(Short inhouseItemNum)
+	public void setInhouseItemNum(final Short inhouseItemNum)
 	{
-		writeProperty("inhouseItemNum", inhouseItemNum);
+		this.writeProperty("inhouseItemNum", inhouseItemNum);
 	}
 
 	public Short getInhouseItemNum()
 	{
-		return (Short) readProperty("inhouseItemNum");
+		return (Short) this.readProperty("inhouseItemNum");
 	}
 
-	public void setInhouseOrderNum(Short inhouseOrderNum)
+	public void setInhouseOrderNum(final Short inhouseOrderNum)
 	{
-		writeProperty("inhouseOrderNum", inhouseOrderNum);
+		this.writeProperty("inhouseOrderNum", inhouseOrderNum);
 	}
 
 	public Short getInhouseOrderNum()
 	{
-		return (Short) readProperty("inhouseOrderNum");
+		return (Short) this.readProperty("inhouseOrderNum");
 	}
 
-	public void setInhouseTradeNum(Integer inhouseTradeNum)
+	public void setInhouseTradeNum(final Integer inhouseTradeNum)
 	{
-		writeProperty("inhouseTradeNum", inhouseTradeNum);
+		this.writeProperty("inhouseTradeNum", inhouseTradeNum);
 	}
 
 	public Integer getInhouseTradeNum()
 	{
-		return (Integer) readProperty("inhouseTradeNum");
+		return (Integer) this.readProperty("inhouseTradeNum");
 	}
 
-	public void setOuthouseAcctAlloc(String outhouseAcctAlloc)
+	public void setOuthouseAcctAlloc(final String outhouseAcctAlloc)
 	{
-		writeProperty("outhouseAcctAlloc", outhouseAcctAlloc);
+		this.writeProperty("outhouseAcctAlloc", outhouseAcctAlloc);
 	}
 
 	public String getOuthouseAcctAlloc()
 	{
-		return (String) readProperty("outhouseAcctAlloc");
+		return (String) this.readProperty("outhouseAcctAlloc");
 	}
 
-	public void setOuthouseProfitCenter(String outhouseProfitCenter)
+	public void setOuthouseProfitCenter(final String outhouseProfitCenter)
 	{
-		writeProperty("outhouseProfitCenter", outhouseProfitCenter);
+		this.writeProperty("outhouseProfitCenter", outhouseProfitCenter);
 	}
 
 	public String getOuthouseProfitCenter()
 	{
-		return (String) readProperty("outhouseProfitCenter");
+		return (String) this.readProperty("outhouseProfitCenter");
 	}
 
-	public void setPortMatchQty(BigDecimal portMatchQty)
+	public void setPortMatchQty(final BigDecimal portMatchQty)
 	{
-		writeProperty("portMatchQty", portMatchQty);
+		this.writeProperty("portMatchQty", portMatchQty);
 	}
 
 	public BigDecimal getPortMatchQty()
 	{
-		return (BigDecimal) readProperty("portMatchQty");
+		return (BigDecimal) this.readProperty("portMatchQty");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setCommodity(Commodity commodity)
+	public void setCommodity(final Commodity commodity)
 	{
-		setToOneTarget("commodity", commodity, true);
+		this.setToOneTarget("commodity", commodity, true);
 	}
 
 	public Commodity getCommodity()
 	{
-		return (Commodity) readProperty("commodity");
+		return (Commodity) this.readProperty("commodity");
 	}
 
-	public void setUom(Uom uom)
+	public void setUom(final Uom uom)
 	{
-		setToOneTarget("uom", uom, true);
+		this.setToOneTarget("uom", uom, true);
 	}
 
 	public Uom getUom()
 	{
-		return (Uom) readProperty("uom");
+		return (Uom) this.readProperty("uom");
 	}
 
-	public void setUom1(Uom uom1)
+	public void setUom1(final Uom uom1)
 	{
-		setToOneTarget("uom1", uom1, true);
+		this.setToOneTarget("uom1", uom1, true);
 	}
 
 	public Uom getUom1()
 	{
-		return (Uom) readProperty("uom1");
+		return (Uom) this.readProperty("uom1");
 	}
-
 }

@@ -178,7 +178,7 @@ public class PortfoliosMappingUpdatePopupController implements IGenericControlle
 			{
 				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateMapping");
 				updateMappingQuery.param("aliasValueParam", ictsPortfolio);
-				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U"));
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);
 				updateMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 

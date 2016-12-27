@@ -23,6 +23,8 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import com.tc.app.exchangemonitor.controller.TradeItemFillDateCellFactory?>
+<?import com.tc.app.exchangemonitor.controller.TradeItemFillDateCellValueFactory?>
 
 <Tab text="Settle Prices" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.MainApplicationSettlePricesTabController">
 
@@ -79,7 +81,7 @@
 		<content>
 			<VBox spacing="5.0">
 			<children>
-				<Button text="Update Settle Prices"/>
+				<Button text="Update Settle Prices" onAction="#handleUpdateSettlePriceButtonClick"/>
 			</children>
 			<padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding>
 			</VBox>
@@ -127,8 +129,10 @@
 			<cellValueFactory><PropertyValueFactory property="traderFullName"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="140.0" text="Trade Date">
-			<cellValueFactory><PropertyValueFactory property="fillDate"/></cellValueFactory>
+			<TableColumn prefWidth="160.0" text="Trade Date">
+			<!-- <cellValueFactory><PropertyValueFactory property="fillDate"/></cellValueFactory> -->
+			<cellValueFactory><TradeItemFillDateCellValueFactory /></cellValueFactory>
+			<cellFactory><TradeItemFillDateCellFactory/></cellFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Commodity">
@@ -155,12 +159,15 @@
 			<cellValueFactory><PropertyValueFactory property="fillPrice" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="140.0" text="Portfolio">
+			<TableColumn prefWidth="160.0" text="Portfolio">
 			<cellValueFactory><PropertyValueFactory property="portNumNameString" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Comment">
 			<cellValueFactory><PropertyValueFactory property="cmntNum" /></cellValueFactory>
+			</TableColumn>
+			
+			<TableColumn prefWidth="110.0" text="Price Update Status">
 			</TableColumn>
 			
 		</columns>

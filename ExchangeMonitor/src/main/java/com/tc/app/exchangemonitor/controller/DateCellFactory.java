@@ -1,6 +1,6 @@
 package com.tc.app.exchangemonitor.controller;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
@@ -9,14 +9,15 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-public class DateCellFactory implements Callback<TableColumn<ExternalTrade, ZonedDateTime>, TableCell<ExternalTrade, ZonedDateTime>>
+// public class DateCellFactory implements Callback<TableColumn<ExternalTrade, ZonedDateTime>, TableCell<ExternalTrade, ZonedDateTime>>
+public class DateCellFactory implements Callback<TableColumn<ExternalTrade, LocalDateTime>, TableCell<ExternalTrade, LocalDateTime>>
 {
 	@Override
-	public TableCell<ExternalTrade, ZonedDateTime> call(final TableColumn<ExternalTrade, ZonedDateTime> param)
+	public TableCell<ExternalTrade, LocalDateTime> call(final TableColumn<ExternalTrade, LocalDateTime> param)
 	{
-		return new TableCell<ExternalTrade, ZonedDateTime>(){
+		return new TableCell<ExternalTrade, LocalDateTime>(){
 			@Override
-			protected void updateItem(final ZonedDateTime item, final boolean empty)
+			protected void updateItem(final LocalDateTime item, final boolean empty)
 			{
 				super.updateItem(item, empty);
 				if(empty || (item == null))
@@ -25,7 +26,10 @@ public class DateCellFactory implements Callback<TableColumn<ExternalTrade, Zone
 				}
 				else
 				{
-					this.setText(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss z").format(item));
+					//this.setText(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss z").format(item));
+					//@formatter:off
+					this.setText(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss").format(item));
+					//@formatter:on
 				}
 			}
 		};

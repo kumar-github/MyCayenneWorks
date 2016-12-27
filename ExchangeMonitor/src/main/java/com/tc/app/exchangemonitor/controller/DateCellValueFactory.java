@@ -1,6 +1,6 @@
 package com.tc.app.exchangemonitor.controller;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
@@ -9,10 +9,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 
-public class DateCellValueFactory implements Callback<TableColumn.CellDataFeatures<ExternalTrade, ZonedDateTime>, ObservableValue<ZonedDateTime>>
+public class DateCellValueFactory implements Callback<TableColumn.CellDataFeatures<ExternalTrade, LocalDateTime>, ObservableValue<LocalDateTime>>
 {
 	@Override
-	public ObservableValue<ZonedDateTime> call(final CellDataFeatures<ExternalTrade, ZonedDateTime> param)
+	public ObservableValue<LocalDateTime> call(final CellDataFeatures<ExternalTrade, LocalDateTime> param)
 	{
 		//return param.getValue().getCreationDate().toInstant().atZone(ZoneId.systemDefault());
 		//return new ReadOnlyObjectWrapper<ZonedDateTime>(param.getValue().getCreationDate().toInstant().atZone(ZoneId.systemDefault()));

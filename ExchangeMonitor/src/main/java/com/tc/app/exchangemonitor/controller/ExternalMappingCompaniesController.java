@@ -192,7 +192,7 @@ public class ExternalMappingCompaniesController implements Initializable
 		{
 			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
 			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
-			CayenneReferenceDataFetchUtil.generateNewTransaction();
+			CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U");
 			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 			LOGGER.info("{} Mapping Deleted Successfully.", (externalMappingOid + "<-->" + selectedMappingToDelete));

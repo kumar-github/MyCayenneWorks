@@ -14,7 +14,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.TradingPeriod;
  */
 public abstract class _Price extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String COMMKT_KEY_PK_COLUMN = "commkt_key";
@@ -22,148 +21,147 @@ public abstract class _Price extends CayenneDataObject
 	public static final String PRICE_SOURCE_CODE_PK_COLUMN = "price_source_code";
 	public static final String TRADING_PRD_PK_COLUMN = "trading_prd";
 
-	public static final Property<String> AVG_CLOSED_CREATION_IND = new Property<String>("avgClosedCreationInd");
-	public static final Property<Double> AVG_CLOSED_PRICE = new Property<Double>("avgClosedPrice");
-	public static final Property<String> CREATION_TYPE = new Property<String>("creationType");
-	public static final Property<String> HIGH_ASKED_CREATION_IND = new Property<String>("highAskedCreationInd");
-	public static final Property<Double> HIGH_ASKED_PRICE = new Property<Double>("highAskedPrice");
-	public static final Property<String> LOW_BID_CREATION_IND = new Property<String>("lowBidCreationInd");
-	public static final Property<Double> LOW_BID_PRICE = new Property<Double>("lowBidPrice");
-	public static final Property<Double> OPEN_INTEREST = new Property<Double>("openInterest");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<Double> VOL_TRADED = new Property<Double>("volTraded");
-	public static final Property<PriceSource> PRICE_SOURCE = new Property<PriceSource>("priceSource");
-	public static final Property<TradingPeriod> TRADING_PERIOD = new Property<TradingPeriod>("tradingPeriod");
-	public static final Property<TradingPeriod> TRADING_PERIOD1 = new Property<TradingPeriod>("tradingPeriod1");
+	public static final Property<String> AVG_CLOSED_CREATION_IND = new Property<>("avgClosedCreationInd");
+	public static final Property<Double> AVG_CLOSED_PRICE = new Property<>("avgClosedPrice");
+	public static final Property<String> CREATION_TYPE = new Property<>("creationType");
+	public static final Property<String> HIGH_ASKED_CREATION_IND = new Property<>("highAskedCreationInd");
+	public static final Property<Double> HIGH_ASKED_PRICE = new Property<>("highAskedPrice");
+	public static final Property<String> LOW_BID_CREATION_IND = new Property<>("lowBidCreationInd");
+	public static final Property<Double> LOW_BID_PRICE = new Property<>("lowBidPrice");
+	public static final Property<Double> OPEN_INTEREST = new Property<>("openInterest");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<Double> VOL_TRADED = new Property<>("volTraded");
+	public static final Property<PriceSource> PRICE_SOURCE = new Property<>("priceSource");
+	public static final Property<TradingPeriod> TRADING_PERIOD = new Property<>("tradingPeriod");
+	public static final Property<TradingPeriod> TRADING_PERIOD1 = new Property<>("tradingPeriod1");
 
-	public void setAvgClosedCreationInd(String avgClosedCreationInd)
+	public void setAvgClosedCreationInd(final String avgClosedCreationInd)
 	{
-		writeProperty("avgClosedCreationInd", avgClosedCreationInd);
+		this.writeProperty("avgClosedCreationInd", avgClosedCreationInd);
 	}
 
 	public String getAvgClosedCreationInd()
 	{
-		return (String) readProperty("avgClosedCreationInd");
+		return (String) this.readProperty("avgClosedCreationInd");
 	}
 
-	public void setAvgClosedPrice(Double avgClosedPrice)
+	public void setAvgClosedPrice(final Double avgClosedPrice)
 	{
-		writeProperty("avgClosedPrice", avgClosedPrice);
+		this.writeProperty("avgClosedPrice", avgClosedPrice);
 	}
 
 	public Double getAvgClosedPrice()
 	{
-		return (Double) readProperty("avgClosedPrice");
+		return (Double) this.readProperty("avgClosedPrice");
 	}
 
-	public void setCreationType(String creationType)
+	public void setCreationType(final String creationType)
 	{
-		writeProperty("creationType", creationType);
+		this.writeProperty("creationType", creationType);
 	}
 
 	public String getCreationType()
 	{
-		return (String) readProperty("creationType");
+		return (String) this.readProperty("creationType");
 	}
 
-	public void setHighAskedCreationInd(String highAskedCreationInd)
+	public void setHighAskedCreationInd(final String highAskedCreationInd)
 	{
-		writeProperty("highAskedCreationInd", highAskedCreationInd);
+		this.writeProperty("highAskedCreationInd", highAskedCreationInd);
 	}
 
 	public String getHighAskedCreationInd()
 	{
-		return (String) readProperty("highAskedCreationInd");
+		return (String) this.readProperty("highAskedCreationInd");
 	}
 
-	public void setHighAskedPrice(Double highAskedPrice)
+	public void setHighAskedPrice(final Double highAskedPrice)
 	{
-		writeProperty("highAskedPrice", highAskedPrice);
+		this.writeProperty("highAskedPrice", highAskedPrice);
 	}
 
 	public Double getHighAskedPrice()
 	{
-		return (Double) readProperty("highAskedPrice");
+		return (Double) this.readProperty("highAskedPrice");
 	}
 
-	public void setLowBidCreationInd(String lowBidCreationInd)
+	public void setLowBidCreationInd(final String lowBidCreationInd)
 	{
-		writeProperty("lowBidCreationInd", lowBidCreationInd);
+		this.writeProperty("lowBidCreationInd", lowBidCreationInd);
 	}
 
 	public String getLowBidCreationInd()
 	{
-		return (String) readProperty("lowBidCreationInd");
+		return (String) this.readProperty("lowBidCreationInd");
 	}
 
-	public void setLowBidPrice(Double lowBidPrice)
+	public void setLowBidPrice(final Double lowBidPrice)
 	{
-		writeProperty("lowBidPrice", lowBidPrice);
+		this.writeProperty("lowBidPrice", lowBidPrice);
 	}
 
 	public Double getLowBidPrice()
 	{
-		return (Double) readProperty("lowBidPrice");
+		return (Double) this.readProperty("lowBidPrice");
 	}
 
-	public void setOpenInterest(Double openInterest)
+	public void setOpenInterest(final Double openInterest)
 	{
-		writeProperty("openInterest", openInterest);
+		this.writeProperty("openInterest", openInterest);
 	}
 
 	public Double getOpenInterest()
 	{
-		return (Double) readProperty("openInterest");
+		return (Double) this.readProperty("openInterest");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setVolTraded(Double volTraded)
+	public void setVolTraded(final Double volTraded)
 	{
-		writeProperty("volTraded", volTraded);
+		this.writeProperty("volTraded", volTraded);
 	}
 
 	public Double getVolTraded()
 	{
-		return (Double) readProperty("volTraded");
+		return (Double) this.readProperty("volTraded");
 	}
 
-	public void setPriceSource(PriceSource priceSource)
+	public void setPriceSource(final PriceSource priceSource)
 	{
-		setToOneTarget("priceSource", priceSource, true);
+		this.setToOneTarget("priceSource", priceSource, true);
 	}
 
 	public PriceSource getPriceSource()
 	{
-		return (PriceSource) readProperty("priceSource");
+		return (PriceSource) this.readProperty("priceSource");
 	}
 
-	public void setTradingPeriod(TradingPeriod tradingPeriod)
+	public void setTradingPeriod(final TradingPeriod tradingPeriod)
 	{
-		setToOneTarget("tradingPeriod", tradingPeriod, true);
+		this.setToOneTarget("tradingPeriod", tradingPeriod, true);
 	}
 
 	public TradingPeriod getTradingPeriod()
 	{
-		return (TradingPeriod) readProperty("tradingPeriod");
+		return (TradingPeriod) this.readProperty("tradingPeriod");
 	}
 
-	public void setTradingPeriod1(TradingPeriod tradingPeriod1)
+	public void setTradingPeriod1(final TradingPeriod tradingPeriod1)
 	{
-		setToOneTarget("tradingPeriod1", tradingPeriod1, true);
+		this.setToOneTarget("tradingPeriod1", tradingPeriod1, true);
 	}
 
 	public TradingPeriod getTradingPeriod1()
 	{
-		return (TradingPeriod) readProperty("tradingPeriod1");
+		return (TradingPeriod) this.readProperty("tradingPeriod1");
 	}
-
 }

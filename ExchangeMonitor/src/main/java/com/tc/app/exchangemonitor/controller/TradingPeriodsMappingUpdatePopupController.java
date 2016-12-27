@@ -150,7 +150,7 @@ public class TradingPeriodsMappingUpdatePopupController implements IGenericContr
 			{
 				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateMapping");
 				updateMappingQuery.param("aliasValueParam", tradingPeriodOffsetMonth);
-				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U"));
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);
 				updateMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 

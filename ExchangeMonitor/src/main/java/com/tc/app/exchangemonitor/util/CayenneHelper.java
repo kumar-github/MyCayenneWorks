@@ -1,6 +1,5 @@
 package com.tc.app.exchangemonitor.util;
 
-import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.configuration.server.ServerRuntimeBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +9,6 @@ public class CayenneHelper
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final ServerRuntime cayenneServerRuntime;
-	private static final ObjectContext cayenneObjectContext;
 
 	static
 	{
@@ -19,10 +17,10 @@ public class CayenneHelper
 			//final Instant startTime = Instant.now();
 			final long startTime = System.currentTimeMillis();
 			cayenneServerRuntime = ServerRuntimeBuilder.builder().addConfig("cayenne/cayenne-ExchangeMonitor.xml").build();
-			cayenneObjectContext = cayenneServerRuntime.newContext();
+			cayenneServerRuntime.newContext();
 			//final Instant endTime = Instant.now();
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took " + (endTime - startTime) + " millisecs to create Cayenne Server Runtime.");
+			LOGGER.info("It took " + (endTime - startTime) + " milli seconds to create Cayenne Server Runtime.");
 		}
 		catch(final Throwable exception)
 		{

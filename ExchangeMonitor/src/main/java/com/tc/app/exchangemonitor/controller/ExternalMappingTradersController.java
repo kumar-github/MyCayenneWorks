@@ -259,7 +259,7 @@ public class ExternalMappingTradersController implements IGenericController
 			/* Commented the above logic, we don't need all these information to just delete a mapping. oid is enough. SHAME ON ME. WHY DID I WRITE THAT?  */
 			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
 			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
-			CayenneReferenceDataFetchUtil.generateNewTransaction();
+			CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U");
 			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 			LOGGER.info("{} Mapping Deleted Successfully.", (externalMappingOid + "<-->" + selectedMappingToDelete));

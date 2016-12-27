@@ -1,6 +1,6 @@
 package com.tc.app.exchangemonitor.controller;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
@@ -60,7 +60,7 @@ public class TradeCreationDateCellFactory extends DateCellFactory
 
 	//3rd way of implementing. Just move the logic to a base class and call it.
 	@Override
-	public TableCell<ExternalTrade, ZonedDateTime> call(final TableColumn<ExternalTrade, ZonedDateTime> cellData)
+	public TableCell<ExternalTrade, LocalDateTime> call(final TableColumn<ExternalTrade, LocalDateTime> cellData)
 	{
 		return super.call(cellData);
 	}

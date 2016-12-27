@@ -156,7 +156,7 @@ public class TemplateTradesMappingAddPopupController implements IGenericControll
 			if(!doesBrokerMappingExistsAlready)
 			{
 				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("InsertMapping");
-				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum());
+				insertMappingQuery.param("oidParam", CayenneReferenceDataFetchUtil.generateNewNum("external_mapping_oid", 0));
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
 				insertMappingQuery.param("mappingTypeParam", TEMPLATE_TRADE_MAPPING_TYPE);
 				insertMappingQuery.param("externalValue1Param", externalSourceCommodity);
@@ -164,7 +164,7 @@ public class TemplateTradesMappingAddPopupController implements IGenericControll
 				insertMappingQuery.param("externalValue3Param", null);
 				insertMappingQuery.param("externalValue4Param", null);
 				insertMappingQuery.param("aliasValueParam", ictsTemplateTrade);
-				insertMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				insertMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U"));
 				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
 				LOGGER.info("Mapping Saved Successfully.");

@@ -139,8 +139,8 @@ public class TradingPeriodsMappingAddPopupController implements IGenericControll
 		{
 			if(!doesBrokerMappingExistsAlready)
 			{
-				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction();
-				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum();
+				final Integer transid = CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U");
+				final Integer newNum = CayenneReferenceDataFetchUtil.generateNewNum("external_mapping_oid", 0);
 				final MappedExec insertMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("InsertMapping");
 				insertMappingQuery.param("oidParam", newNum);
 				insertMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);

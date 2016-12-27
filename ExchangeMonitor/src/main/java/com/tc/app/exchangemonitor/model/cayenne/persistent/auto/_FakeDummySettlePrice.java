@@ -49,16 +49,16 @@ public abstract class _FakeDummySettlePrice extends CayenneDataObject
 		return (String) this.readProperty("cmdtyCode");
 	}
 
-	public int getCmntNum()
+	public Integer getCmntNum()
 	{
 		final Object value = this.readProperty("cmntNum");
-		return (value != null) ? (Integer) value : 0;
+		return (value != null) ? (Integer) value : null;
 	}
 
-	public int getCommktKey()
+	public Integer getCommktKey()
 	{
 		final Object value = this.readProperty("commktKey");
-		return (value != null) ? (Integer) value : 0;
+		return (value != null) ? (Integer) value : null;
 	}
 
 	public String getExternalTradeNum()
@@ -71,25 +71,25 @@ public abstract class _FakeDummySettlePrice extends CayenneDataObject
 		return (Date) this.readProperty("fillDate");
 	}
 
-	public double getFillPrice()
+	public Double getFillPrice()
 	{
 		final Object value = this.readProperty("fillPrice");
-		return (value != null) ? (Double) value : 0;
+		return (value != null) ? (Double) value : 0.0;
 	}
 
-	public double getFillQty()
+	public Double getFillQty()
 	{
 		final Object value = this.readProperty("fillQty");
-		return (value != null) ? (Double) value : 0;
+		return (value != null) ? (Double) value : 0.0;
 	}
 
-	public short getItemFillNum()
+	public Short getItemFillNum()
 	{
 		final Object value = this.readProperty("itemFillNum");
 		return (value != null) ? (Short) value : 0;
 	}
 
-	public short getItemNum()
+	public Short getItemNum()
 	{
 		final Object value = this.readProperty("itemNum");
 		return (value != null) ? (Short) value : 0;
@@ -100,16 +100,16 @@ public abstract class _FakeDummySettlePrice extends CayenneDataObject
 		return (String) this.readProperty("orderInstrCode");
 	}
 
-	public short getOrderNum()
+	public Short getOrderNum()
 	{
 		final Object value = this.readProperty("orderNum");
 		return (value != null) ? (Short) value : 0;
 	}
 
-	public double getOrderPrice()
+	public Double getOrderPrice()
 	{
 		final Object value = this.readProperty("orderPrice");
-		return (value != null) ? (Double) value : 0;
+		return (value != null) ? (Double) value : 0.0;
 	}
 
 	public String getPSInd()
@@ -127,7 +127,7 @@ public abstract class _FakeDummySettlePrice extends CayenneDataObject
 		return (String) this.readProperty("priceSourceCode");
 	}
 
-	public int getRealPortNum()
+	public Integer getRealPortNum()
 	{
 		final Object value = this.readProperty("realPortNum");
 		return (value != null) ? (Integer) value : 0;

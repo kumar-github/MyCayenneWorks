@@ -2,22 +2,22 @@ package com.tc.app.exchangemonitor.controller;
 
 import java.util.List;
 
+import org.apache.cayenne.DataRow;
 import org.apache.cayenne.query.MappedSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.model.cayenne.persistent.FakeDummySettlePrice;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-public class FetchSettlePricesTask extends Task<ObservableList<FakeDummySettlePrice>>
+public class FetchSettlePricesTask extends Task<ObservableList<DataRow>>
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final MappedSelect<FakeDummySettlePrice> mappedSelect;
+	private final MappedSelect<DataRow> mappedSelect;
 
 	public FetchSettlePricesTask()
 	{
@@ -26,7 +26,7 @@ public class FetchSettlePricesTask extends Task<ObservableList<FakeDummySettlePr
 		this.mappedSelect = null;
 	}
 
-	public FetchSettlePricesTask(final MappedSelect<FakeDummySettlePrice> mappedSelect)
+	public FetchSettlePricesTask(final MappedSelect<DataRow> mappedSelect)
 	{
 		this.updateMessage("");
 		this.updateProgress(0.0, 0.0);
@@ -34,7 +34,7 @@ public class FetchSettlePricesTask extends Task<ObservableList<FakeDummySettlePr
 	}
 
 	@Override
-	protected ObservableList<FakeDummySettlePrice> call() throws Exception
+	protected ObservableList<DataRow> call() throws Exception
 	{
 		try
 		{
@@ -46,9 +46,9 @@ public class FetchSettlePricesTask extends Task<ObservableList<FakeDummySettlePr
 		}
 	}
 
-	private List<FakeDummySettlePrice> fetchSettlePricesForQuery(final MappedSelect<FakeDummySettlePrice> mappedSelect)
+	private List<DataRow> fetchSettlePricesForQuery(final MappedSelect<DataRow> mappedSelect)
 	{
-		List<FakeDummySettlePrice> settlePrices = null;
+		List<DataRow> settlePrices = null;
 
 		try
 		{

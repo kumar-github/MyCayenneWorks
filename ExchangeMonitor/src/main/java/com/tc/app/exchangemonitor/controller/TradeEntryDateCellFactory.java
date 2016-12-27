@@ -1,6 +1,6 @@
 package com.tc.app.exchangemonitor.controller;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 
@@ -9,7 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 // public class TradeCreationDateCellFactory implements Callback<TableColumn<DummyExternalTrade, ZonedDateTime>, TableCell<DummyExternalTrade, ZonedDateTime>>
-public class TradeEntryDateCellFactory extends DateCellFactory implements Callback<TableColumn<ExternalTrade, ZonedDateTime>, TableCell<ExternalTrade, ZonedDateTime>>
+public class TradeEntryDateCellFactory extends DateCellFactory implements Callback<TableColumn<ExternalTrade, LocalDateTime>, TableCell<ExternalTrade, LocalDateTime>>
 {
 	/*
 	// 1st way of implementing
@@ -60,7 +60,7 @@ public class TradeEntryDateCellFactory extends DateCellFactory implements Callba
 
 	//3rd way of implementing. Just move the logic to a base class and call it.
 	@Override
-	public TableCell<ExternalTrade, ZonedDateTime> call(final TableColumn<ExternalTrade, ZonedDateTime> param)
+	public TableCell<ExternalTrade, LocalDateTime> call(final TableColumn<ExternalTrade, LocalDateTime> param)
 	{
 		return super.call(param);
 	}

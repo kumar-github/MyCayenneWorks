@@ -4,15 +4,20 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import org.apache.cayenne.DataRow;
 import org.apache.cayenne.query.MappedSelect;
+import org.apache.cayenne.query.SQLSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.model.cayenne.persistent.FakeDummySettlePrice;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Price;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.util.DatePickerConverter;
 
@@ -84,7 +89,7 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 	private DatePicker endDateDatePicker;
 
 	@FXML
-	private TableView<FakeDummySettlePrice> settlePricesTableView;
+	private TableView<DummySettlePrice> settlePricesTableView;
 
 	@FXML
 	private TextField settlePricesTableViewDataFilterTextField;
@@ -115,9 +120,9 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 
 	private InvalidationListener settlePricesTableViewDataFilterTextFieldKeyListener = null;
 
-	private final ObservableList<FakeDummySettlePrice> settlePricesObservableList = FXCollections.observableArrayList();
-	private final FilteredList<FakeDummySettlePrice> settlePricesFilteredList = new FilteredList<>(this.settlePricesObservableList, null);
-	private final SortedList<FakeDummySettlePrice> settlePricesSortedList = new SortedList<>(this.settlePricesFilteredList);
+	private final ObservableList<DummySettlePrice> settlePricesObservableList = FXCollections.observableArrayList();
+	private final FilteredList<DummySettlePrice> settlePricesFilteredList = new FilteredList<>(this.settlePricesObservableList, null);
+	private final SortedList<DummySettlePrice> settlePricesSortedList = new SortedList<>(this.settlePricesFilteredList);
 
 	private final FetchSettlePricesScheduledService fetchSettlePricesScheduledService = new FetchSettlePricesScheduledService();
 
@@ -345,7 +350,7 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 
 	private void fetchSettlePricesFromDBForTableView()
 	{
-		MappedSelect<FakeDummySettlePrice> mappedSelectQueryToFetchSettlePrices = null;
+		MappedSelect<DataRow> mappedSelectQueryToFetchSettlePrices = null;
 
 		//@formatter:off
 		final String selectedStartDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.startDateDatePicker.getValue() != null ? this.startDateDatePicker.getValue() : LocalDate.now());
@@ -356,7 +361,7 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 		parametersMap.put("startDateParam", selectedStartDate);
 		parametersMap.put("endDateParam", selectedEndDate);
 
-		mappedSelectQueryToFetchSettlePrices = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchSettlePrices", FakeDummySettlePrice.class);
+		mappedSelectQueryToFetchSettlePrices = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchSettlePrices");
 		mappedSelectQueryToFetchSettlePrices.params(parametersMap);
 
 		/* This will fetch the data in a background thread, so UI will not be freezed and user can interact with the UI. Here we use a scheduled service which will invoke the task recurringly. */
@@ -386,8 +391,73 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 
 	private void doThisIfFetchSucceeded()
 	{
+		final List<DummySettlePrice> allSettlePrices = this.createDummySettlePriceObjectsForSettlePriceDataRows(this.fetchSettlePricesScheduledService.getValue());
 		this.settlePricesObservableList.clear();
-		this.settlePricesObservableList.addAll(this.fetchSettlePricesScheduledService.getValue());
+		this.settlePricesObservableList.addAll(allSettlePrices);
+	}
+
+	private List<DummySettlePrice> createDummySettlePriceObjectsForSettlePriceDataRows(final ObservableList<DataRow> settlePriceDataRows)
+	{
+		if(settlePriceDataRows == null)
+			return null;
+		//@formatter:off
+		return settlePriceDataRows.stream().map(DummySettlePrice::new).collect(Collectors.toList());
+		//@formatter:on
+	}
+
+	@FXML
+	private void handleUpdateSettlePriceButtonClick()
+	{
+		this.updateSettlePrice();
+	}
+
+	private void updateSettlePrice()
+	{
+		final boolean shouldConsiderFASDifferentialSet = true;
+		//@formatter:off
+		final ObservableList<DummySettlePrice> allRecords = this.settlePricesTableView.getSelectionModel().getSelectedItems();
+
+		for(final DummySettlePrice aRecord : allRecords)
+		{
+			/* No need to update the settle price if it is already update. So check the comment, if it contains "Settlement Price Updated" then just continue. */
+
+
+			/* Find the settlement price. */
+			/* SELECT avg_closed_price FROM price WHERE commkt_key = 5 AND price_source_code = 'EXCHANGE' AND trading_prd = 201502 AND price_quote_date = '2015-01-01' */
+			final String queryToFindSettlementPrice = "SELECT * FROM price WHERE commkt_key = #bind($commktParam) AND price_source_code = #bind($priceSourceCodeParam) AND trading_prd = #bind($tradingPrdParam) AND price_quote_date = #bind($priceQuoteDateParam)";
+			final SQLSelect<Price> priceSQLSelect = SQLSelect.query(Price.class, queryToFindSettlementPrice);
+			priceSQLSelect.params("commktParam", aRecord.getCommktKey());
+			priceSQLSelect.params("priceSourceCodeParam", aRecord.getPriceSourceCode());
+			priceSQLSelect.params("tradingPrdParam", aRecord.getTradingPrd());
+			priceSQLSelect.params("priceQuoteDateParam", aRecord.getFillDate());
+			final Price aPriceRecord = priceSQLSelect.selectFirst(CayenneHelper.getCayenneServerRuntime().newContext());
+
+			if((aPriceRecord == null) || (aPriceRecord.getAvgClosedPrice() == null))
+			{
+				/* We cannot find a price. So just set the fail comment and continue with other records. */
+				this.setFailComment();
+				continue;
+			}
+			final Double rPrice = aPriceRecord.getAvgClosedPrice();
+			final Double rOldPrice;
+			final Double rNewPrice;
+			if(shouldConsiderFASDifferentialSet)
+			{
+				rOldPrice = aRecord.getFillPrice();
+				rNewPrice = aRecord.getFillPrice() + rPrice +  aRecord.getOrderPrice();
+			}
+			else
+			{
+				rOldPrice = aRecord.getFillPrice();
+				rNewPrice = aRecord.getFillPrice() + rPrice;
+			}
+		}
+		//@formatter:on
+	}
+
+	private void setFailComment()
+	{
+		final String commentString = "Settlement Price Not Found!";
 	}
 }
 

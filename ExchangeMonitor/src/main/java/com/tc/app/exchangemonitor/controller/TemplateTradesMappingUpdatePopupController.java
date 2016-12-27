@@ -166,7 +166,7 @@ public class TemplateTradesMappingUpdatePopupController implements IGenericContr
 			{
 				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateMapping");
 				updateMappingQuery.param("aliasValueParam", ictsTemplateTrade);
-				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U"));
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);
 				updateMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 

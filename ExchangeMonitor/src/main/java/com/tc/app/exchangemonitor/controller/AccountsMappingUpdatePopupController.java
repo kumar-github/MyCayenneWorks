@@ -154,7 +154,7 @@ public class AccountsMappingUpdatePopupController implements IGenericController
 				final MappedExec updateMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateAccountMapping");
 				updateMappingQuery.param("externalValue1Param", externalSourceAccount);
 				updateMappingQuery.param("aliasValueParam", "NONE");
-				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction());
+				updateMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U"));
 				updateMappingQuery.param("externalMappingOidParam", externalMappingOid);
 				updateMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 

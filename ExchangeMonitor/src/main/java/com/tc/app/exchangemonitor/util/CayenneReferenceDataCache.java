@@ -3,6 +3,7 @@ package com.tc.app.exchangemonitor.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -65,9 +66,8 @@ public class CayenneReferenceDataCache
 
 			//@formatter:off
 			final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class)
-																																								.where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
-																																								.select(CayenneHelper.getCayenneServerRuntime()
-																																								.newContext());
+																																						 .where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
+																																						 .select(CayenneHelper.getCayenneServerRuntime().newContext());
 			//@formatter:on
 
 			final long endTime = System.currentTimeMillis();
@@ -87,7 +87,7 @@ public class CayenneReferenceDataCache
 			//@formatter:off
 
 			externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream()
-																																						 .collect(Collectors.toConcurrentMap(ExternalTradeSource::getExternalTradeSrcName, theExternalTradeSource -> theExternalTradeSource));
+																																					   .collect(Collectors.toConcurrentMap(ExternalTradeSource::getExternalTradeSrcName, theExternalTradeSource -> theExternalTradeSource));
 			//@formatter:on
 
 			if(IS_DEBUG_ENABLED)
@@ -109,7 +109,8 @@ public class CayenneReferenceDataCache
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} external trade states.", (endTime - startTime), externalTradeStateList.size());
 
-			externalTradeStateReferenceDataHashMap = externalTradeStateList.stream().collect(Collectors.toConcurrentMap(ExternalTradeState::getExternalTradeStateOid, theExternalTradeState -> theExternalTradeState));
+			externalTradeStateReferenceDataHashMap = externalTradeStateList.stream()
+			.collect(Collectors.toConcurrentMap(ExternalTradeState::getExternalTradeStateOid, theExternalTradeState -> theExternalTradeState));
 
 			if(IS_DEBUG_ENABLED)
 			{
@@ -525,5 +526,15 @@ public class CayenneReferenceDataCache
 	{
 		LOGGER.debug("List Count : {}", someList.size());
 		LOGGER.debug("List : {}", someList);
+	}
+
+	private Optional<List<ExternalTradeSource>> ret()
+	{
+		//@formatter:off
+		final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class)
+																																					 .where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
+																																					 .select(CayenneHelper.getCayenneServerRuntime().newContext());
+		//@formatter:on
+		return Optional.ofNullable(externalTradeSourceList);
 	}
 }

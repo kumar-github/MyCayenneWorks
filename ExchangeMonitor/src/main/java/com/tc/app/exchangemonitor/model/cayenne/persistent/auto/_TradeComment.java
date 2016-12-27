@@ -11,33 +11,31 @@ import org.apache.cayenne.exp.Property;
  */
 public abstract class _TradeComment extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String CMNT_NUM_PK_COLUMN = "cmnt_num";
 	public static final String TRADE_NUM_PK_COLUMN = "trade_num";
 
-	public static final Property<String> TRADE_CMNT_TYPE = new Property<String>("tradeCmntType");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
+	public static final Property<String> TRADE_CMNT_TYPE = new Property<>("tradeCmntType");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
 
-	public void setTradeCmntType(String tradeCmntType)
+	public void setTradeCmntType(final String tradeCmntType)
 	{
-		writeProperty("tradeCmntType", tradeCmntType);
+		this.writeProperty("tradeCmntType", tradeCmntType);
 	}
 
 	public String getTradeCmntType()
 	{
-		return (String) readProperty("tradeCmntType");
+		return (String) this.readProperty("tradeCmntType");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
-
 }

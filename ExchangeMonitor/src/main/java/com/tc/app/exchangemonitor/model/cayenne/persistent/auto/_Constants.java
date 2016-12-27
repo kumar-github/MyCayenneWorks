@@ -11,54 +11,52 @@ import org.apache.cayenne.exp.Property;
  */
 public abstract class _Constants extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String ATTRIBUTE_NAME_PK_COLUMN = "attribute_name";
 
-	public static final Property<String> ATTRIBUTE_NOTE = new Property<String>("attributeNote");
-	public static final Property<String> ATTRIBUTE_STATUS = new Property<String>("attributeStatus");
-	public static final Property<String> ATTRIBUTE_VALUE = new Property<String>("attributeValue");
-	public static final Property<String> CLIENT_EDIT_IND = new Property<String>("clientEditInd");
+	public static final Property<String> ATTRIBUTE_NOTE = new Property<>("attributeNote");
+	public static final Property<String> ATTRIBUTE_STATUS = new Property<>("attributeStatus");
+	public static final Property<String> ATTRIBUTE_VALUE = new Property<>("attributeValue");
+	public static final Property<String> CLIENT_EDIT_IND = new Property<>("clientEditInd");
 
-	public void setAttributeNote(String attributeNote)
+	public void setAttributeNote(final String attributeNote)
 	{
-		writeProperty("attributeNote", attributeNote);
+		this.writeProperty("attributeNote", attributeNote);
 	}
 
 	public String getAttributeNote()
 	{
-		return (String) readProperty("attributeNote");
+		return (String) this.readProperty("attributeNote");
 	}
 
-	public void setAttributeStatus(String attributeStatus)
+	public void setAttributeStatus(final String attributeStatus)
 	{
-		writeProperty("attributeStatus", attributeStatus);
+		this.writeProperty("attributeStatus", attributeStatus);
 	}
 
 	public String getAttributeStatus()
 	{
-		return (String) readProperty("attributeStatus");
+		return (String) this.readProperty("attributeStatus");
 	}
 
-	public void setAttributeValue(String attributeValue)
+	public void setAttributeValue(final String attributeValue)
 	{
-		writeProperty("attributeValue", attributeValue);
+		this.writeProperty("attributeValue", attributeValue);
 	}
 
 	public String getAttributeValue()
 	{
-		return (String) readProperty("attributeValue");
+		return (String) this.readProperty("attributeValue");
 	}
 
-	public void setClientEditInd(String clientEditInd)
+	public void setClientEditInd(final String clientEditInd)
 	{
-		writeProperty("clientEditInd", clientEditInd);
+		this.writeProperty("clientEditInd", clientEditInd);
 	}
 
 	public String getClientEditInd()
 	{
-		return (String) readProperty("clientEditInd");
+		return (String) this.readProperty("clientEditInd");
 	}
-
 }
