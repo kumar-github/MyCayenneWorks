@@ -18,133 +18,131 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.VoucherPayment;
  */
 public abstract class _Comment extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String CMNT_NUM_PK_COLUMN = "cmnt_num";
 
-	public static final Property<String> CMNT_PATH = new Property<String>("cmntPath");
-	public static final Property<String> CMNT_TEXT = new Property<String>("cmntText");
-	public static final Property<String> SHORT_CMNT = new Property<String>("shortCmnt");
-	public static final Property<String> TINY_CMNT = new Property<String>("tinyCmnt");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<List<Account>> ACCOUNTS = new Property<List<Account>>("accounts");
-	public static final Property<List<RiskCover>> RISK_COVERS = new Property<List<RiskCover>>("riskCovers");
-	public static final Property<List<Shipment>> SHIPMENTS = new Property<List<Shipment>>("shipments");
-	public static final Property<List<VoucherPayment>> VOUCHER_PAYMENTS = new Property<List<VoucherPayment>>("voucherPayments");
+	public static final Property<String> CMNT_PATH = new Property<>("cmntPath");
+	public static final Property<String> CMNT_TEXT = new Property<>("cmntText");
+	public static final Property<String> SHORT_CMNT = new Property<>("shortCmnt");
+	public static final Property<String> TINY_CMNT = new Property<>("tinyCmnt");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<List<Account>> ACCOUNTS = new Property<>("accounts");
+	public static final Property<List<RiskCover>> RISK_COVERS = new Property<>("riskCovers");
+	public static final Property<List<Shipment>> SHIPMENTS = new Property<>("shipments");
+	public static final Property<List<VoucherPayment>> VOUCHER_PAYMENTS = new Property<>("voucherPayments");
 
-	public void setCmntPath(String cmntPath)
+	public void setCmntPath(final String cmntPath)
 	{
-		writeProperty("cmntPath", cmntPath);
+		this.writeProperty("cmntPath", cmntPath);
 	}
 
 	public String getCmntPath()
 	{
-		return (String) readProperty("cmntPath");
+		return (String) this.readProperty("cmntPath");
 	}
 
-	public void setCmntText(String cmntText)
+	public void setCmntText(final String cmntText)
 	{
-		writeProperty("cmntText", cmntText);
+		this.writeProperty("cmntText", cmntText);
 	}
 
 	public String getCmntText()
 	{
-		return (String) readProperty("cmntText");
+		return (String) this.readProperty("cmntText");
 	}
 
-	public void setShortCmnt(String shortCmnt)
+	public void setShortCmnt(final String shortCmnt)
 	{
-		writeProperty("shortCmnt", shortCmnt);
+		this.writeProperty("shortCmnt", shortCmnt);
 	}
 
 	public String getShortCmnt()
 	{
-		return (String) readProperty("shortCmnt");
+		return (String) this.readProperty("shortCmnt");
 	}
 
-	public void setTinyCmnt(String tinyCmnt)
+	public void setTinyCmnt(final String tinyCmnt)
 	{
-		writeProperty("tinyCmnt", tinyCmnt);
+		this.writeProperty("tinyCmnt", tinyCmnt);
 	}
 
 	public String getTinyCmnt()
 	{
-		return (String) readProperty("tinyCmnt");
+		return (String) this.readProperty("tinyCmnt");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void addToAccounts(Account obj)
+	public void addToAccounts(final Account obj)
 	{
-		addToManyTarget("accounts", obj, true);
+		this.addToManyTarget("accounts", obj, true);
 	}
 
-	public void removeFromAccounts(Account obj)
+	public void removeFromAccounts(final Account obj)
 	{
-		removeToManyTarget("accounts", obj, true);
+		this.removeToManyTarget("accounts", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Account> getAccounts()
 	{
-		return (List<Account>) readProperty("accounts");
+		return (List<Account>) this.readProperty("accounts");
 	}
 
-	public void addToRiskCovers(RiskCover obj)
+	public void addToRiskCovers(final RiskCover obj)
 	{
-		addToManyTarget("riskCovers", obj, true);
+		this.addToManyTarget("riskCovers", obj, true);
 	}
 
-	public void removeFromRiskCovers(RiskCover obj)
+	public void removeFromRiskCovers(final RiskCover obj)
 	{
-		removeToManyTarget("riskCovers", obj, true);
+		this.removeToManyTarget("riskCovers", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<RiskCover> getRiskCovers()
 	{
-		return (List<RiskCover>) readProperty("riskCovers");
+		return (List<RiskCover>) this.readProperty("riskCovers");
 	}
 
-	public void addToShipments(Shipment obj)
+	public void addToShipments(final Shipment obj)
 	{
-		addToManyTarget("shipments", obj, true);
+		this.addToManyTarget("shipments", obj, true);
 	}
 
-	public void removeFromShipments(Shipment obj)
+	public void removeFromShipments(final Shipment obj)
 	{
-		removeToManyTarget("shipments", obj, true);
+		this.removeToManyTarget("shipments", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Shipment> getShipments()
 	{
-		return (List<Shipment>) readProperty("shipments");
+		return (List<Shipment>) this.readProperty("shipments");
 	}
 
-	public void addToVoucherPayments(VoucherPayment obj)
+	public void addToVoucherPayments(final VoucherPayment obj)
 	{
-		addToManyTarget("voucherPayments", obj, true);
+		this.addToManyTarget("voucherPayments", obj, true);
 	}
 
-	public void removeFromVoucherPayments(VoucherPayment obj)
+	public void removeFromVoucherPayments(final VoucherPayment obj)
 	{
-		removeToManyTarget("voucherPayments", obj, true);
+		this.removeToManyTarget("voucherPayments", obj, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<VoucherPayment> getVoucherPayments()
 	{
-		return (List<VoucherPayment>) readProperty("voucherPayments");
+		return (List<VoucherPayment>) this.readProperty("voucherPayments");
 	}
-
 }

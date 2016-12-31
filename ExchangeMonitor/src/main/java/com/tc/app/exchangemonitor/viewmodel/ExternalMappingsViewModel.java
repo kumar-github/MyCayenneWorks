@@ -31,7 +31,7 @@ public class ExternalMappingsViewModel
 		}
 		return this.isAnyRowSelectedInTradersView;
 	}
-	
+
 	private BooleanProperty isAnyRowSelectedInBrokersView = null;
 	public BooleanProperty isAnyRowSelectedInBrokersViewProperty()
 	{

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import javax.inject.Inject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckListView;
@@ -22,6 +24,7 @@ import com.tc.app.exchangemonitor.view.java.ExternalMappingTemplateTradesView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingTradersView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingTradingPeriodsView;
 import com.tc.app.exchangemonitor.view.java.ExternalMappingUOMConversionsView;
+import com.tc.app.exchangemonitor.viewmodel.MainApplicationMappingsTabViewModel;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -36,6 +39,9 @@ import javafx.scene.layout.BorderPane;
 public class MainApplicationMappingsTabController implements Initializable
 {
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	@Inject
+	private MainApplicationMappingsTabViewModel mainApplicationMappingsTabViewModel;
 
 	@FXML
 	private CheckListView<ExternalTradeSource> externalTradeSourcesListView;
@@ -211,6 +217,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradersView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingTradersView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingTradersView not loaded because it is already loaded.");
@@ -223,6 +230,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingBrokersView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingBrokersView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingBrokersView not loaded because it is already loaded.");
@@ -235,6 +243,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingCompaniesView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingCompaniesView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingCompaniesView not loaded because it is already loaded.");
@@ -247,6 +256,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingCurrenciesView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingCurrenciesView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingCurrenciesView not loaded because it is already loaded.");
@@ -259,6 +269,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingPortfoliosView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingPortfoliosView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingPortfoliosView not loaded because it is already loaded.");
@@ -271,6 +282,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTemplateTradesView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingTemplateTradesView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingTemplateTradesView not loaded because it is already loaded.");
@@ -283,6 +295,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingAccountsView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingAccountsView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingAccountsView not loaded because it is already loaded.");
@@ -295,6 +308,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingUOMConversionsView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingUOMConversionsView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingUOMConversionsView not loaded because it is already loaded.");
@@ -307,6 +321,7 @@ public class MainApplicationMappingsTabController implements Initializable
 		{
 			this.mappingsWindowBorderPane.setCenter(new ExternalMappingTradingPeriodsView().getView());
 			CURRENT_VISIBLE_MAPPING_VIEW = this.mappingsWindowBorderPane.getCenter().getId();
+			this.mainApplicationMappingsTabViewModel.currentVisibleMappingViewProperty().set(CURRENT_VISIBLE_MAPPING_VIEW);
 			LOGGER.debug("ExternalMappingTradingPeriodsView Loaded.");
 		}
 		LOGGER.debug("ExternalMappingTradingPeriodsView not loaded because it is already loaded.");

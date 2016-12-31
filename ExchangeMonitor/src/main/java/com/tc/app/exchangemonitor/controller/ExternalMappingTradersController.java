@@ -154,7 +154,7 @@ public class ExternalMappingTradersController implements IGenericController
 	}
 
 	@FXML
-	private void handleAddMapingButtonClick()
+	private void handleAddMappingButtonClick()
 	{
 		/*
 		final Dialog dialog = new Dialog<>();
@@ -175,13 +175,13 @@ public class ExternalMappingTradersController implements IGenericController
 	}
 
 	@FXML
-	private void handleDeleteMapingButtonClick()
+	private void handleDeleteMappingButtonClick()
 	{
 		this.deleteSelectedMapping();
 	}
 
 	@FXML
-	private void handleUpdateMapingButtonClick()
+	private void handleUpdateMappingButtonClick()
 	{
 		/* commented the below line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
 		//this.externalMappingTradersViewModel.isAddProperty().set(false);

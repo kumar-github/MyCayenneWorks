@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.ExternalMappingAddUpdateDeleteRefreshController">
+<children>
+	<Button text="_Add" mnemonicParsing="true" fx:id="addMappingButton" onAction="#handleAddMappingButtonClick"/>
+   	<Button disable="true" text="_Delete" mnemonicParsing="true" fx:id="deleteMappingButton" onAction="#handleDeleteMappingButtonClick"/>
+   	<Button disable="true" text="_Update" mnemonicParsing="true" fx:id="updateMappingButton" onAction="#handleUpdateMappingButtonClick"/>
+   	<Button text="_Refresh" mnemonicParsing="true" fx:id="refreshMappingButton" onAction="#handleRefreshMappingButtonClick"/>
+</children>
+<!-- <padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding> -->
+</HBox>
