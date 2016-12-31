@@ -74,17 +74,17 @@ public class ExternalMappingTradersController implements IGenericController
 		this.attachListeners();
 	}
 
+	@Override
+	public void addThisControllerToControllersMap()
+	{
+		ApplicationHelper.controllersMap.putInstance(ExternalMappingTradersController.class, this);
+	}
+
 	private void doSomeGlobalVariableInitialization()
 	{
 		LOGGER.debug("ExternalMappingTradersViewModel Instance {}", this.externalMappingTradersViewModel);
 		this.externalMappingTradersFilteredList = new FilteredList<>(this.externalMappingTradersViewModel.getExternalMappingTradersObservableList(), null);
 		this.externalMappingTradersSortedList = new SortedList<>(this.externalMappingTradersFilteredList);
-	}
-
-	@Override
-	public void addThisControllerToControllersMap()
-	{
-		ApplicationHelper.controllersMap.putInstance(ExternalMappingTradersController.class, this);
 	}
 
 	@Override

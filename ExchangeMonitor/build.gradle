@@ -3,6 +3,8 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle user guide available at https://docs.gradle.org/3.1/userguide/tutorial_java_projects.html
  */
  
+ description = "Exchange Monitor. This application is used to monitor the deals coming from exchanges like NYMEX, ICE, etc."
+ 
  //Apply the java plugin to add support for Java related tasks
 apply plugin: 'java'
 
@@ -24,6 +26,36 @@ repositories
     }
 }
 
+//In this section you declare the dependencies for your production and test code
+dependencies
+{
+	//Declare the dependency for your favourite test framework you want to use in your tests.
+    //TestNG is also supported by the Gradle Test task. Just change the testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add 'test.useTestNG()' to your build script.
+    testCompile 'junit:junit:4.4'
+    compile 'javax.inject:javax.inject:1'
+    compile 'org.hibernate:hibernate-core:5.1.0.Final'
+    compile 'org.controlsfx:controlsfx:8.40.12'
+    
+    //log4j dependency
+    compile 'org.apache.logging.log4j:log4j-api:2.5'
+    compile 'org.apache.logging.log4j:log4j-core:2.5'
+    
+    //jtds dependency
+    compile 'net.sourceforge.jtds:jtds:1.3.1'
+    
+    //Google Guava dependency
+    compile 'com.google.guava:guava:19.0'
+    
+    //Apache POI dependency
+    compile group: 'org.apache.poi', name: 'poi', version: '3.15'
+    
+    //Apache POI OOXML dependency
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
+    
+    //Apache Cayenne
+    compile 'org.apache.cayenne:cayenne-server:4.0.M4.ce40fc0'
+}
+
 javafx
 {
 	profiles
@@ -41,7 +73,8 @@ javafx
 			appName 'ExchangeMonitor Application'
 			
 			//Main class of application
-			mainClass 'com.tc.app.exchangemonitor.main.ExchangeMonitorApplicationMain'
+			//mainClass 'com.tc.app.exchangemonitor.main.ExchangeMonitorApplicationMain'
+			mainClass 'com.tc.app.exchangemonitor.ExchangeMonitorApplication'
 			
 			//JVM arguments, system properties, application command line arguments
 			jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
@@ -66,6 +99,16 @@ javafx
 			icons
 			{
 			}
+			
+			//jar
+			//{
+				//from('src/main/java')
+				//{
+					//include '**/*.css'
+					//include '**/*.fxml'
+					//include '**/*.properties'
+				//}
+			//}
 		}
 		
 		macosx
@@ -76,38 +119,16 @@ javafx
 		{
 		}
 	}
-}
-
-//In this section you declare the dependencies for your production and test code
-dependencies
-{
-	//Declare the dependency for your favourite test framework you want to use in your tests.
-    //TestNG is also supported by the Gradle Test task. Just change the
-    //testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
-    //'test.useTestNG()' to your build script.
-    testCompile 'junit:junit:4.4'
-    compile 'javax.inject:javax.inject:1'
-    compile 'org.hibernate:hibernate-core:5.1.0.Final'
-    compile 'org.controlsfx:controlsfx:8.40.12'
-    
-    //log4j dependency
-    compile 'org.apache.logging.log4j:log4j-api:2.5'
-    compile 'org.apache.logging.log4j:log4j-core:2.5'
-    
-    //jtds dependency
-    compile 'net.sourceforge.jtds:jtds:1.3.1'
-    
-    //Google Guava dependency
-    compile 'com.google.guava:guava:19.0'
-    
-    //Apache POI dependency
-    compile group: 'org.apache.poi', name: 'poi', version: '3.15'
-    
-    //Apache POI OOXML dependency
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
-    
-    //Apache Cayenne
-    compile 'org.apache.cayenne:cayenne-server:4.0.M4.ce40fc0'
+	
+	jar
+	{
+		from('src/main/java')
+		{
+			include '**/*.css'
+			include '**/*.fxml'
+			include '**/*.properties'
+		}
+	}
 }
 
 //compileJava.options.fork=true

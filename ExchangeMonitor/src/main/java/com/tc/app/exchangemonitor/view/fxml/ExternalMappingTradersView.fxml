@@ -23,7 +23,7 @@
 		<Button text="_Refresh" mnemonicParsing="true" fx:id="refreshMappingButton" onAction="#handleRefreshMappingButtonClick"/>
 	</children>
 	</HBox>
-	<fx:include source="ExternalMappingAddUpdateDeleteRefreshView.fxml" />
+	<!-- <fx:include source="ExternalMappingAddUpdateDeleteRefreshView.fxml" /> -->
 	
 	<TableView cache="true" fx:id="externalMappingTradersTableView" prefWidth="420.0" VBox.vgrow="ALWAYS" focusTraversable="false">
 	<!-- <fx:script>externalMappingTradersTableView.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);</fx:script>-->
