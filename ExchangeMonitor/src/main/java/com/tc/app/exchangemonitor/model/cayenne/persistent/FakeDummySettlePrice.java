@@ -18,9 +18,7 @@ public class FakeDummySettlePrice extends _FakeDummySettlePrice
 
 	public String getBuySellString()
 	{
-		//@formatter:off
 		return this.getPSInd().equals("P") ? "BUY" : "SELL";
-		//@formatter:on
 	}
 
 	public String getPortNumNameString()

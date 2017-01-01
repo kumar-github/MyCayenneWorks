@@ -8,8 +8,6 @@ public class TradeItemFill extends _TradeItemFill
 
 	public Short getFillNum()
 	{
-		//@formatter:off
 		return (this.getObjectId() != null) && !this.getObjectId().isTemporary() ? (Short) this.getObjectId().getIdSnapshot().get(ITEM_FILL_NUM_PK_COLUMN) : null;
-		//@formatter:on
 	}
 }

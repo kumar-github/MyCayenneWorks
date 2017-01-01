@@ -14,8 +14,6 @@ public class TradeItemFillDateCellValueFactory implements Callback<TableColumn.C
 	@Override
 	public ObservableValue<LocalDateTime> call(final CellDataFeatures<DummySettlePrice, LocalDateTime> cellData)
 	{
-		//@formatter:off
 		return new ReadOnlyObjectWrapper<>(cellData.getValue().getFillDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-		//@formatter:on
 	}
 }

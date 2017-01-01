@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.query.MappedExec;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +23,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.controlsfx.control.CheckListView;
-import org.hibernate.Session;
 
 import com.tc.app.exchangemonitor.animation.FadeInUpTransition;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExchToolsTrade;
@@ -33,10 +34,9 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeStatus;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
 import com.tc.app.exchangemonitor.util.DatePickerConverter;
 import com.tc.app.exchangemonitor.util.ExcelStylesHelper;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
-import com.tc.app.exchangemonitor.util.HibernateUtil;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -941,37 +941,37 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 
 	private void updateFailedExternalTrades(final ObservableList<ExternalTrade> selectedItems)
 	{
-		final List<String> selectedExternalTradeOids = new ArrayList<>();
-		selectedItems.stream().forEach((anExternalTrade) -> selectedExternalTradeOids.add(anExternalTrade.getExternalTradeOid().toString()));
+		final List<Integer> selectedExternalTradeOids = selectedItems.stream().map(ExternalTrade::getExternalTradeOid).collect(Collectors.toList());
 		LOGGER.debug(selectedExternalTradeOids);
-		Session session = null;
-
 		try
 		{
-			final Integer transid = HibernateReferenceDataFetchUtil.generateNewTransaction();
-			session = HibernateUtil.beginTransaction();
-			int status = session.getNamedQuery("UpdateExternalTradeStatus").setParameter("transIdParam", transid).setParameterList("externalTradesParam", selectedExternalTradeOids).executeUpdate();
-			LOGGER.debug(status);
-			if(status != 0)
-			{
-				status = session.getNamedQuery("UpdateExternalCommentText").setParameter("transIdParam", transid).setParameterList("externalTradesParam", selectedExternalTradeOids).executeUpdate();
-				LOGGER.debug(status);
-			}
-			session.flush();
-			session.clear();
-			session.getTransaction().commit();
-			//session.close();
+			CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> this.update(selectedExternalTradeOids));
 			LOGGER.info("{} External Trade(s) updated successfully.", selectedExternalTradeOids.size());
 		}
 		catch(final Exception exception)
 		{
 			LOGGER.error("Update Failed. {}", exception);
-			session.getTransaction().rollback();
 			throw new RuntimeException("Update Failed.", exception);
 		}
 		finally
 		{
 		}
+	}
+
+	private Integer update(final List<Integer> selectedExternalTradeOids)
+	{
+		final ObjectContext tempContext = CayenneHelper.getCayenneServerRuntime().newContext();
+		final Integer transId = CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U");
+		final MappedExec updateExternalTradeStatusQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateExternalTradeStatus");
+		updateExternalTradeStatusQuery.param("oidsParam", selectedExternalTradeOids);
+		updateExternalTradeStatusQuery.param("transIdParam", transId);
+		updateExternalTradeStatusQuery.execute(tempContext);
+
+		final MappedExec updateExternalCommentQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("UpdateExternalCommentText");
+		updateExternalCommentQuery.param("oidsParam", selectedExternalTradeOids);
+		updateExternalCommentQuery.param("transIdParam", transId);
+		updateExternalCommentQuery.execute(tempContext);
+		return null;
 	}
 
 	private boolean writeRecordsToExcelFile(final String fileName)

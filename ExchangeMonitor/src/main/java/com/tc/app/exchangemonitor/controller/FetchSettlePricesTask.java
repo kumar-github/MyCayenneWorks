@@ -56,9 +56,7 @@ public class FetchSettlePricesTask extends Task<ObservableList<DataRow>>
 			this.updateProgress(-1.0, -1.0);
 
 			final long startTime = System.currentTimeMillis();
-			//@formatter:off
 			settlePrices = mappedSelect.select(CayenneHelper.getCayenneServerRuntime().newContext());
-			//@formatter:on
 			final long endTime = System.currentTimeMillis();
 
 			this.updateMessage("Task Completed. It took " + (endTime - startTime) + " milli seconds to fetch " + settlePrices.size() + " record(s).");

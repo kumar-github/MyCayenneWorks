@@ -20,8 +20,6 @@ public class TradeCreationDateCellValueFactory implements Callback<TableColumn.C
 		//return param.getValue().getCreationDate().toInstant().atZone(ZoneId.systemDefault());
 		//return new ReadOnlyObjectWrapper<ZonedDateTime>(cellData.getValue().getExchToolsTrade().getCreationDate().toInstant().atZone(ZoneId.systemDefault()));
 		//return new ReadOnlyObjectWrapper<>(cellData.getValue().getExternalTradeO1().getCreationDate().toInstant().atZone(ZoneId.systemDefault()));
-		//@formatter:off
 		return new ReadOnlyObjectWrapper<>(cellData.getValue().getExternalTradeO1().getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-		//@formatter:on
 	}
 }

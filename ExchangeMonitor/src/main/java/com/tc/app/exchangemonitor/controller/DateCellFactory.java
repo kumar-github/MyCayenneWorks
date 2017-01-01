@@ -27,9 +27,7 @@ public class DateCellFactory implements Callback<TableColumn<ExternalTrade, Loca
 				else
 				{
 					//this.setText(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss z").format(item));
-					//@formatter:off
 					this.setText(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss").format(item));
-					//@formatter:on
 				}
 			}
 		};

@@ -224,7 +224,8 @@
 
 .table-row-cell:selected
 {
-    -fx-background-color: chocolate;
+	-fx-background-color: chocolate;
+    /*-fx-background-color: GREEN;*/
     /* the below style will remove the border lines of the selected row */
     -fx-table-cell-border-color: TRANSPARENT;
 }

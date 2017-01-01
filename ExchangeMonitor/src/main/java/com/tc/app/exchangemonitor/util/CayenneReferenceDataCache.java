@@ -64,11 +64,9 @@ public class CayenneReferenceDataCache
 
 			final long startTime = System.currentTimeMillis();
 
-			//@formatter:off
 			final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class)
 																																						 .where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
 																																						 .select(CayenneHelper.getCayenneServerRuntime().newContext());
-			//@formatter:on
 
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} external trade sources.", (endTime - startTime), externalTradeSourceList.size());
@@ -84,11 +82,9 @@ public class CayenneReferenceDataCache
 			}
 			 */
 			//externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream().collect(Collectors.toConcurrentMap(theExternalTradeSource -> theExternalTradeSource.getExternalTradeSourceOid(), theExternalTradeSource -> theExternalTradeSource));
-			//@formatter:off
 
 			externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream()
 																																					   .collect(Collectors.toConcurrentMap(ExternalTradeSource::getExternalTradeSrcName, theExternalTradeSource -> theExternalTradeSource));
-			//@formatter:on
 
 			if(IS_DEBUG_ENABLED)
 			{
@@ -530,11 +526,9 @@ public class CayenneReferenceDataCache
 
 	private Optional<List<ExternalTradeSource>> ret()
 	{
-		//@formatter:off
 		final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class)
 																																					 .where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
 																																					 .select(CayenneHelper.getCayenneServerRuntime().newContext());
-		//@formatter:on
 		return Optional.ofNullable(externalTradeSourceList);
 	}
 }

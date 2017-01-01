@@ -10,12 +10,18 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.apache.cayenne.DataRow;
+import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.MappedSelect;
+import org.apache.cayenne.query.SQLExec;
 import org.apache.cayenne.query.SQLSelect;
+import org.apache.cayenne.query.SelectById;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Comment;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Constants;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Price;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.TradeItemFill;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
@@ -352,16 +358,14 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 	{
 		MappedSelect<DataRow> mappedSelectQueryToFetchSettlePrices = null;
 
-		//@formatter:off
 		final String selectedStartDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.startDateDatePicker.getValue() != null ? this.startDateDatePicker.getValue() : LocalDate.now());
 		final String selectedEndDate = DateTimeFormatter.ofPattern("dd-MMM-yyyy").format(this.endDateDatePicker.getValue() != null ? this.endDateDatePicker.getValue() : LocalDate.now());
-		//@formatter:on
 
 		final Map<String, String> parametersMap = new HashMap<>();
 		parametersMap.put("startDateParam", selectedStartDate);
 		parametersMap.put("endDateParam", selectedEndDate);
 
-		mappedSelectQueryToFetchSettlePrices = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchSettlePrices");
+		mappedSelectQueryToFetchSettlePrices = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchTradeItemFills");
 		mappedSelectQueryToFetchSettlePrices.params(parametersMap);
 
 		/* This will fetch the data in a background thread, so UI will not be freezed and user can interact with the UI. Here we use a scheduled service which will invoke the task recurringly. */
@@ -400,9 +404,7 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 	{
 		if(settlePriceDataRows == null)
 			return null;
-		//@formatter:off
 		return settlePriceDataRows.stream().map(DummySettlePrice::new).collect(Collectors.toList());
-		//@formatter:on
 	}
 
 	@FXML
@@ -413,51 +415,266 @@ public class MainApplicationSettlePricesTabController implements IMainApplicatio
 
 	private void updateSettlePrice()
 	{
-		final boolean shouldConsiderFASDifferentialSet = true;
-		//@formatter:off
-		final ObservableList<DummySettlePrice> allRecords = this.settlePricesTableView.getSelectionModel().getSelectedItems();
+		final ObservableList<DummySettlePrice> tradeItemFills = this.settlePricesTableView.getSelectionModel().getSelectedItems();
 
-		for(final DummySettlePrice aRecord : allRecords)
+		tradeItemFills.forEach((aTradeItemFill) -> this.update(aTradeItemFill));
+	}
+
+	private SQLExec updateTradeItemFillSQLExec = null;
+	private SQLExec updateTradeItemFutSQLExec = null;
+	private SQLExec updateTradeItemSQLExec = null;
+	private SQLExec updateCommentSQLExec = null;
+	private SQLExec updateCommentSQLExec2 = null;
+	private SQLExec updateExchToolsTradeSQLExec = null;
+	private SQLExec insertTradeCommentSQLExec = null;
+	private SQLExec insertCommentSQLExec = null;
+	private static boolean commentAlreadyExists = false;
+	private void update(final DummySettlePrice theTradeItemFill)
+	{
+		final boolean shouldConsiderFASDifferentialSet = shouldConsiderFASDifferentialSet();
+		String theFinalCommentToSet = "";
+
+		// Find Settlement Price by looking into the price table
+		final Map<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put(Price.COMMKT_KEY_PK_COLUMN, theTradeItemFill.getCommktKey());
+		parametersMap.put(Price.PRICE_SOURCE_CODE_PK_COLUMN, theTradeItemFill.getPriceSourceCode());
+		parametersMap.put(Price.TRADING_PRD_PK_COLUMN, theTradeItemFill.getTradingPrd());
+		parametersMap.put(Price.PRICE_QUOTE_DATE_PK_COLUMN, theTradeItemFill.getFillDate());
+		final SelectById<Price> settlementPrice = SelectById.query(Price.class, parametersMap);
+		final Price thePrice = settlementPrice.selectOne(CayenneHelper.getCayenneServerRuntime().newContext());
+
+		LOGGER.info("Price found. Average Closed Price : {}", thePrice.getAvgClosedPrice());
+
+		if((thePrice == null) || (thePrice.getAvgClosedPrice() == null))
 		{
-			/* No need to update the settle price if it is already update. So check the comment, if it contains "Settlement Price Updated" then just continue. */
+			/* We cannot find a price. So just set the fail comment and continue with other records. */
+			this.setFailComment(theTradeItemFill);
+			return;
+		}
+		// Keep the old fill price, we need to update it in the comment text
+		final Double theOldFillPrice = theTradeItemFill.getFillPrice();
 
+		final Double avgClosedPrice = thePrice.getAvgClosedPrice();
+		final Double theNewFillPrice = shouldConsiderFASDifferentialSet ? theTradeItemFill.getOrderPrice() + theOldFillPrice + avgClosedPrice : theOldFillPrice + avgClosedPrice;
 
-			/* Find the settlement price. */
-			/* SELECT avg_closed_price FROM price WHERE commkt_key = 5 AND price_source_code = 'EXCHANGE' AND trading_prd = 201502 AND price_quote_date = '2015-01-01' */
-			final String queryToFindSettlementPrice = "SELECT * FROM price WHERE commkt_key = #bind($commktParam) AND price_source_code = #bind($priceSourceCodeParam) AND trading_prd = #bind($tradingPrdParam) AND price_quote_date = #bind($priceQuoteDateParam)";
-			final SQLSelect<Price> priceSQLSelect = SQLSelect.query(Price.class, queryToFindSettlementPrice);
-			priceSQLSelect.params("commktParam", aRecord.getCommktKey());
-			priceSQLSelect.params("priceSourceCodeParam", aRecord.getPriceSourceCode());
-			priceSQLSelect.params("tradingPrdParam", aRecord.getTradingPrd());
-			priceSQLSelect.params("priceQuoteDateParam", aRecord.getFillDate());
-			final Price aPriceRecord = priceSQLSelect.selectFirst(CayenneHelper.getCayenneServerRuntime().newContext());
+		// Find the average fill price
+		final SQLSelect<TradeItemFill> fillSQLSelect = SQLSelect.query(TradeItemFill.class, "SELECT * FROM trade_item_fill WHERE trade_num = #bind($tradeNumParam) and order_num = #bind($orderNumParam) and item_num = #bind($itemNumParam)");
+		fillSQLSelect.params("tradeNumParam", theTradeItemFill.getTradeNum());
+		fillSQLSelect.params("orderNumParam", theTradeItemFill.getOrderNum());
+		fillSQLSelect.params("itemNumParam", theTradeItemFill.getItemNum());
+		final List<TradeItemFill> tradeItemFills = fillSQLSelect.select(CayenneHelper.getCayenneServerRuntime().newContext());
 
-			if((aPriceRecord == null) || (aPriceRecord.getAvgClosedPrice() == null))
+		if((tradeItemFills == null) || (tradeItemFills.size() == 0))
+		{
+			this.setFailComment(theTradeItemFill);
+			return;
+		}
+
+		/* We got some fills, let's calculate the average of them. */
+		double avgFillPrice = 0.0;
+		double fillPriceSum = 0.0;
+		double fillQtySum = 0.0;
+		for(final TradeItemFill aTradeItemFill : tradeItemFills)
+		{
+			final double fillPriceToUse = aTradeItemFill.getFillNum() == theTradeItemFill.getItemFillNum() ? theNewFillPrice : aTradeItemFill.getFillPrice();
+			fillPriceSum = fillPriceSum + (aTradeItemFill.getFillQty() * fillPriceToUse);
+			fillQtySum = fillQtySum + aTradeItemFill.getFillQty();
+		}
+		avgFillPrice = fillQtySum != 0.0 ? fillPriceSum / fillQtySum : 0.0;
+
+		final Integer transId = CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U");
+		Integer cmntNum = CayenneReferenceDataFetchUtil.generateNewNum("cmnt_num", 0);
+
+		// We got avg closed price, avg of fill prices. So go ahead and update fill price, avg price, avg fill price, tiny cmnt
+		//final SQLExec updateTradeItemFillSQLExec = new SQLExec("UPDATE trade_item_fill set fill_price = #bind($newFillPriceParam), trans_id = #bind($transIdParam) WHERE trade_num = #bind($tradeNumParam) and order_num = #bind($orderNumParam) and item_num = #bind($itemNumParam) and item_fill_num = #bind($itemFillNumParam)");
+		this.updateTradeItemFillSQLExec = new SQLExec("UPDATE trade_item_fill set fill_price = #bind($newFillPriceParam), trans_id = #bind($transIdParam) WHERE trade_num = #bind($tradeNumParam) and order_num = #bind($orderNumParam) and item_num = #bind($itemNumParam) and item_fill_num = #bind($itemFillNumParam)");
+		this.updateTradeItemFillSQLExec.params("newFillPriceParam", theNewFillPrice);
+		this.updateTradeItemFillSQLExec.params("transIdParam", transId);
+		this.updateTradeItemFillSQLExec.params("tradeNumParam", theTradeItemFill.getTradeNum());
+		this.updateTradeItemFillSQLExec.params("orderNumParam", theTradeItemFill.getOrderNum());
+		this.updateTradeItemFillSQLExec.params("itemNumParam", theTradeItemFill.getItemNum());
+		this.updateTradeItemFillSQLExec.params("itemFillNumParam", theTradeItemFill.getItemFillNum());
+
+		//final SQLExec updateTradeItemFutSQLExec = new SQLExec("UPDATE trade_item_fut set avg_fill_price = #bind($avgFillPriceParam), trans_id = #bind($transIdParam) WHERE trade_num =  #bind($tradeNumParam) and order_num = o#bind($orderNumParam) and item_num = #bind($itemNumParam)");
+		this.updateTradeItemFutSQLExec = new SQLExec("UPDATE trade_item_fut set avg_fill_price = #bind($avgFillPriceParam), trans_id = #bind($transIdParam) WHERE trade_num =  #bind($tradeNumParam) and order_num = #bind($orderNumParam) and item_num = #bind($itemNumParam)");
+		this.updateTradeItemFutSQLExec.params("avgFillPriceParam", avgFillPrice);
+		this.updateTradeItemFutSQLExec.params("transIdParam", transId);
+		this.updateTradeItemFutSQLExec.params("tradeNumParam", theTradeItemFill.getTradeNum());
+		this.updateTradeItemFutSQLExec.params("orderNumParam", theTradeItemFill.getOrderNum());
+		this.updateTradeItemFutSQLExec.params("itemNumParam", theTradeItemFill.getItemNum());
+
+		//final SQLExec updateTradeItemSQLExec = new SQLExec("UPDATE trade_item set avg_price = #bind($avgFillPriceParam), trans_id = #bind($transIdParam) WHERE trade_num = #bind($tradeNumParam) and order_num = o#bind($orderNumParam) and item_num = #bind($itemNumParam)");
+		this.updateTradeItemSQLExec = new SQLExec("UPDATE trade_item set avg_price = #bind($avgFillPriceParam), trans_id = #bind($transIdParam) WHERE trade_num = #bind($tradeNumParam) and order_num = #bind($orderNumParam) and item_num = #bind($itemNumParam)");
+		this.updateTradeItemSQLExec.params("avgFillPriceParam", avgFillPrice);
+		this.updateTradeItemSQLExec.params("transIdParam", transId);
+		this.updateTradeItemSQLExec.params("tradeNumParam", theTradeItemFill.getTradeNum());
+		this.updateTradeItemSQLExec.params("orderNumParam", theTradeItemFill.getOrderNum());
+		this.updateTradeItemSQLExec.params("itemNumParam", theTradeItemFill.getItemNum());
+
+		//final SQLExec updateCommentSQLExec = new SQLExec("UPDATE comment set tiny_cmnt = 'Priced', trans_id = #bind($transIdParam) WHERE cmnt_num = #bind($cmntNumParam)");
+		this.updateCommentSQLExec = new SQLExec("UPDATE comment set tiny_cmnt = 'Priced', trans_id = #bind($transIdParam) WHERE cmnt_num = #bind($cmntNumParam)");
+		this.updateCommentSQLExec.params("transIdParam", transId);
+		this.updateCommentSQLExec.params("cmntNumParam", theTradeItemFill.getCmntNum());
+
+		//final SQLExec updateExchToolsTradeSQLExec = new SQLExec("UPDATE exch_tools_trade set price = #bind($priceParam), trans_id = #bind($transIdParam) WHERE exch_tools_trade_num = #bind($exchToolsTradeNumParam) and external_trade_oid in (select oid from external_trade where trade_num = #bind($tradeNumParam)");
+		this.updateExchToolsTradeSQLExec = new SQLExec("UPDATE exch_tools_trade set price = #bind($priceParam), trans_id = #bind($transIdParam) WHERE exch_tools_trade_num = #bind($exchToolsTradeNumParam) and external_trade_oid in (select oid from external_trade where trade_num = #bind($tradeNumParam))");
+		this.updateExchToolsTradeSQLExec.params("priceParam", theNewFillPrice);
+		this.updateExchToolsTradeSQLExec.params("transIdParam", transId);
+		this.updateExchToolsTradeSQLExec.params("exchToolsTradeNumParam", theTradeItemFill.getExternalTradeNum());
+		this.updateExchToolsTradeSQLExec.params("tradeNumParam", theTradeItemFill.getTradeNum());
+
+		String tinyCmnt = "";
+		String shortCmnt = "";
+		String cmntText = "";
+
+		/* if comment exists update with old price else create a new comment and update */
+		final String selectComment = "SELECT tradecommentalias.cmnt_num, commentalias.tiny_cmnt, commentalias.short_cmnt, SUBSTRING(CONVERT(varchar, commentalias.cmnt_text), 1, 4000) as cmntText FROM trade_comment AS tradecommentalias RIGHT OUTER JOIN comment AS commentalias ON tradecommentalias.cmnt_num = commentalias.cmnt_num WHERE tradecommentalias.trade_num = #bind($tradeNumParam) AND tradecommentalias.trade_cmnt_type = 'T'";
+		final Comment theComment = SQLSelect.query(Comment.class, selectComment).params("tradeNumParam", theTradeItemFill.getTradeNum()).selectOne(CayenneHelper.getCayenneServerRuntime().newContext());
+		if(theComment != null)
+		{
+			commentAlreadyExists = true;
+			cmntNum = theComment.getCommentNum();
+			// a trade comment is available so go ahead and update the necessary columns
+			if((theComment.getTinyCmnt() != null) && !theComment.getTinyCmnt().isEmpty())
 			{
-				/* We cannot find a price. So just set the fail comment and continue with other records. */
-				this.setFailComment();
-				continue;
+				theFinalCommentToSet = theComment.getTinyCmnt();
 			}
-			final Double rPrice = aPriceRecord.getAvgClosedPrice();
-			final Double rOldPrice;
-			final Double rNewPrice;
-			if(shouldConsiderFASDifferentialSet)
+			else if((theComment.getShortCmnt() != null) && !theComment.getShortCmnt().isEmpty())
 			{
-				rOldPrice = aRecord.getFillPrice();
-				rNewPrice = aRecord.getFillPrice() + rPrice +  aRecord.getOrderPrice();
+				theFinalCommentToSet = theComment.getShortCmnt();
+			}
+			else if((theComment.getCmntText() != null) && !theComment.getCmntText().isEmpty())
+			{
+				theFinalCommentToSet = theComment.getCmntText();
+			}
+			//theFinalCommentToSet = theFinalCommentToSet + "\r\n****\r\n" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "\r\n****\r\n";
+			theFinalCommentToSet = theFinalCommentToSet + "***** " + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + " *****";
+			if(theFinalCommentToSet.length() <= 16)
+			{
+				tinyCmnt = theFinalCommentToSet;
+				shortCmnt = null;
+				cmntText = null;
+			}
+			else if(theFinalCommentToSet.length() <= 255)
+			{
+				tinyCmnt = null;
+				shortCmnt = theFinalCommentToSet;
+				cmntText = null;
 			}
 			else
 			{
-				rOldPrice = aRecord.getFillPrice();
-				rNewPrice = aRecord.getFillPrice() + rPrice;
+				tinyCmnt = null;
+				shortCmnt = null;
+				cmntText = theFinalCommentToSet;
 			}
+			this.updateCommentSQLExec2 = new SQLExec("UPDATE comment SET tiny_cmnt = #bind($tinyCmntParam), short_cmnt = #bind($shortCmntParam), cmnt_path = #bind($cmntPathParam), cmnt_text = #bind($cmntTextParam), trans_id = #bind($transIdParam) WHERE cmnt_num = #bind($cmntNumParam)");
+			this.updateCommentSQLExec2.params("tinyCmntParam", tinyCmnt);
+			this.updateCommentSQLExec2.params("shortCmntParam", shortCmnt);
+			this.updateCommentSQLExec2.params("cmntPathParam", null);
+			this.updateCommentSQLExec2.params("cmntTextParam", cmntText);
+			this.updateCommentSQLExec2.params("transIdParam", transId);
+			this.updateCommentSQLExec2.params("cmntNumParam", cmntNum);
 		}
-		//@formatter:on
+		else
+		{
+			//create a new trade comment and update the necessary columns
+			this.insertTradeCommentSQLExec = new SQLExec("INSERT INTO trade_comment values(#bind($tradeNumParam), #bind($cmntNumParam), #bind($tradeCmntTypeParam), #bind($transIdParam))");
+			this.insertTradeCommentSQLExec.params("tradeNumParam", theTradeItemFill.getTradeNum());
+			this.insertTradeCommentSQLExec.params("cmntNumParam", cmntNum);
+			this.insertTradeCommentSQLExec.params("tradeCmntTypeParam", "T");
+			this.insertTradeCommentSQLExec.params("transIdParam", transId);
+
+			theFinalCommentToSet = "";
+			//theFinalCommentToSet = theFinalCommentToSet + "\r\n****\r\n" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "\r\n****\r\n";
+			theFinalCommentToSet = theFinalCommentToSet + "***** " + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + " *****";
+			if(theFinalCommentToSet.length() <= 16)
+			{
+				tinyCmnt = theFinalCommentToSet;
+				shortCmnt = null;
+				cmntText = null;
+			}
+			else if(theFinalCommentToSet.length() <= 255)
+			{
+				tinyCmnt = null;
+				shortCmnt = theFinalCommentToSet;
+				cmntText = null;
+			}
+			else
+			{
+				tinyCmnt = null;
+				shortCmnt = null;
+				cmntText = theFinalCommentToSet;
+			}
+
+			this.insertCommentSQLExec = new SQLExec("INSERT INTO comment values(#bind($cmntNumParam), #bind($tinyCmntParam), #bind($shortCmntParam), #bind($cmntPathParam), #bind($cmntTextParam), #bind($transIdParam))");
+			this.insertCommentSQLExec.params("cmntNumParam", cmntNum);
+			this.insertCommentSQLExec.params("tinyCmntParam", tinyCmnt);
+			this.insertCommentSQLExec.params("shortCmntParam", shortCmnt);
+			this.insertCommentSQLExec.params("cmntPathParam", null);
+			this.insertCommentSQLExec.params("cmntTextParam", cmntText);
+			this.insertCommentSQLExec.params("transIdParam", transId);
+		}
+
+		try
+		{
+			CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> this.saveAll());
+			this.setSuccessComment(theTradeItemFill);
+		}
+		catch(final Exception exception)
+		{
+			this.setFailComment(theTradeItemFill);
+		}
 	}
 
-	private void setFailComment()
+	private Integer saveAll()
 	{
-		final String commentString = "Settlement Price Not Found!";
+		final ObjectContext objectContext = CayenneHelper.getCayenneServerRuntime().newContext();
+		this.updateTradeItemFillSQLExec.execute(objectContext);
+		this.updateTradeItemFutSQLExec.execute(objectContext);
+		this.updateTradeItemSQLExec.execute(objectContext);
+		this.updateCommentSQLExec.execute(objectContext);
+		this.updateExchToolsTradeSQLExec.execute(objectContext);
+
+		if(commentAlreadyExists)
+		{
+			this.updateCommentSQLExec2.execute(objectContext);
+		}
+		else
+		{
+			this.insertTradeCommentSQLExec.execute(objectContext);
+			this.insertCommentSQLExec.execute(objectContext);
+		}
+		return null;
+	}
+
+	private void setFailComment(final DummySettlePrice theTradeItemFill)
+	{
+		theTradeItemFill.setPriceUpdateStatus("Settlement Price Not Found");
+	}
+
+	private void setSuccessComment(final DummySettlePrice theTradeItemFill)
+	{
+		theTradeItemFill.setPriceUpdateStatus("Settlement Price Updated");
+	}
+
+	private static boolean firstTime = true;
+	static boolean shouldConsiderFASDifferentialSet = false;
+	private static boolean shouldConsiderFASDifferentialSet()
+	{
+		if(firstTime)
+		{
+			firstTime = false;
+			final Constants theConstant = SelectById.query(Constants.class, "ConsiderFASDifferential").selectOne(CayenneHelper.getCayenneServerRuntime().newContext());
+			if((theConstant == null) || theConstant.getAttributeValue().equals("N"))
+			{
+				shouldConsiderFASDifferentialSet = false;
+			}
+			else
+			{
+				shouldConsiderFASDifferentialSet = true;
+			}
+		}
+		return shouldConsiderFASDifferentialSet;
 	}
 }
 

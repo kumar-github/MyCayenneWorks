@@ -38,8 +38,6 @@ public class DummySettlePrice
 
 	public DummySettlePrice(final DataRow aDataRow)
 	{
-		//@formatter:off
-
 		this.tradeNum = aDataRow.get("tradeNum") != null ? (Integer)aDataRow.get("tradeNum") : null;
 		this.orderNum = aDataRow.get("orderNum") != null ? (Short)aDataRow.get("orderNum") : null;
 		this.itemNum = aDataRow.get("itemNum") != null ? (Short)aDataRow.get("itemNum") : null;
@@ -64,8 +62,6 @@ public class DummySettlePrice
 		this.commktKey = aDataRow.get("commktKey") != null ? (Integer)aDataRow.get("commktKey") : null;
 
 		LOGGER.info(this);
-
-		//@formatter:on
 	}
 
 	public Integer getTradeNum()
@@ -296,6 +292,17 @@ public class DummySettlePrice
 	public String getPortNumNameString()
 	{
 		return this.getRealPortNum() + "-" + this.getPortFullName();
+	}
+
+	private String priceUpdateStatus;
+	public String getPriceUpdateStatus()
+	{
+		return this.priceUpdateStatus;
+	}
+
+	public void setPriceUpdateStatus(final String priceUpdateStatus)
+	{
+		this.priceUpdateStatus = priceUpdateStatus;
 	}
 
 	@Override

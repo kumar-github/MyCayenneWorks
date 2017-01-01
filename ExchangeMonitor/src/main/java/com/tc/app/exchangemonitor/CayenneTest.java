@@ -26,6 +26,7 @@ import com.tc.app.exchangemonitor.controller.DummySettlePrice;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.AccountAddress;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Comment;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Constants;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExchToolsTrade;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Price;
@@ -47,7 +48,14 @@ public class CayenneTest
 		CayenneHelper.initializeCayenneServerRuntime();
 		//testCall();
 		//testCall1();
-		updateSettleTest();
+		//updateSettleTest();
+		constantTest();
+	}
+
+	private static void constantTest()
+	{
+		final Constants theConstant = SelectById.query(Constants.class, "ConsiderFASDifferential").selectOne(CayenneHelper.getCayenneServerRuntime().newContext());
+		System.out.println(theConstant);
 	}
 
 	private static void updateSettleTest()
@@ -65,9 +73,14 @@ public class CayenneTest
 		tradeItemFills.forEach(theTradeItemFill -> updateSettlePrice(theTradeItemFill));
 	}
 
-	private static void setFailComment()
+	private static void setFailComment(final DummySettlePrice theTradeItemFill)
 	{
-		final String commentString = "Settlement Price Not Found!";
+		theTradeItemFill.setPriceUpdateStatus("Settlement Price Not Found");
+	}
+
+	private static void setSuccessComment(final DummySettlePrice theTradeItemFill)
+	{
+		theTradeItemFill.setPriceUpdateStatus("Settlement Price Updated");
 	}
 
 	private static List<DummySettlePrice> createDummySettlePriceObjectsForSettlePriceDataRows(final List<DataRow> settlePriceDataRows)
@@ -368,7 +381,7 @@ public class CayenneTest
 		if((thePrice == null) || (thePrice.getAvgClosedPrice() == null))
 		{
 			/* We cannot find a price. So just set the fail comment and continue with other records. */
-			setFailComment();
+			setFailComment(theTradeItemFill);
 			return;
 		}
 		// Keep the old fill price, we need to update it in the comment text
@@ -386,7 +399,7 @@ public class CayenneTest
 
 		if((tradeItemFills == null) || (tradeItemFills.size() == 0))
 		{
-			setFailComment();
+			setFailComment(theTradeItemFill);
 			return;
 		}
 
@@ -431,7 +444,7 @@ public class CayenneTest
 		//final SQLExec updateCommentSQLExec = new SQLExec("UPDATE comment set tiny_cmnt = 'Priced', trans_id = #bind($transIdParam) WHERE cmnt_num = #bind($cmntNumParam)");
 		updateCommentSQLExec = new SQLExec("UPDATE comment set tiny_cmnt = 'Priced', trans_id = #bind($transIdParam) WHERE cmnt_num = #bind($cmntNumParam)");
 		updateCommentSQLExec.params("transIdParam", transId);
-		updateCommentSQLExec.params("cmntNumParam", cmntNum);
+		updateCommentSQLExec.params("cmntNumParam", theTradeItemFill.getCmntNum());
 
 		//final SQLExec updateExchToolsTradeSQLExec = new SQLExec("UPDATE exch_tools_trade set price = #bind($priceParam), trans_id = #bind($transIdParam) WHERE exch_tools_trade_num = #bind($exchToolsTradeNumParam) and external_trade_oid in (select oid from external_trade where trade_num = #bind($tradeNumParam)");
 		updateExchToolsTradeSQLExec = new SQLExec("UPDATE exch_tools_trade set price = #bind($priceParam), trans_id = #bind($transIdParam) WHERE exch_tools_trade_num = #bind($exchToolsTradeNumParam) and external_trade_oid in (select oid from external_trade where trade_num = #bind($tradeNumParam))");
@@ -464,7 +477,8 @@ public class CayenneTest
 			{
 				theFinalCommentToSet = theComment.getCmntText();
 			}
-			theFinalCommentToSet = theFinalCommentToSet + "\r\n****\r\n" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "\r\n****\r\n";
+			//theFinalCommentToSet = theFinalCommentToSet + "\r\n****\r\n" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "\r\n****\r\n";
+			theFinalCommentToSet = theFinalCommentToSet + "*****" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "*****";
 			if(theFinalCommentToSet.length() <= 16)
 			{
 				tinyCmnt = theFinalCommentToSet;
@@ -501,7 +515,8 @@ public class CayenneTest
 			insertTradeCommentSQLExec.params("transIdParam", transId);
 
 			theFinalCommentToSet = "";
-			theFinalCommentToSet = theFinalCommentToSet + "\r\n****\r\n" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "\r\n****\r\n";
+			//theFinalCommentToSet = theFinalCommentToSet + "\r\n****\r\n" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "\r\n****\r\n";
+			theFinalCommentToSet = theFinalCommentToSet + "*****" + "Price Differential For Item Fill Number " + theTradeItemFill.getItemFillNum() + " was " + theOldFillPrice + "*****";
 			if(theFinalCommentToSet.length() <= 16)
 			{
 				tinyCmnt = theFinalCommentToSet;
@@ -530,26 +545,15 @@ public class CayenneTest
 			insertCommentSQLExec.params("transIdParam", transId);
 		}
 
-		CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> saveAll());
-		/*CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> {
-			final ObjectContext objectContext = CayenneHelper.getCayenneServerRuntime().newContext();
-			updateTradeItemFillSQLExec.execute(objectContext);
-			updateTradeItemFutSQLExec.execute(objectContext);
-			updateTradeItemSQLExec.execute(objectContext);
-			updateCommentSQLExec.execute(objectContext);
-			updateExchToolsTradeSQLExec.execute(objectContext);
-
-			if(commentAlreadyExists)
-			{
-				updateCommentSQLExec2.execute(objectContext);
-			}
-			else
-			{
-				insertTradeCommentSQLExec.execute(objectContext);
-				insertCommentSQLExec.execute(objectContext);
-			}
-			return null;
-		});*/
+		try
+		{
+			CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> saveAll());
+			setSuccessComment(theTradeItemFill);
+		}
+		catch(final Exception exception)
+		{
+			setFailComment(theTradeItemFill);
+		}
 	}
 
 	private static boolean shouldConsiderFASDifferentialSet()
@@ -559,7 +563,6 @@ public class CayenneTest
 		return shouldConsiderFASDifferentialSet;
 	}
 
-	//private static Integer saveAll(final TransactionalOperation op)
 	private static Integer saveAll()
 	{
 		final ObjectContext objectContext = CayenneHelper.getCayenneServerRuntime().newContext();

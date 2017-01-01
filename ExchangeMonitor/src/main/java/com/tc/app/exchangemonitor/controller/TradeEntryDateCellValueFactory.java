@@ -17,8 +17,6 @@ public class TradeEntryDateCellValueFactory implements Callback<TableColumn.Cell
 	public ObservableValue<LocalDateTime> call(final CellDataFeatures<ExternalTrade, LocalDateTime> cellData)
 	{
 		//return param.getValue().getCreationDate().toInstant().atZone(ZoneId.systemDefault());
-		//@formatter:off
 		return new ReadOnlyObjectWrapper<>(cellData.getValue().getEntryDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-		//@formatter:on
 	}
 }

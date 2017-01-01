@@ -129,7 +129,7 @@
 			<cellValueFactory><PropertyValueFactory property="traderFullName"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="160.0" text="Trade Date">
+			<TableColumn prefWidth="200.0" text="Trade Date">
 			<!-- <cellValueFactory><PropertyValueFactory property="fillDate"/></cellValueFactory> -->
 			<cellValueFactory><TradeItemFillDateCellValueFactory /></cellValueFactory>
 			<cellFactory><TradeItemFillDateCellFactory/></cellFactory>
@@ -168,6 +168,7 @@
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Price Update Status">
+			<cellValueFactory><PropertyValueFactory property="priceUpdateStatus" /></cellValueFactory>
 			</TableColumn>
 			
 		</columns>
