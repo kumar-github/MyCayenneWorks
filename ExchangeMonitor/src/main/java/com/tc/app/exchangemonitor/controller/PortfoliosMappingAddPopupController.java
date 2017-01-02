@@ -18,7 +18,6 @@ import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
 import com.tc.app.exchangemonitor.viewmodel.ExternalMappingPortfoliosViewModel;
 
 import javafx.application.Platform;
@@ -199,7 +198,8 @@ public class PortfoliosMappingAddPopupController implements IGenericController
 
 	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
-		return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
+		//return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
+		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 
 	private void refreshExternalMappingPortfoliosTableView()

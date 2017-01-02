@@ -2,11 +2,11 @@ package entitypredicates;
 
 import java.util.function.Predicate;
 
-import com.tc.app.exchangemonitor.model.IctsUser;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
 
 public interface ITraderPredicates
 {
-	public static Predicate<IctsUser> applyTraderPredicate(String filterText)
+	public static Predicate<IctsUser> applyTraderPredicate(final String filterText)
 	{
 		return (ictsUser) -> {
 			/*
@@ -20,7 +20,7 @@ public interface ITraderPredicates
 				return true;
 			return false;
 			 */
-			return (filterText == null || filterText.isEmpty() || ictsUser.getUserInit().trim().toLowerCase().contains(filterText) || ictsUser.getUserFirstName().trim().toLowerCase().contains(filterText) || ictsUser.getUserLastName().trim().toLowerCase().contains(filterText));
+			return ((filterText == null) || filterText.isEmpty() || ictsUser.getUserInit().trim().toLowerCase().contains(filterText) || ictsUser.getUserFirstName().trim().toLowerCase().contains(filterText) || ictsUser.getUserLastName().trim().toLowerCase().contains(filterText));
 		};
 	}
 }

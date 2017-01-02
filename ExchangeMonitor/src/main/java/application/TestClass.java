@@ -3,8 +3,8 @@ package application;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tc.app.exchangemonitor.util.HibernateUtil;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
+import com.tc.app.exchangemonitor.util.CayenneHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.framework.injection.Injector;
 
 import javafx.application.Application;
@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 
 public class TestClass extends Application
 {
-	//private Rectangle2D primaryMonitor = Screen.getPrimary().getVisualBounds();
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public TestClass()
@@ -37,8 +36,8 @@ public class TestClass extends Application
 	public void init()
 	{
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
-		HibernateUtil.getSessionFactory();
-		ReferenceDataCache.loadAllReferenceData();
+		CayenneHelper.initializeCayenneServerRuntime();
+		CayenneReferenceDataCache.fetchAllReferenceData();
 	}
 
 	@Override
@@ -78,7 +77,6 @@ public class TestClass extends Application
 		LOGGER.debug("ExchangeMonitorApplication stop called by ", Thread.currentThread().getName());
 		super.stop();
 		Injector.forgetAll();
-		HibernateUtil.closeSessionFactory();
 		LOGGER.info("Application Terminated.");
 		Platform.exit();
 		System.exit(0);

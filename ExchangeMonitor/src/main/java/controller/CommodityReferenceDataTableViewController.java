@@ -3,8 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.tc.app.exchangemonitor.model.Commodity;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Commodity;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import entitypredicates.ICommodityPredicates;
 import javafx.collections.FXCollections;
@@ -26,32 +26,31 @@ public class CommodityReferenceDataTableViewController implements IGenericRefere
 	@FXML
 	private TableColumn<Commodity, String> commodityFullNameTableColumn;
 
-	private ObservableList<Commodity> commoditiesObservableList = FXCollections.observableArrayList();
-	private FilteredList<Commodity> commoditiesFilteredList = new FilteredList<Commodity>(commoditiesObservableList, p -> true);
-	private SortedList<Commodity> commoditiesSortedList = new SortedList<Commodity>(commoditiesFilteredList);
+	private final ObservableList<Commodity> commoditiesObservableList = FXCollections.observableArrayList();
+	private final FilteredList<Commodity> commoditiesFilteredList = new FilteredList<>(this.commoditiesObservableList, p -> true);
+	private final SortedList<Commodity> commoditiesSortedList = new SortedList<>(this.commoditiesFilteredList);
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		commoditiesSortedList.comparatorProperty().bind(commodityReferenceDataTableView.comparatorProperty());
+		this.commoditiesSortedList.comparatorProperty().bind(this.commodityReferenceDataTableView.comparatorProperty());
 
-		//commoditiesObservableList = HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllCommodities");
-		long startTime = System.currentTimeMillis();
-		commoditiesObservableList.addAll(HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllCommodities"));
-		long endTime = System.currentTimeMillis();
-		commodityReferenceDataTableView.setItems(commoditiesSortedList);
+		final long startTime = System.currentTimeMillis();
+		this.commoditiesObservableList.addAll(CayenneReferenceDataCache.loadAllActiveCommodities().values());
+		final long endTime = System.currentTimeMillis();
+		this.commodityReferenceDataTableView.setItems(this.commoditiesSortedList);
 		System.out.println(endTime - startTime);
 	}
 
 	@Override
 	public FilteredList<Commodity> getInnerTableViewControlDataSource()
 	{
-		return commoditiesFilteredList;
+		return this.commoditiesFilteredList;
 	}
 
 	@Override
-	public void filter(String filterText)
+	public void filter(final String filterText)
 	{
-		commoditiesFilteredList.setPredicate(ICommodityPredicates.applyCommodityPredicate(filterText));
+		this.commoditiesFilteredList.setPredicate(ICommodityPredicates.applyCommodityPredicate(filterText));
 	}
 }

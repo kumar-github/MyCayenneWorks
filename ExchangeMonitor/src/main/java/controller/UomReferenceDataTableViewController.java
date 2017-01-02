@@ -3,8 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.tc.app.exchangemonitor.model.Uom;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Uom;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import entitypredicates.IUomPredicates;
 import javafx.collections.FXCollections;
@@ -26,29 +26,28 @@ public class UomReferenceDataTableViewController implements IGenericReferenceDat
 	@FXML
 	private TableColumn<Uom, String> uomFullNameTableColumn;
 
-	private ObservableList<Uom> uomObservableList = FXCollections.observableArrayList();
-	private FilteredList<Uom> uomFilteredList = new FilteredList<Uom>(uomObservableList, p -> true);
-	private SortedList<Uom> uomSortedList = new SortedList<Uom>(uomFilteredList);
+	private final ObservableList<Uom> uomObservableList = FXCollections.observableArrayList();
+	private final FilteredList<Uom> uomFilteredList = new FilteredList<>(this.uomObservableList, p -> true);
+	private final SortedList<Uom> uomSortedList = new SortedList<>(this.uomFilteredList);
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		uomSortedList.comparatorProperty().bind(uomReferenceDataTableView.comparatorProperty());
+		this.uomSortedList.comparatorProperty().bind(this.uomReferenceDataTableView.comparatorProperty());
 
-		//commoditiesObservableList = HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllCommodities");
-		uomObservableList.addAll(HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllUoms"));
-		uomReferenceDataTableView.setItems(uomSortedList);
+		this.uomObservableList.addAll(CayenneReferenceDataCache.loadAllActiveUoms().values());
+		this.uomReferenceDataTableView.setItems(this.uomSortedList);
 	}
 
 	@Override
 	public FilteredList<Uom> getInnerTableViewControlDataSource()
 	{
-		return uomFilteredList;
+		return this.uomFilteredList;
 	}
 
 	@Override
-	public void filter(String filterText)
+	public void filter(final String filterText)
 	{
-		uomFilteredList.setPredicate(IUomPredicates.applyUomPredicate(filterText));
+		this.uomFilteredList.setPredicate(IUomPredicates.applyUomPredicate(filterText));
 	}
 }

@@ -123,46 +123,7 @@ public class TradersMappingAddPopupController implements IGenericController
 		this.observableIctsTradersList.clear();
 		this.observableIctsTradersList.addAll(this.filter(CayenneReferenceDataCache.loadAllActiveIctsUsers().values(), (final IctsUser anIctsUser) -> anIctsUser.getUserJobTitle().getUserJobTitle().trim().equals("TRADER")));
 		LOGGER.debug("Traders Count : {}", this.observableIctsTradersList.size());
-
-		/*
-		final Session session = HibernateUtil.beginTransaction();
-		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.IctsUser.class);
-		criteria.add(Restrictions.eq("userStatus", 'A'));
-		criteria.add(Restrictions.eq("userJobTitle.jobTitle", "TRADER"));
-		final long startTime = System.currentTimeMillis();
-		this.observableIctsTraderList.clear();
-		this.observableIctsTraderList.addAll(criteria.list());
-		final long endTime = System.currentTimeMillis();
-		System.out.println(endTime - startTime);
-		session.close();
-		 */
 	}
-
-	/*
-	private boolean doesTraderMappingExistsAlready(final Integer externalTradeSourceOid, final String externalSourceTrader, final String ictsTrader)
-	{
-		boolean doesExists = false;
-		Session session = null;
-		List aMapping = null;
-
-		try
-		{
-			session = HibernateUtil.beginTransaction();
-			aMapping = session.getNamedQuery("DoesMappingExists").setParameter("externalTradeSourceOidParam", externalTradeSourceOid).setParameter("mappingTypeParam", TRADER_MAPPING_TYPE).setParameter("externalValue1Param", externalSourceTrader).setParameter("externalValue2Param", null).setParameter("externalValue3Param", null).setParameter("externalValue4Param", null).list();
-			System.out.println(aMapping);
-			doesExists = (aMapping.size() == 0) ? false : true;
-		}
-		catch(final Exception exception)
-		{
-		}
-		finally
-		{
-			session.close();
-		}
-
-		return doesExists;
-	}
-	 */
 
 	@FXML
 	private void handleSaveButtonClick()

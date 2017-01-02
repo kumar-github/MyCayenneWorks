@@ -49,7 +49,8 @@ public class CayenneTest
 		//testCall();
 		//testCall1();
 		//updateSettleTest();
-		constantTest();
+		//constantTest();
+		updateSettleTest();
 	}
 
 	private static void constantTest()

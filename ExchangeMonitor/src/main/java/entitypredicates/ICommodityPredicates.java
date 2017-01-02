@@ -2,12 +2,12 @@ package entitypredicates;
 
 import java.util.function.Predicate;
 
-import com.tc.app.exchangemonitor.model.Commodity;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Commodity;
 
 // public class ICommodityPredicates
 public interface ICommodityPredicates
 {
-	public static Predicate<Commodity> applyCommodityPredicate(String filterText)
+	public static Predicate<Commodity> applyCommodityPredicate(final String filterText)
 	{
 		return (commodity) -> {
 			/*
@@ -21,7 +21,7 @@ public interface ICommodityPredicates
 				return true;
 			return false;
 			 */
-			return (filterText == null || filterText.isEmpty() || commodity.getCmdtyCode().trim().toLowerCase().contains(filterText) || commodity.getCmdtyFullName().trim().toLowerCase().contains(filterText) || commodity.getCmdtyShortName().trim().toLowerCase().contains(filterText));
+			return ((filterText == null) || filterText.isEmpty() || commodity.getCmdtyCode().trim().toLowerCase().contains(filterText) || commodity.getCmdtyFullName().trim().toLowerCase().contains(filterText) || commodity.getCmdtyShortName().trim().toLowerCase().contains(filterText));
 		};
 	}
 }

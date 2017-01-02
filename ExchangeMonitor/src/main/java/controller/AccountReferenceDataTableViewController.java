@@ -3,8 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.tc.app.exchangemonitor.model.Account;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,29 +27,27 @@ public class AccountReferenceDataTableViewController implements IGenericReferenc
 	@FXML
 	private TableColumn<Account, String> accountTypeCodeTableColumn;
 
-	private ObservableList<Account> accountsObservableList = FXCollections.observableArrayList();
-	private FilteredList<Account> accountsFilteredList = new FilteredList<Account>(accountsObservableList, p -> true);
-	private SortedList<Account> accountsSortedList = new SortedList<Account>(accountsFilteredList);
+	private final ObservableList<Account> accountsObservableList = FXCollections.observableArrayList();
+	private final FilteredList<Account> accountsFilteredList = new FilteredList<>(this.accountsObservableList, p -> true);
+	private final SortedList<Account> accountsSortedList = new SortedList<>(this.accountsFilteredList);
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		accountsSortedList.comparatorProperty().bind(accountReferenceDataTableView.comparatorProperty());
+		this.accountsSortedList.comparatorProperty().bind(this.accountReferenceDataTableView.comparatorProperty());
 
-		//commoditiesObservableList = HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllCommodities");
-		accountsObservableList.addAll(HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllAccounts"));
-		accountReferenceDataTableView.setItems(accountsSortedList);
+		this.accountsObservableList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
+		this.accountReferenceDataTableView.setItems(this.accountsSortedList);
 	}
 
 	@Override
-	//public FilteredList<Account> getInnerTableViewControlDataSource()
 	public FilteredList<Account> getInnerTableViewControlDataSource()
 	{
-		return accountsFilteredList;
+		return this.accountsFilteredList;
 	}
 
 	@Override
-	public void filter(String filterText)
+	public void filter(final String filterText)
 	{
 	}
 }

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import com.sun.javafx.application.LauncherImpl;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
-import com.tc.app.exchangemonitor.util.HibernateUtil;
 import com.tc.app.exchangemonitor.view.java.MainWindowView;
 import com.tc.framework.injection.Injector;
 
@@ -50,8 +49,6 @@ public class ExchangeMonitorApplication extends Application
 	public void init()
 	{
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
-		//HibernateUtil.getSessionFactory();
-		//ReferenceDataCache.loadAllReferenceData();
 		CayenneHelper.initializeCayenneServerRuntime();
 		CayenneReferenceDataCache.fetchAllReferenceData();
 		for(int i = 0; i < 1000; i++)
@@ -64,12 +61,6 @@ public class ExchangeMonitorApplication extends Application
 	@Override
 	public void start(final Stage primaryStage)
 	{
-		//System.out.println(HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("GenNewTransactionSP"));
-		//System.out.println(HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("testStoredProc"));
-		//System.out.println(HibernateUtil.beginTransaction().getNamedQuery("testStoredProc").list());
-		//HibernateUtil.beginTransaction().getNamedQuery("testStoredProc").executeUpdate();
-		//HibernateUtil.beginTransaction().getNamedQuery("testStoredProc").list();
-
 		LOGGER.debug("ExchangeMonitorApplication start called by ", Thread.currentThread().getName());
 		// Do all the heavy lifting stuff. One Question. Can we do the heavy lifting stuff in init() instead here?
 		// then load the primary stage
@@ -164,7 +155,6 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.debug("ExchangeMonitorApplication stop called by ", Thread.currentThread().getName());
 		super.stop();
 		Injector.forgetAll();
-		HibernateUtil.closeSessionFactory();
 		CayenneHelper.getCayenneServerRuntime().shutdown();
 		LOGGER.info("Application Terminated.");
 		Platform.exit();

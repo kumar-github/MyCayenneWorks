@@ -16,7 +16,7 @@ public class CayenneHelper
 		{
 			//final Instant startTime = Instant.now();
 			final long startTime = System.currentTimeMillis();
-			cayenneServerRuntime = ServerRuntimeBuilder.builder().addConfig("cayenne/cayenne-ExchangeMonitor.xml").build();
+			cayenneServerRuntime = ServerRuntimeBuilder.builder().addConfig("cayenne/Cayenne-ExchangeMonitor.xml").build();
 			cayenneServerRuntime.newContext();
 			//final Instant endTime = Instant.now();
 			final long endTime = System.currentTimeMillis();

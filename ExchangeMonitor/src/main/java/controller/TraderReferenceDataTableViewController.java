@@ -3,8 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.tc.app.exchangemonitor.model.IctsUser;
-import com.tc.app.exchangemonitor.util.HibernateReferenceDataFetchUtil;
+import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 
 import entitypredicates.ITraderPredicates;
 import javafx.collections.FXCollections;
@@ -28,29 +28,28 @@ public class TraderReferenceDataTableViewController implements IGenericReference
 	@FXML
 	private TableColumn<IctsUser, String> userLogonIdTableColumn;
 
-	private ObservableList<IctsUser> tradersObservableList = FXCollections.observableArrayList();
-	private FilteredList<IctsUser> tradersFilteredList = new FilteredList<IctsUser>(tradersObservableList, p -> true);
-	private SortedList<IctsUser> tradersSortedList = new SortedList<IctsUser>(tradersFilteredList);
+	private final ObservableList<IctsUser> tradersObservableList = FXCollections.observableArrayList();
+	private final FilteredList<IctsUser> tradersFilteredList = new FilteredList<>(this.tradersObservableList, p -> true);
+	private final SortedList<IctsUser> tradersSortedList = new SortedList<>(this.tradersFilteredList);
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources)
+	public void initialize(final URL location, final ResourceBundle resources)
 	{
-		tradersSortedList.comparatorProperty().bind(traderReferenceDataTableView.comparatorProperty());
+		this.tradersSortedList.comparatorProperty().bind(this.traderReferenceDataTableView.comparatorProperty());
 
-		//commoditiesObservableList = HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllCommodities");
-		tradersObservableList.addAll(HibernateReferenceDataFetchUtil.fetchDataFromDBForSQLNamedQuery("FetchAllTraders"));
-		traderReferenceDataTableView.setItems(tradersSortedList);
+		this.tradersObservableList.addAll(CayenneReferenceDataCache.loadAllActiveIctsUsers().values());
+		this.traderReferenceDataTableView.setItems(this.tradersSortedList);
 	}
 
 	@Override
 	public FilteredList<IctsUser> getInnerTableViewControlDataSource()
 	{
-		return tradersFilteredList;
+		return this.tradersFilteredList;
 	}
 
 	@Override
-	public void filter(String filterText)
+	public void filter(final String filterText)
 	{
-		tradersFilteredList.setPredicate(ITraderPredicates.applyTraderPredicate(filterText));
+		this.tradersFilteredList.setPredicate(ITraderPredicates.applyTraderPredicate(filterText));
 	}
 }
