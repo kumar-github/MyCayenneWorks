@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.function.UnaryOperator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.tc.app.exchangemonitor.util.DatabaseUtil;
 import com.tc.app.exchangemonitor.util.StaticConstantsHelper;
 
@@ -20,6 +23,7 @@ import javafx.scene.text.Text;
 /** Controls the login screen */
 public class LoginController
 {
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final boolean DEFAULT_BOOLEAN_VALUE = false;
 	//public static String CONNECTION_URL ="jdbc:jtds:sqlserver://{0};databaseName={1}";
 
@@ -118,13 +122,20 @@ public class LoginController
 		/*String sessionID = authorize();
 		if(sessionID != null)
 			loginManager.authenticated(sessionID);*/
-		if(this.authorize())
+		try
 		{
-			this.loginManager.authenticated();
+			if(this.authorize())
+			{
+				this.loginManager.authenticated();
+			}
+			else
+			{
+				//loginStatusTxt.setText("Login Failure");
+			}
 		}
-		else
+		catch(final SQLException exception)
 		{
-			//loginStatusTxt.setText("Login Failure");
+			LOGGER.error("Login Failed.", exception);
 		}
 	}
 
@@ -144,7 +155,7 @@ public class LoginController
 	 */
 	String connectionURL = null;
 
-	private boolean authorize()
+	private boolean authorize() throws SQLException
 	{
 		final boolean isFirstTimeLogin = !PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.IS_AUTHENTICATED_USER, DEFAULT_BOOLEAN_VALUE);
 		boolean isAuthorized = DEFAULT_BOOLEAN_VALUE;
@@ -193,6 +204,7 @@ public class LoginController
 			catch(final SQLException exception)
 			{
 				this.loginStatusTextField.setText(exception.getMessage());
+				throw exception;
 			}
 		}
 		return isAuthorized;
