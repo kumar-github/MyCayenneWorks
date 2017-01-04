@@ -37,7 +37,6 @@ public class ExchangeMonitorApplication extends Application
 
 		LOGGER.info(() -> System.getProperties());
 		LOGGER.info(() -> System.getenv());
-		System.exit(0);
 	}
 
 	private static long startTime;
