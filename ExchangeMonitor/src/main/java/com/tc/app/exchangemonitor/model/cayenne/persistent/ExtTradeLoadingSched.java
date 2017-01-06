@@ -4,7 +4,5 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.auto._ExtTradeLoading
 
 public class ExtTradeLoadingSched extends _ExtTradeLoadingSched
 {
-
 	private static final long serialVersionUID = 1L;
-
 }

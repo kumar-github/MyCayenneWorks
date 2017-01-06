@@ -138,6 +138,23 @@
 	</sql>
 	</query>
 	
+	<query name="FindLoadSchedules" type="SQLTemplate">
+	<property name="cayenne.GenericSelectQuery.fetchingDataRows" value="true"/>
+	<sql>
+	<![CDATA[
+	SELECT DISTINCT #result('em.external_trade_source_oid', 'int', 'externalTradeSourceOid', 'externalTradeSourceOid'), #result('em.external_value1', 'String', 'externalValue1', 'externalValue1'),
+	#result('sch.loading_schedule', 'String', 'loadingSchedule', 'loadingSchedule'), #result('sch.loading_time_from', 'java.util.Data', 'loadingTimeFrom', 'loadingTimeFrom'),
+	#result('sch.loading_time_to', 'java.util.Date', 'loadingTimeTo', 'loadingTimeTo'), #result('sch.trade_date_to_load', 'java.util.Date', 'tradeDateToLoad', 'tradeDateToLoad'),
+	#result('sch.loading_date_timezone', 'String', 'loadingDateTimezone', 'loadingDateTimezone'), #result('trns.user_init', 'String', 'userInit', 'userInit'), #result('sch.oid', 'int', 'oid', 'oid')
+	FROM
+	external_mapping em LEFT OUTER JOIN ext_trade_loading_sched sch ON em.external_value1 = sch.buyer_seller_account LEFT OUTER JOIN icts_transaction trns ON sch.trans_id = trns.trans_id
+	LEFT OUTER JOIN icts_user iu ON em.alias_value = iu.user_init
+	WHERE
+	em.mapping_type = 'T' AND em.external_value1 IS NOT NULL AND iu.user_status = 'A' ORDER BY em.external_value1
+	]]>
+	</sql>
+	</query>
+	
 	<!-- ======================================================= SQL QUERIES ENDS ====================================================== -->
 	
 	<!-- =================================================== STORED PROCEDURES BEGINS =================================================== -->

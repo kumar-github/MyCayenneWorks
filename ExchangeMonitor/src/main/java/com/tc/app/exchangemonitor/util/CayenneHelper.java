@@ -12,6 +12,10 @@ public class CayenneHelper
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final ServerRuntime cayenneServerRuntime;
+	private static String CONNECTION_URL = "jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22";
+	private static final String DATABASE_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
+	private static String USERNAME = null;
+	private static String PASSWORD = null;
 
 	static
 	{
@@ -21,10 +25,16 @@ public class CayenneHelper
 			final long startTime = System.currentTimeMillis();
 			//cayenneServerRuntime = ServerRuntimeBuilder.builder().addConfig("cayenne/cayenne-ExchangeMonitor.xml").build();
 
+			CONNECTION_URL = PropertiesHelper.get("CONNECTION_URL");
+			USERNAME = PropertiesHelper.get("USERNAME");
+			PASSWORD = PropertiesHelper.get("PASSWORD");
+
 			//@formatter:off
 			//final DataSource dataSource = DataSourceBuilder.url("jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22").driver("net.sourceforge.jtds.jdbc.Driver").userName("ictspass").password("ictspass").pool(1, 2).build();
-			final DataSource dataSource = DataSourceBuilder.url("jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22")
-																												 .driver("net.sourceforge.jtds.jdbc.Driver")
+			final DataSource dataSource = DataSourceBuilder.url(CONNECTION_URL)
+																												 .driver(DATABASE_DRIVER)
+																												 .userName(USERNAME)
+																												 .password(PASSWORD)
 																												 .pool(1, 2).build();
 			cayenneServerRuntime = ServerRuntimeBuilder.builder()
 																											.addConfig("cayenne/cayenne-ExchangeMonitor.xml")

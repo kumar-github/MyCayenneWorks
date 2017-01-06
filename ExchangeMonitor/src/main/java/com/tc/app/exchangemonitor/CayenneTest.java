@@ -22,6 +22,7 @@ import org.apache.cayenne.query.SelectById;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.tc.app.exchangemonitor.controller.DummyPosition;
 import com.tc.app.exchangemonitor.controller.DummySettlePrice;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Account;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.AccountAddress;
@@ -50,7 +51,26 @@ public class CayenneTest
 		//testCall1();
 		//updateSettleTest();
 		//constantTest();
-		updateSettleTest();
+		//updateSettleTest();
+		findLoadSchedules();
+	}
+
+	private static void findLoadSchedules()
+	{
+		final List<DataRow> a = CayenneReferenceDataFetchUtil.getSelectQueryForName("FindLoadSchedules").select(CayenneHelper.getCayenneServerRuntime().newContext());
+		System.out.println(a.size());
+		for(final DataRow dataRow : a)
+		{
+			System.out.println(dataRow.get("externalTradeSourceOid"));
+			System.out.println(dataRow.get("externalValue1"));
+			System.out.println(dataRow.get("loadingSchedule"));
+			System.out.println(dataRow.get("loadingTimeFrom"));
+			System.out.println(dataRow.get("loadingTimeTo"));
+			System.out.println(dataRow.get("tradeDateToLoad"));
+			System.out.println(dataRow.get("loadingDateTimezone"));
+			System.out.println(dataRow.get("userInit"));
+			System.out.println(dataRow.get("oid"));
+		}
 	}
 
 	private static void constantTest()
@@ -233,8 +253,8 @@ public class CayenneTest
 		//final String positionQuery = "SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (1)) AND (et.external_trade_status_oid IN (1, 2, 3, 4)) AND (et.external_trade_state_oid IN (1, 2, 3, 4)) AND (ett.creation_date >= ('2016-01-01')) AND (ett.creation_date <= ('2016-12-20')) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid";
 		///final String positionQuery = "SELECT * FROM external_trade et JOIN exch_tools_trade ett ON et.oid = ett.external_trade_oid WHERE et.trade_num = 2494184";
 		//final SQLTemplate querySelect = new SQLTemplate(ExternalTrade.class, positionQuery);
-		final SQLTemplate querySelect = new SQLTemplate(com.tc.app.exchangemonitor.controller.DummyPosition.class, positionQuery);
-		final EntityResult entityResult = new EntityResult(com.tc.app.exchangemonitor.controller.DummyPosition.class);
+		final SQLTemplate querySelect = new SQLTemplate(DummyPosition.class, positionQuery);
+		final EntityResult entityResult = new EntityResult(DummyPosition.class);
 		final SQLResult resultDescriptor = new SQLResult();
 		resultDescriptor.addEntityResult(entityResult);
 		querySelect.setResult(resultDescriptor);

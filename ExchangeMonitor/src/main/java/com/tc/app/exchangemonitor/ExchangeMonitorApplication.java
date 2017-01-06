@@ -45,7 +45,7 @@ public class ExchangeMonitorApplication extends Application
 	{
 		LOGGER.debug("ExchangeMonitorApplication main called by ", Thread.currentThread().getName());
 		startTime = System.currentTimeMillis();
-		LOGGER.error("App Launch Initiated Time {}", startTime);
+		LOGGER.info("App Launch Initiated Time {}", startTime);
 		Application.launch();
 		//LauncherImpl.launchApplication(ExchangeMonitorApplication.class, ExchangeMonitionApplicationPreloader.class, args);
 	}
@@ -83,8 +83,8 @@ public class ExchangeMonitorApplication extends Application
 			this.animateStageIfNeeded();
 
 			endTime = System.currentTimeMillis();
-			LOGGER.error("UI Displayed Time {}", endTime);
-			LOGGER.error("It took {} milli seconds to load the UI.", (endTime - startTime));
+			LOGGER.info("UI Displayed Time {}", endTime);
+			LOGGER.info("It took {} milli seconds to load the UI.", (endTime - startTime));
 			primaryStage.show();
 			primaryStage.toFront();
 		}

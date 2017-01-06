@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tc.app.exchangemonitor.util.DatabaseUtil;
+import com.tc.app.exchangemonitor.util.PropertiesHelper;
 import com.tc.app.exchangemonitor.util.StaticConstantsHelper;
 
 import javafx.application.Platform;
@@ -119,6 +120,27 @@ public class LoginController
 	@FXML
 	private void handleLoginButtonClick()
 	{
+		try
+		{
+			this.login();
+		}
+		catch(final SQLException exception)
+		{
+			LOGGER.error("Login Failed.", exception);
+		}
+	}
+
+	@FXML
+	private void handleCancelButtonClick()
+	{
+		Platform.runLater(() -> {
+			Platform.exit();
+			System.exit(0);
+		});
+	}
+
+	private void login() throws SQLException
+	{
 		/*String sessionID = authorize();
 		if(sessionID != null)
 			loginManager.authenticated(sessionID);*/
@@ -135,17 +157,8 @@ public class LoginController
 		}
 		catch(final SQLException exception)
 		{
-			LOGGER.error("Login Failed.", exception);
+			throw exception;
 		}
-	}
-
-	@FXML
-	private void handleCancelButtonClick()
-	{
-		Platform.runLater(() -> {
-			Platform.exit();
-			System.exit(0);
-		});
 	}
 
 	/**
@@ -180,6 +193,16 @@ public class LoginController
 					this.loginStatusTextField.setText("Login Success...");
 					//store the connection url in registry so that hibernate can pick this when creating session factory.
 					PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.CONNECTION_URL, this.connectionURL);
+					PropertiesHelper.set("CONNECTION_URL", this.connectionURL);
+
+					if(username != null)
+					{
+						PropertiesHelper.set("USERNAME", username);
+					}
+					if(password != null)
+					{
+						PropertiesHelper.set("PASSWORD", password);
+					}
 				}
 				if(isAuthorized && shouldRemember)
 				{

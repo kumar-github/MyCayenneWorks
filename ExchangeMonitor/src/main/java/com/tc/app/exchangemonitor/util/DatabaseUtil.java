@@ -18,6 +18,7 @@ public class DatabaseUtil
 		Connection connection = null;
 		try
 		{
+			/* If no username, password mentioned or username, password is null, then it will be treated as Windows Authentication. */
 			connection = DriverManager.getConnection(url, username, password);
 			if(connection != null)
 			{
