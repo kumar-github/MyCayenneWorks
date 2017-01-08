@@ -18,7 +18,6 @@ import javafx.scene.control.ToggleGroup;
 public class ExternalTradeSourceRadioCellForMappingsTab extends ListCell<ExternalTradeSource>
 {
 	private final RadioButton radioButton = new RadioButton();
-	//private static final ToggleGroup toggleGroup = new ToggleGroup();
 	public static final ToggleGroup toggleGroup = new ToggleGroup();
 	private static String selectedRadioButtonName;
 

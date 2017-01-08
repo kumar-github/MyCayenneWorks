@@ -22,7 +22,7 @@
 		<HBox BorderPane.alignment="CENTER">
 		<BorderPane.margin><Insets bottom="5.0" left="181.0" right="5.0" top="5.0" /></BorderPane.margin>
 		<children>
-			<ToolBar fx:id="applicationMainWindowCurrentFilterToolBar">
+			<ToolBar>
 			<items>
 				<Text styleClass="filterKeyTextStyle" text="Current Filter: " />
 			</items>
@@ -41,8 +41,8 @@
 		<content>
 			<VBox spacing="5.0">
 			<children>
-				<Button maxWidth="1.7976931348623157E308" text="Show" />
-				<Button maxWidth="1.7976931348623157E308" text="Save" />
+				<Button maxWidth="1.7976931348623157E308" text="Show" onAction="#handleShowButtonClick" />
+				<Button maxWidth="1.7976931348623157E308" text="Save" onAction="#handleSaveButtonClick" />
 			</children>
 			<padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding>
 			</VBox>
@@ -57,42 +57,45 @@
 	<BorderPane.margin><Insets bottom="5.0" left="0.0" right="5.0" top="5.0" /></BorderPane.margin>
 	<padding><Insets bottom="2.0" left="2.0" right="2.0" top="1.0" /></padding>
 	<children>
-		<TableView fx:id="loadingScheduleTableView" cache="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" focusTraversable="false">
+		<TableView fixedCellSize="28.0" fx:id="loadingScheduleTableView" cache="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" focusTraversable="false" editable="true">
 		<columns>
 			<TableColumn prefWidth="110.0" text="Exchange">
-			<cellValueFactory><PropertyValueFactory property="tradeOrderItemFillNumString"/></cellValueFactory>
+			<!-- <cellValueFactory><PropertyValueFactory property="externalTradeSourceOid"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="externalTradeSourceName"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="140.0" text="Trade Account">
-			<cellValueFactory><PropertyValueFactory property="traderFullName"/></cellValueFactory>
+			<cellValueFactory><PropertyValueFactory property="externalValue1"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="140.0" text="Loading Status">
-			<!--<cellValueFactory><PropertyValueFactory property="fillDate"/></cellValueFactory>-->
+			<TableColumn prefWidth="180.0" text="Loading Status" fx:id="loadingStatusTableColumn">
+			<!-- <cellValueFactory><PropertyValueFactory property="loadingSchedule"/></cellValueFactory>-->
+			<cellValueFactory><PropertyValueFactory property="loadingScheduleStatus"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="110.0" text="Start Time">
-			<cellValueFactory><PropertyValueFactory property="cmdtyCode"/></cellValueFactory>
+			<TableColumn prefWidth="110.0" text="Start Time" fx:id="startTimeTableColumn">
+			<cellValueFactory><PropertyValueFactory property="loadingTimeFrom"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="100.0" text="Stop Time">
-			<cellValueFactory><PropertyValueFactory property="riskMktCode"/></cellValueFactory>
+			<TableColumn prefWidth="100.0" text="Stop Time" fx:id="stopTimeTableColumn">
+			<cellValueFactory><PropertyValueFactory property="loadingTimeTo"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="100.0" text="Trade Date">
-			<cellValueFactory><PropertyValueFactory property="tradingPrd" /></cellValueFactory>
+			<TableColumn prefWidth="100.0" text="Trade Date" fx:id="tradeDateTableColumn">
+			<cellValueFactory><PropertyValueFactory property="tradeDateToLoad" /></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="90.0" text="Time Zone">
-			<cellValueFactory><PropertyValueFactory property="buySellString" /></cellValueFactory>
+			<TableColumn prefWidth="90.0" text="Time Zone" fx:id="timezoneTableColumn">
+			<cellValueFactory><PropertyValueFactory property="loadingDateTimezone" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="Last Modified By">
-			<cellValueFactory><PropertyValueFactory property="fillQty" /></cellValueFactory>
+			<cellValueFactory><PropertyValueFactory property="userInit" /></cellValueFactory>
 			</TableColumn>
 		
 		</columns>
-		<BorderPane.margin><Insets bottom="10.0" left="5.0" right="10.0" top="5.0" /></BorderPane.margin>
+		<!-- <BorderPane.margin><Insets bottom="10.0" left="5.0" right="10.0" top="5.0" /></BorderPane.margin> -->
+		<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
 		</TableView>
 	</children>
 	</VBox>

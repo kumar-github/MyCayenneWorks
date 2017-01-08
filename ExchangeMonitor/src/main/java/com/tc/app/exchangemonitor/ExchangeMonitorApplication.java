@@ -32,11 +32,8 @@ public class ExchangeMonitorApplication extends Application
 	public ExchangeMonitorApplication()
 	{
 		LOGGER.debug("ExchangeMonitorApplication constructor called by ", Thread.currentThread().getName());
-		//LOGGER.debug(() -> System.getProperties());
-		//LOGGER.debug(() -> System.getenv());
-
-		LOGGER.info(() -> System.getProperties());
-		LOGGER.info(() -> System.getenv());
+		LOGGER.debug(() -> System.getProperties());
+		LOGGER.debug(() -> System.getenv());
 	}
 
 	private static long startTime;
@@ -136,18 +133,16 @@ public class ExchangeMonitorApplication extends Application
 	private void animateStageIfNeeded()
 	{
 		this.setFadeInTransition();
-		//setRotateTransition();
 	}
 
 	private void setFadeInTransition()
 	{
-		//super.setOpacity(0);
 		this.primaryScene.getRoot().setOpacity(0.0);
-		//primaryStage.setOpacity(0);
 		this.primaryStage.showingProperty().addListener((observableValue, oldValue, newValue) -> {
 			if(newValue)
 			{
-				final FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), this.primaryScene.getRoot());
+				//final FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), this.primaryScene.getRoot());
+				final FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), this.primaryScene.getRoot());
 				fadeTransition.setToValue(1);
 				fadeTransition.play();
 			}

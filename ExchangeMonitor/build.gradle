@@ -18,7 +18,7 @@ repositories
 	//Use 'jcenter' for resolving your dependencies. You can declare any Maven/Ivy/file repository here.
 	jcenter()
     mavenCentral()
-    maven { url "http://maven.objectstyle.org/nexus/content/repositories/cayenne-unofficial/" }
+    //maven { url "http://maven.objectstyle.org/nexus/content/repositories/cayenne-unofficial/" }
 }
 
 //In this section you declare the dependencies for your production and test code
@@ -39,13 +39,24 @@ dependencies
     compile 'com.google.guava:guava:19.0'
     
     //Apache POI dependency
-    compile group: 'org.apache.poi', name: 'poi', version: '3.15'
+    compile 'org.apache.poi:poi:3.15'
     
     //Apache POI OOXML dependency
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
+    compile 'org.apache.poi:poi-ooxml:3.15'
     
     //Apache Cayenne
-    compile 'org.apache.cayenne:cayenne-server:4.0.M4.ce40fc0'
+    //compile 'org.apache.cayenne:cayenne-server:4.0.M4.ce40fc0'
+    compile 'org.apache.cayenne:cayenne-server:4.0.M4'
+}
+
+jar
+{
+	from('src/main/java')
+	{
+		include '**/*.css'
+		include '**/*.fxml'
+		include '**/*.properties'
+	}
 }
 
 javafx
@@ -96,16 +107,6 @@ javafx
 	//app icons
 	icons
 	{
-	}
-	
-	jar
-	{
-		from('src/main/java')
-		{
-			include '**/*.css'
-			include '**/*.fxml'
-			include '**/*.properties'
-		}
 	}
 }
 

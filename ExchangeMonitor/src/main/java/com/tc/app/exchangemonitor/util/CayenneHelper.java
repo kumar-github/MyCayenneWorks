@@ -25,9 +25,9 @@ public class CayenneHelper
 			final long startTime = System.currentTimeMillis();
 			//cayenneServerRuntime = ServerRuntimeBuilder.builder().addConfig("cayenne/cayenne-ExchangeMonitor.xml").build();
 
-			CONNECTION_URL = PropertiesHelper.get("CONNECTION_URL");
-			USERNAME = PropertiesHelper.get("USERNAME");
-			PASSWORD = PropertiesHelper.get("PASSWORD");
+			//CONNECTION_URL = PropertiesHelper.get("CONNECTION_URL");
+			USERNAME = PropertiesHelper.getSystemProperty("USERNAME");
+			PASSWORD = PropertiesHelper.getSystemProperty("PASSWORD");
 
 			//@formatter:off
 			//final DataSource dataSource = DataSourceBuilder.url("jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22").driver("net.sourceforge.jtds.jdbc.Driver").userName("ictspass").password("ictspass").pool(1, 2).build();

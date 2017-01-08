@@ -193,15 +193,15 @@ public class LoginController
 					this.loginStatusTextField.setText("Login Success...");
 					//store the connection url in registry so that hibernate can pick this when creating session factory.
 					PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.CONNECTION_URL, this.connectionURL);
-					PropertiesHelper.set("CONNECTION_URL", this.connectionURL);
+					PropertiesHelper.setAsSystemProperty("CONNECTION_URL", this.connectionURL);
 
 					if(username != null)
 					{
-						PropertiesHelper.set("USERNAME", username);
+						PropertiesHelper.setAsSystemProperty("USERNAME", username);
 					}
 					if(password != null)
 					{
-						PropertiesHelper.set("PASSWORD", password);
+						PropertiesHelper.setAsSystemProperty("PASSWORD", password);
 					}
 				}
 				if(isAuthorized && shouldRemember)

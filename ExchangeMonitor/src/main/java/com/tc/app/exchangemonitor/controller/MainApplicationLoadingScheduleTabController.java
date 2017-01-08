@@ -1,16 +1,60 @@
 package com.tc.app.exchangemonitor.controller;
 
 import java.net.URL;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.MappedSelect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.tc.app.exchangemonitor.controller.DummyLoadSchedule.LoadScheduleStatus;
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
 
 public class MainApplicationLoadingScheduleTabController implements IMainApplicationMonitorTabController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	@FXML
+	private TableView<DummyLoadSchedule> loadingScheduleTableView;
+
+	private final ObservableList<DummyLoadSchedule> loadSchedulesObservableList = FXCollections.observableArrayList();
+
+	@FXML
+	//private TableColumn<DummyLoadSchedule, String> loadingStatusTableColumn;
+	private TableColumn<DummyLoadSchedule, LoadScheduleStatus> loadingStatusTableColumn;
+
+	private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> dateCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new DateEditingCell();
+
+	@FXML
+	private TableColumn<DummyLoadSchedule, Date> tradeDateTableColumn;
+
+	@FXML
+	private TableColumn<DummyLoadSchedule, Date> startTimeTableColumn;
+
+	@FXML
+	private TableColumn<DummyLoadSchedule, Date> stopTimeTableColumn;
+
+	@FXML
+	private TableColumn<DummyLoadSchedule, String> timezoneTableColumn;
+
+	private final FetchLoadSchedulesService fetchLoadSchedulesService = new FetchLoadSchedulesService();
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources)
@@ -55,6 +99,7 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	@Override
 	public void doInitialDataBinding()
 	{
+		this.loadingScheduleTableView.setItems(this.loadSchedulesObservableList);
 	}
 
 	@Override
@@ -120,5 +165,57 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 
 	private void initializeExternalTradeTableView()
 	{
+		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("Off", "Load All", "Load By Time", "Load By Trade Date", "Load By Time and TradeDate"));
+		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.<DummyLoadSchedule, LoadScheduleStatus>forTableColumn(LoadScheduleStatus.values()));
+		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
+		this.loadingStatusTableColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
+		this.tradeDateTableColumn.setCellFactory(this.dateCellFactory);
+		this.startTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
+		this.stopTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
+		this.timezoneTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("GMT", "EST", "IST"));
+	}
+
+	@FXML
+	public void handleShowButtonClick()
+	{
+		this.showLoadSchedules();
+	}
+
+	@FXML
+	public void handleSaveButtonClick()
+	{
+	}
+
+	private void showLoadSchedules()
+	{
+		this.fetchLoadSchedulesFromDBForTableView();
+	}
+
+	private void fetchLoadSchedulesFromDBForTableView()
+	{
+		MappedSelect<DataRow> mappedSelectQueryToFetchLoadSchedules = null;
+		//final List<DataRow> list = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchLoadSchedules").select(CayenneHelper.getCayenneServerRuntime().newContext());
+		mappedSelectQueryToFetchLoadSchedules = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchLoadSchedules");
+		this.fetchLoadSchedulesService.setMappedSelect(mappedSelectQueryToFetchLoadSchedules);
+
+		this.fetchLoadSchedulesService.restart();
+
+		this.fetchLoadSchedulesService.setOnSucceeded((final WorkerStateEvent workerStateEvent) -> {
+			this.doThisIfFetchSucceeded();
+		});
+	}
+
+	private void doThisIfFetchSucceeded()
+	{
+		final List<DummyLoadSchedule> allLoadSchedules = this.createDummyLoadSchedulesObjectsForLoadScheduleDataRows(this.fetchLoadSchedulesService.getValue());
+		this.loadSchedulesObservableList.clear();
+		this.loadSchedulesObservableList.addAll(allLoadSchedules);
+	}
+
+	private List<DummyLoadSchedule> createDummyLoadSchedulesObjectsForLoadScheduleDataRows(final List<DataRow> loadScheduleDataRows)
+	{
+		if(loadScheduleDataRows == null)
+			return null;
+		return loadScheduleDataRows.stream().map(DummyLoadSchedule::new).collect(Collectors.toList());
 	}
 }

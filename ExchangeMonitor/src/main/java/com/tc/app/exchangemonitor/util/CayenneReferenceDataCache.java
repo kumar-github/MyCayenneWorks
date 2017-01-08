@@ -24,6 +24,8 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.Portfolio;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Trade;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Uom;
 
+import javafx.concurrent.Task;
+
 public class CayenneReferenceDataCache
 {
 	//private static final Logger LOGGER = LogManager.getLogger(CayenneReferenceDataCache.class);
@@ -38,24 +40,59 @@ public class CayenneReferenceDataCache
 		fetchExternalTradeStatusReferenceData();
 		fetchExternalTradeAccountReferenceData();
 		fetchExternalMappingReferenceData();
+
+		/*
 		fetchAccountsReferenceData();
 		fetchIctsUsersReferenceData();
 		fetchCountriesReferenceData();
 		fetchCommoditiesReferenceData();
-
-		/* The below is not needed since we already loaded all the commodities and a currency is nothing but a commodity of type "C".
-		 * But still we are doing because we want to maintain a  seperate map for currencies which we use it directly at some situations instead of getting the commodities map an d filtering it.
-		 * Also believing that the previuos fetch for commodities will be in the cache, hence this won't affect the performance much.
-		 */
-		//fetchCurrenciesReferenceData();
-
 		fetchPortfoliosReferenceData();
 		fetchTemplateTradesReferenceData();
 		fetchUomsReferenceData();
+		*/
+
+		Task task;
+		task = TaskUtil.task(() -> {
+			fetchAccountsReferenceData();
+			fetchIctsUsersReferenceData();
+			fetchCountriesReferenceData();
+			fetchCommoditiesReferenceData();
+			fetchPortfoliosReferenceData();
+			fetchTemplateTradesReferenceData();
+			fetchUomsReferenceData();
+			return null;
+		});
+		new Thread(task).start();
+
+		/*
+		final Task task;
+		task = new Task<Void>(){
+			@Override
+			protected Void call() throws Exception
+			{
+				fetchAccountsReferenceData();
+				fetchIctsUsersReferenceData();
+				fetchCountriesReferenceData();
+				fetchCommoditiesReferenceData();
+				fetchPortfoliosReferenceData();
+				fetchTemplateTradesReferenceData();
+				fetchUomsReferenceData();
+				return null;
+			}
+		};
+		new Thread(task).start();
+		*/
+
+		/* The below is not needed since we already loaded all the commodities and a currency is nothing but a commodity of type "C".
+		 * But still we are doing because we want to maintain a  seperate map for currencies which we use it directly at some situations instead of getting the commodities map and filtering it.
+		 * Also believing that the previuos fetch for commodities will be in the cache, hence this won't affect the performance much.
+		 */
+		//fetchCurrenciesReferenceData();
 	}
 
 	/* Do we really need a map here? Think again... */
 	private static ConcurrentMap<String, ExternalTradeSource> externalTradeSourceReferenceDataHashMap = null;
+
 	private static void fetchExternalTradeSourceReferenceData()
 	{
 		if(externalTradeSourceReferenceDataHashMap == null)
@@ -64,9 +101,7 @@ public class CayenneReferenceDataCache
 
 			final long startTime = System.currentTimeMillis();
 
-			final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class)
-																																						 .where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
-																																						 .select(CayenneHelper.getCayenneServerRuntime().newContext());
+			final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class).where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} external trade sources.", (endTime - startTime), externalTradeSourceList.size());
@@ -83,8 +118,7 @@ public class CayenneReferenceDataCache
 			 */
 			//externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream().collect(Collectors.toConcurrentMap(theExternalTradeSource -> theExternalTradeSource.getExternalTradeSourceOid(), theExternalTradeSource -> theExternalTradeSource));
 
-			externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream()
-																																					   .collect(Collectors.toConcurrentMap(ExternalTradeSource::getExternalTradeSrcName, theExternalTradeSource -> theExternalTradeSource));
+			externalTradeSourceReferenceDataHashMap = externalTradeSourceList.stream().collect(Collectors.toConcurrentMap(ExternalTradeSource::getExternalTradeSrcName, theExternalTradeSource -> theExternalTradeSource));
 
 			if(IS_DEBUG_ENABLED)
 			{
@@ -94,6 +128,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<Integer, ExternalTradeState> externalTradeStateReferenceDataHashMap = null;
+
 	private static void fetchExternalTradeStateReferenceData()
 	{
 		if(externalTradeStateReferenceDataHashMap == null)
@@ -105,8 +140,7 @@ public class CayenneReferenceDataCache
 			final long endTime = System.currentTimeMillis();
 			LOGGER.info("It took {} milli seconds to fetch {} external trade states.", (endTime - startTime), externalTradeStateList.size());
 
-			externalTradeStateReferenceDataHashMap = externalTradeStateList.stream()
-			.collect(Collectors.toConcurrentMap(ExternalTradeState::getExternalTradeStateOid, theExternalTradeState -> theExternalTradeState));
+			externalTradeStateReferenceDataHashMap = externalTradeStateList.stream().collect(Collectors.toConcurrentMap(ExternalTradeState::getExternalTradeStateOid, theExternalTradeState -> theExternalTradeState));
 
 			if(IS_DEBUG_ENABLED)
 			{
@@ -116,6 +150,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<Integer, ExternalTradeStatus> externalTradeStatusReferenceDataHashMap = null;
+
 	private static void fetchExternalTradeStatusReferenceData()
 	{
 		if(externalTradeStatusReferenceDataHashMap == null)
@@ -137,6 +172,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<String, ExternalMapping> externalTradeAccountReferenceDataHashMap = null;
+
 	private static void fetchExternalTradeAccountReferenceData()
 	{
 		if(externalTradeAccountReferenceDataHashMap == null)
@@ -158,6 +194,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static List<ExternalMapping> externalMappingReferenceDataList = null;
+
 	private static void fetchExternalMappingReferenceData()
 	{
 		if(externalMappingReferenceDataList == null)
@@ -177,6 +214,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<Integer, Account> accountsReferenceDataHashMap = null;
+
 	private static void fetchAccountsReferenceData()
 	{
 		if(accountsReferenceDataHashMap == null)
@@ -198,6 +236,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<String, IctsUser> ictsUsersReferenceDataHashMap = null;
+
 	private static void fetchIctsUsersReferenceData()
 	{
 		if(ictsUsersReferenceDataHashMap == null)
@@ -221,6 +260,7 @@ public class CayenneReferenceDataCache
 	private static ConcurrentMap<String, Country> countriesReferenceDataHashMap = null;
 	private static ConcurrentMap<String, Country> isoCountriesReferenceDataHashMap = null;
 	private static ConcurrentMap<String, Country> countriesReferenceDataHashMapWithCountryName = null;
+
 	private static void fetchCountriesReferenceData()
 	{
 		if(countriesReferenceDataHashMap == null)
@@ -249,6 +289,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<String, Commodity> commoditiesReferenceDataHashMap = null;
+
 	private static void fetchCommoditiesReferenceData()
 	{
 		if(commoditiesReferenceDataHashMap == null)
@@ -295,6 +336,7 @@ public class CayenneReferenceDataCache
 	 */
 
 	private static ConcurrentMap<Integer, Portfolio> portfoliosReferenceDataHashMap = null;
+
 	private static void fetchPortfoliosReferenceData()
 	{
 		if(portfoliosReferenceDataHashMap == null)
@@ -316,6 +358,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<Integer, Trade> templateTradesReferenceDataHashMap = null;
+
 	private static void fetchTemplateTradesReferenceData()
 	{
 		if(templateTradesReferenceDataHashMap == null)
@@ -345,6 +388,7 @@ public class CayenneReferenceDataCache
 	}
 
 	private static ConcurrentMap<String, Uom> uomsReferenceDataHashMap = null;
+
 	private static void fetchUomsReferenceData()
 	{
 		if(uomsReferenceDataHashMap == null)
@@ -526,9 +570,7 @@ public class CayenneReferenceDataCache
 
 	private Optional<List<ExternalTradeSource>> ret()
 	{
-		final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class)
-																																					 .where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined"))
-																																					 .select(CayenneHelper.getCayenneServerRuntime().newContext());
+		final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class).where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 		return Optional.ofNullable(externalTradeSourceList);
 	}
 }
