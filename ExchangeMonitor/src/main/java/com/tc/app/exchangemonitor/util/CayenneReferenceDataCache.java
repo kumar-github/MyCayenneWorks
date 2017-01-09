@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.apache.cayenne.query.ObjectSelect;
@@ -23,8 +25,6 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.IctsUser;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Portfolio;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Trade;
 import com.tc.app.exchangemonitor.model.cayenne.persistent.Uom;
-
-import javafx.concurrent.Task;
 
 public class CayenneReferenceDataCache
 {
@@ -51,19 +51,6 @@ public class CayenneReferenceDataCache
 		fetchUomsReferenceData();
 		*/
 
-		Task task;
-		task = TaskUtil.task(() -> {
-			fetchAccountsReferenceData();
-			fetchIctsUsersReferenceData();
-			fetchCountriesReferenceData();
-			fetchCommoditiesReferenceData();
-			fetchPortfoliosReferenceData();
-			fetchTemplateTradesReferenceData();
-			fetchUomsReferenceData();
-			return null;
-		});
-		new Thread(task).start();
-
 		/*
 		final Task task;
 		task = new Task<Void>(){
@@ -82,6 +69,38 @@ public class CayenneReferenceDataCache
 		};
 		new Thread(task).start();
 		*/
+
+		/*
+		Task task;
+		task = TaskUtil.task(() -> {
+			fetchAccountsReferenceData();
+			fetchIctsUsersReferenceData();
+			fetchCountriesReferenceData();
+			fetchCommoditiesReferenceData();
+			fetchPortfoliosReferenceData();
+			fetchTemplateTradesReferenceData();
+			fetchUomsReferenceData();
+			return null;
+		});
+		new Thread(task).start();
+		*/
+
+		//final ExecutorService executorService = Executors.newFixedThreadPool(3);
+		final ExecutorService executorService = Executors.newCachedThreadPool(new DaemonThreadFactory());
+
+		//@formatter:off
+
+		executorService.execute(TaskUtil.task(() -> { fetchAccountsReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchIctsUsersReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchCountriesReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchCommoditiesReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchPortfoliosReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchTemplateTradesReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchUomsReferenceData(); return null; }));
+
+		//@formatter:on
+
+		executorService.shutdown();
 
 		/* The below is not needed since we already loaded all the commodities and a currency is nothing but a commodity of type "C".
 		 * But still we are doing because we want to maintain a  seperate map for currencies which we use it directly at some situations instead of getting the commodities map and filtering it.

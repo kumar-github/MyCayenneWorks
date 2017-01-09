@@ -6,8 +6,6 @@ package com.tc.app.exchangemonitor.util;
 
 import java.util.concurrent.Callable;
 
-import org.apache.poi.ss.formula.functions.T;
-
 import javafx.concurrent.Task;
 
 /**
@@ -16,8 +14,7 @@ import javafx.concurrent.Task;
  */
 public class TaskUtil
 {
-	//public static final void task(final Callable<T> callable)
-	public static final Task<T> task(final Callable<T> callable)
+	public static final <T> Task<T> task(final Callable<T> callable)
 	{
 		return new Task<T>(){
 			@Override

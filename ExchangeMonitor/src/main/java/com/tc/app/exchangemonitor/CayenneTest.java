@@ -4,6 +4,11 @@
  */
 package com.tc.app.exchangemonitor;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,13 +51,38 @@ public class CayenneTest
 
 	public static void main(final String[] args)
 	{
-		CayenneHelper.initializeCayenneServerRuntime();
+		//CayenneHelper.initializeCayenneServerRuntime();
 		//testCall();
 		//testCall1();
 		//updateSettleTest();
 		//constantTest();
 		//updateSettleTest();
-		findLoadSchedules();
+		//findLoadSchedules();
+		timeTest();
+	}
+
+	private static void timeTest()
+	{
+		final String timeString = "13:20:00";
+
+		final Time time = Time.valueOf(timeString);
+		System.out.println(time);
+
+		final DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+		Date date;
+		try
+		{
+			date = sdf.parse(timeString);
+			System.out.println(date);
+		}
+		catch(final ParseException exception)
+		{
+			exception.printStackTrace();
+		}
+
+		final LocalTime localTime = LocalTime.of(13, 25);
+		System.out.println(localTime);
+		System.out.println(localTime.parse(timeString));
 	}
 
 	private static void findLoadSchedules()

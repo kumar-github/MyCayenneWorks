@@ -3,18 +3,15 @@ package com.tc.app.exchangemonitor.controller;
 import java.util.Date;
 
 import org.apache.cayenne.DataRow;
-import org.apache.cayenne.query.SelectById;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
-import com.tc.app.exchangemonitor.util.CayenneHelper;
 
 public class DummyLoadSchedule
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private Integer externalTradeSourceOid;
+	private String externalTradeSourceName;
 	private String externalValue1;
 	private String loadingSchedule;
 	private Date loadingTimeFrom;
@@ -31,6 +28,7 @@ public class DummyLoadSchedule
 	public DummyLoadSchedule(final DataRow aDataRow)
 	{
 		this.externalTradeSourceOid = aDataRow.get("externalTradeSourceOid") != null ? (Integer) aDataRow.get("externalTradeSourceOid") : null;
+		this.externalTradeSourceName = aDataRow.get("externalTradeSourceName") != null ? (String) aDataRow.get("externalTradeSourceName") : null;
 		this.externalValue1 = aDataRow.get("externalValue1") != null ? (String) aDataRow.get("externalValue1") : null;
 		this.loadingSchedule = aDataRow.get("loadingSchedule") != null ? (String) aDataRow.get("loadingSchedule") : null;
 		this.loadingTimeFrom = aDataRow.get("loadingTimeFrom") != null ? (Date) aDataRow.get("loadingTimeFrom") : null;
@@ -53,6 +51,16 @@ public class DummyLoadSchedule
 		this.externalTradeSourceOid = externalTradeSourceOid;
 	}
 
+	public String getExternalTradeSourceName()
+	{
+		return this.externalTradeSourceName;
+	}
+
+	public void setExternalTradeSourceName(final String externalTradeSourceName)
+	{
+		this.externalTradeSourceName = externalTradeSourceName;
+	}
+
 	public String getExternalValue1()
 	{
 		return this.externalValue1;
@@ -66,11 +74,6 @@ public class DummyLoadSchedule
 	public String getLoadingSchedule()
 	{
 		return this.loadingSchedule;
-	}
-
-	public LoadScheduleStatus getLoadingScheduleStatus()
-	{
-		return this.loadingSchedule != null ? LoadScheduleStatus.valueOf(this.loadingSchedule) : null;
 	}
 
 	public void setLoadingSchedule(final String loadingSchedule)
@@ -138,17 +141,13 @@ public class DummyLoadSchedule
 		this.oid = oid;
 	}
 
-	/* An utility method to get the external trade source name given the oid. But we should not hit DB every time. It is better to join the external trade source table in the query itself and fetch the name. */
-	public String getExternalTradeSourceName()
-	{
-		return SelectById.query(ExternalTradeSource.class, this.externalTradeSourceOid).selectOne(CayenneHelper.getCayenneServerRuntime().newContext()).getExternalTradeSrcName();
-	}
-
 	@Override
 	public String toString()
 	{
 		return this.externalTradeSourceOid + " <--> " + this.externalValue1 + " <--> " + this.loadingSchedule + " <--> " + this.loadingTimeFrom + " <--> " + this.loadingTimeTo + " <--> " + this.tradeDateToLoad + " <--> " + this.loadingDateTimezone + " <--> " + this.userInit + " <--> " + this.oid;
 	}
+
+	/* ================================================================ Few Utility Methods =============================================================== */
 
 	/* A handy enum to deal with the load schedule statuses. */
 	public enum LoadScheduleStatus
@@ -166,5 +165,28 @@ public class DummyLoadSchedule
 		{
 			return this.label;
 		}
+	}
+
+	/* An utility method to get the external trade source name given the oid. But we should not hit DB every time. It is better to join the external trade source table in the query itself and fetch the name. */
+	/*
+	public String getExternalTradeSourceName()
+	{
+		return SelectById.query(ExternalTradeSource.class, this.externalTradeSourceOid).selectOne(CayenneHelper.getCayenneServerRuntime().newContext()).getExternalTradeSrcName();
+	}
+	*/
+
+	public LoadScheduleStatus getLoadingScheduleStatus()
+	{
+		return this.loadingSchedule != null ? LoadScheduleStatus.valueOf(this.loadingSchedule) : null;
+	}
+
+	public String getLoadingTimeFromString()
+	{
+		return this.loadingTimeFrom != null ? this.loadingTimeFrom.getHours() + ":" + this.loadingTimeFrom.getMinutes() : null;
+	}
+
+	public String getLoadingTimeToString()
+	{
+		return this.loadingTimeTo != null ? this.loadingTimeTo.getHours() + ":" + this.loadingTimeTo.getMinutes() : null;
 	}
 }

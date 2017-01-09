@@ -33,21 +33,13 @@
 	
 	<left>
 	<VBox spacing="2.0" BorderPane.alignment="CENTER">
-	<BorderPane.margin><Insets bottom="5.0" left="2.0" right="0.0" top="5.0" /></BorderPane.margin>
-	<padding><Insets bottom="2.0" left="2.0" right="2.0" top="1.0" /></padding>
+	<!-- <BorderPane.margin><Insets bottom="5.0" left="2.0" right="0.0" top="5.0" /></BorderPane.margin> -->
+	<BorderPane.margin><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></BorderPane.margin>
+	<!--  <padding><Insets bottom="2.0" left="2.0" right="2.0" top="1.0" /></padding> -->
+	<padding><Insets bottom="2.0" left="2.0" right="2.0" top="2.0" /></padding>
 	<children>
-		<TitledPane expanded="true" mnemonicParsing="true" text="_Action">
-		<font><Font name="System Bold" size="12.0" />	</font>
-		<content>
-			<VBox spacing="5.0">
-			<children>
-				<Button maxWidth="1.7976931348623157E308" text="Show" onAction="#handleShowButtonClick" />
-				<Button maxWidth="1.7976931348623157E308" text="Save" onAction="#handleSaveButtonClick" />
-			</children>
-			<padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding>
-			</VBox>
-		</content>
-		</TitledPane>
+		<Button text="Show" onAction="#handleShowButtonClick" prefWidth="80" />
+		<Button text="Save" onAction="#handleSaveButtonClick" prefWidth="80" />
 	</children>
 	</VBox>
 </left>
@@ -74,11 +66,13 @@
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Start Time" fx:id="startTimeTableColumn">
-			<cellValueFactory><PropertyValueFactory property="loadingTimeFrom"/></cellValueFactory>
+			<!--  <cellValueFactory><PropertyValueFactory property="loadingTimeFrom"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="loadingTimeFromString"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="100.0" text="Stop Time" fx:id="stopTimeTableColumn">
-			<cellValueFactory><PropertyValueFactory property="loadingTimeTo"/></cellValueFactory>
+			<!--  <cellValueFactory><PropertyValueFactory property="loadingTimeTo"/></cellValueFactory> -->
+			<cellValueFactory><PropertyValueFactory property="loadingTimeToString"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="100.0" text="Trade Date" fx:id="tradeDateTableColumn">

@@ -21,9 +21,9 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
@@ -166,13 +166,21 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	private void initializeExternalTradeTableView()
 	{
 		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("Off", "Load All", "Load By Time", "Load By Trade Date", "Load By Time and TradeDate"));
-		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.<DummyLoadSchedule, LoadScheduleStatus>forTableColumn(LoadScheduleStatus.values()));
-		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
 		this.loadingStatusTableColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
+
+		this.loadingStatusTableColumn.setOnEditCommit((t) -> {
+			System.out.println(t.getNewValue());
+			final ObservableList<DummyLoadSchedule> items = t.getTableView().getItems();
+			System.out.println(items);
+			final TablePosition<DummyLoadSchedule, LoadScheduleStatus> tablePosition = t.getTablePosition();
+			System.out.println(tablePosition);
+			System.out.println(items.get(tablePosition.getRow()));
+		});
+
 		this.tradeDateTableColumn.setCellFactory(this.dateCellFactory);
 		this.startTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
 		this.stopTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
-		this.timezoneTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("GMT", "EST", "IST"));
+		this.timezoneTableColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn("GMT", "EST", "IST"));
 	}
 
 	@FXML

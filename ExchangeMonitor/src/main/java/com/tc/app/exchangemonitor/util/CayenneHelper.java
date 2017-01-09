@@ -35,7 +35,7 @@ public class CayenneHelper
 																												 .driver(DATABASE_DRIVER)
 																												 .userName(USERNAME)
 																												 .password(PASSWORD)
-																												 .pool(1, 2).build();
+																												 .pool(1, 3).build();
 			cayenneServerRuntime = ServerRuntimeBuilder.builder()
 																											.addConfig("cayenne/cayenne-ExchangeMonitor.xml")
 																											.dataSource(dataSource)
