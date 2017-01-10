@@ -27,18 +27,15 @@ public class ComplexAnimation extends Application {
     }
 
     private void startAnimation(final Group root) {
-        // 四角
         final Rectangle rect = new Rectangle(50, 50, 100, 75);
         rect.setFill(Color.RED);
         rect.setOpacity(0.0);
 
-        // 四角をフェードインさせる
         final FadeTransition fadein
             = new FadeTransition(new Duration(500));
         fadein.setNode(rect);
         fadein.setToValue(1.0);
 
-        // 四角を左右に移動させる
         final TranslateTransition translate
             = new TranslateTransition(new Duration(1000));
         translate.setNode(rect);
@@ -47,7 +44,6 @@ public class ComplexAnimation extends Application {
         translate.setAutoReverse(true);
         translate.setCycleCount(5);
 
-        // 四角の色を変化させる
         final Timeline colorchange = new Timeline(
             new KeyFrame(new Duration(600),
                          new KeyValue(rect.fillProperty(), Color.GREEN))
@@ -55,18 +51,15 @@ public class ComplexAnimation extends Application {
         colorchange.setAutoReverse(true);
         colorchange.setCycleCount(4);
 
-        // 後から表示する円
         final Circle circ = new Circle(150, 150, 50);
         circ.setFill(Color.CYAN);
         circ.setOpacity(0.0);
 
-        // 円をフェードインさせる
         final FadeTransition fadein2
             = new FadeTransition(new Duration(500));
         fadein2.setNode(circ);
         fadein2.setToValue(1.0);
 
-        // 円のサイズを変化させる
         final ScaleTransition scale
            = new ScaleTransition(new Duration(1000));
         scale.setNode(circ);
@@ -75,14 +68,12 @@ public class ComplexAnimation extends Application {
         scale.setAutoReverse(true);
         scale.setCycleCount(2);
 
-        // 円をフェードアウトさせる
         final FadeTransition fadeout
             = new FadeTransition(new Duration(500));
         fadeout.setNode(circ);
         fadeout.setToValue(0.0);
         fadeout.setOnFinished(event -> root.getChildren().remove(circ));
 
-        // 基本となる時間軸
         final Timeline timeline = new Timeline(
             new KeyFrame(
                 new Duration(500),

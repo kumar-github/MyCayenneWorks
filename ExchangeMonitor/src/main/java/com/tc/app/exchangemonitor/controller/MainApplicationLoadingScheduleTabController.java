@@ -21,10 +21,8 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 
 public class MainApplicationLoadingScheduleTabController implements IMainApplicationMonitorTabController
@@ -33,27 +31,23 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 
 	@FXML
 	private TableView<DummyLoadSchedule> loadingScheduleTableView;
-
-	private final ObservableList<DummyLoadSchedule> loadSchedulesObservableList = FXCollections.observableArrayList();
-
 	@FXML
-	//private TableColumn<DummyLoadSchedule, String> loadingStatusTableColumn;
 	private TableColumn<DummyLoadSchedule, LoadScheduleStatus> loadingStatusTableColumn;
-
-	private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> dateCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new DateEditingCell();
-
 	@FXML
 	private TableColumn<DummyLoadSchedule, Date> tradeDateTableColumn;
-
 	@FXML
 	private TableColumn<DummyLoadSchedule, Date> startTimeTableColumn;
-
 	@FXML
 	private TableColumn<DummyLoadSchedule, Date> stopTimeTableColumn;
-
 	@FXML
 	private TableColumn<DummyLoadSchedule, String> timezoneTableColumn;
+	@FXML
+	private TableColumn<DummyLoadSchedule, Boolean> saveChangesTableColumn;
 
+	private final ObservableList<DummyLoadSchedule> loadSchedulesObservableList = FXCollections.observableArrayList();
+	private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> dateCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new DateEditingCell();
+	private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> textCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new TextEditingCell();
+	private final Callback<TableColumn<DummyLoadSchedule, Boolean>, TableCell<DummyLoadSchedule, Boolean>> buttonCellFactory = (final TableColumn<DummyLoadSchedule, Boolean> param) -> new ButtonCell();
 	private final FetchLoadSchedulesService fetchLoadSchedulesService = new FetchLoadSchedulesService();
 
 	@Override
@@ -166,21 +160,27 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	private void initializeExternalTradeTableView()
 	{
 		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("Off", "Load All", "Load By Time", "Load By Trade Date", "Load By Time and TradeDate"));
-		this.loadingStatusTableColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
-
-		this.loadingStatusTableColumn.setOnEditCommit((t) -> {
-			System.out.println(t.getNewValue());
-			final ObservableList<DummyLoadSchedule> items = t.getTableView().getItems();
+		this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
+		/*
+		this.loadingStatusTableColumn.setOnEditCommit((event) -> {
+			System.out.println(event.getNewValue());
+			final ObservableList<DummyLoadSchedule> items = event.getTableView().getItems();
 			System.out.println(items);
-			final TablePosition<DummyLoadSchedule, LoadScheduleStatus> tablePosition = t.getTablePosition();
+			final TablePosition<DummyLoadSchedule, LoadScheduleStatus> tablePosition = event.getTablePosition();
 			System.out.println(tablePosition);
 			System.out.println(items.get(tablePosition.getRow()));
+			System.out.println(tablePosition.getColumn());
+			System.out.println(tablePosition.getTableColumn());
 		});
+		*/
+
+		//this.startTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
+		this.startTimeTableColumn.setCellFactory(this.textCellFactory);
+		this.stopTimeTableColumn.setCellFactory(this.textCellFactory);
 
 		this.tradeDateTableColumn.setCellFactory(this.dateCellFactory);
-		this.startTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
-		this.stopTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
-		this.timezoneTableColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn("GMT", "EST", "IST"));
+
+		this.timezoneTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("GMT", "EST", "IST"));
 	}
 
 	@FXML
@@ -192,6 +192,7 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	@FXML
 	public void handleSaveButtonClick()
 	{
+		this.saveLoadSchedules();
 	}
 
 	private void showLoadSchedules()
@@ -202,7 +203,6 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	private void fetchLoadSchedulesFromDBForTableView()
 	{
 		MappedSelect<DataRow> mappedSelectQueryToFetchLoadSchedules = null;
-		//final List<DataRow> list = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchLoadSchedules").select(CayenneHelper.getCayenneServerRuntime().newContext());
 		mappedSelectQueryToFetchLoadSchedules = CayenneReferenceDataFetchUtil.getSelectQueryForName("FetchLoadSchedules");
 		this.fetchLoadSchedulesService.setMappedSelect(mappedSelectQueryToFetchLoadSchedules);
 
@@ -225,5 +225,10 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 		if(loadScheduleDataRows == null)
 			return null;
 		return loadScheduleDataRows.stream().map(DummyLoadSchedule::new).collect(Collectors.toList());
+	}
+
+	private void saveLoadSchedules()
+	{
+		this.loadingScheduleTableView.getItems().forEach(System.out::println);
 	}
 }

@@ -14,6 +14,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import com.tc.app.exchangemonitor.controller.ButtonCellFactory?>
 
 <Tab text="Loading Schedule" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.MainApplicationLoadingScheduleTabController">
 <content>
@@ -52,7 +53,6 @@
 		<TableView fixedCellSize="28.0" fx:id="loadingScheduleTableView" cache="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" focusTraversable="false" editable="true">
 		<columns>
 			<TableColumn prefWidth="110.0" text="Exchange">
-			<!-- <cellValueFactory><PropertyValueFactory property="externalTradeSourceOid"/></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="externalTradeSourceName"/></cellValueFactory>
 			</TableColumn>
 			
@@ -61,18 +61,15 @@
 			</TableColumn>
 			
 			<TableColumn prefWidth="180.0" text="Loading Status" fx:id="loadingStatusTableColumn">
-			<!-- <cellValueFactory><PropertyValueFactory property="loadingSchedule"/></cellValueFactory>-->
-			<cellValueFactory><PropertyValueFactory property="loadingScheduleStatus"/></cellValueFactory>
+			<cellValueFactory><PropertyValueFactory property="loadingSchedule"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Start Time" fx:id="startTimeTableColumn">
-			<!--  <cellValueFactory><PropertyValueFactory property="loadingTimeFrom"/></cellValueFactory> -->
-			<cellValueFactory><PropertyValueFactory property="loadingTimeFromString"/></cellValueFactory>
+			<cellValueFactory><PropertyValueFactory property="loadingTimeFrom"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="100.0" text="Stop Time" fx:id="stopTimeTableColumn">
-			<!--  <cellValueFactory><PropertyValueFactory property="loadingTimeTo"/></cellValueFactory> -->
-			<cellValueFactory><PropertyValueFactory property="loadingTimeToString"/></cellValueFactory>
+			<cellValueFactory><PropertyValueFactory property="loadingTimeTo"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="100.0" text="Trade Date" fx:id="tradeDateTableColumn">
@@ -85,6 +82,10 @@
 			
 			<TableColumn prefWidth="80.0" text="Last Modified By">
 			<cellValueFactory><PropertyValueFactory property="userInit" /></cellValueFactory>
+			</TableColumn>
+			
+			<TableColumn prefWidth="60.0" text="Save Changes">
+			<cellFactory><ButtonCellFactory/></cellFactory>
 			</TableColumn>
 		
 		</columns>

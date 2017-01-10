@@ -143,7 +143,7 @@
 	<sql>
 	<![CDATA[
 	SELECT DISTINCT #result('ets.external_trade_src_name', 'String', 'externalTradeSourceName', 'externalTradeSourceName'), #result('em.external_trade_source_oid', 'int', 'externalTradeSourceOid', 'externalTradeSourceOid'),
-	#result('em.external_value1', 'String', 'externalValue1', 'externalValue1'), 	#result('sch.loading_schedule', 'String', 'loadingSchedule', 'loadingSchedule'), #result('sch.loading_time_from', 'java.util.Data', 'loadingTimeFrom', 'loadingTimeFrom'),
+	#result('em.external_value1', 'String', 'externalValue1', 'externalValue1'), 	#result('sch.loading_schedule', 'String', 'loadingSchedule', 'loadingSchedule'), #result('sch.loading_time_from', 'java.util.Date', 'loadingTimeFrom', 'loadingTimeFrom'),
 	#result('sch.loading_time_to', 'java.util.Date', 'loadingTimeTo', 'loadingTimeTo'), #result('sch.trade_date_to_load', 'java.util.Date', 'tradeDateToLoad', 'tradeDateToLoad'),
 	#result('sch.loading_date_timezone', 'String', 'loadingDateTimezone', 'loadingDateTimezone'), #result('trns.user_init', 'String', 'userInit', 'userInit'), #result('sch.oid', 'int', 'oid', 'oid')
 	FROM

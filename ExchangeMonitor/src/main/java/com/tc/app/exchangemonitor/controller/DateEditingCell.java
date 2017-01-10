@@ -12,9 +12,6 @@ import javafx.scene.control.TableCell;
 public class DateEditingCell extends TableCell<DummyLoadSchedule, Date>
 {
 	private DatePicker datePicker;
-	public DateEditingCell()
-	{
-	}
 
 	@Override
 	public void startEdit()
@@ -33,7 +30,6 @@ public class DateEditingCell extends TableCell<DummyLoadSchedule, Date>
 	{
 		super.cancelEdit();
 
-		//this.setText(this.getDate().toString());
 		this.setText(this.getDate() != null ? this.getDate().toString() : null);
 		this.setGraphic(null);
 	}
@@ -84,7 +80,6 @@ public class DateEditingCell extends TableCell<DummyLoadSchedule, Date>
 
 	private LocalDate getDate()
 	{
-		//return this.getItem() == null ? LocalDate.now() : this.getItem().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		return this.getItem() != null ? this.getItem().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
 	}
 }

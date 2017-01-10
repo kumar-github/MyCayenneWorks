@@ -60,8 +60,8 @@ public class EditableTable extends Application
 
 		this.table.setEditable(true);
 		final Callback<TableColumn<Person, String>, TableCell<Person, String>> cellFactory = (final TableColumn<Person, String> param) -> new EditingCell();
-		final Callback<TableColumn<Person, Date>, TableCell<Person, Date>> dateCellFactory = (final TableColumn<Person, Date> param) -> new DateEditingCell();
 		final Callback<TableColumn<Person, Typ>, TableCell<Person, Typ>> comboBoxCellFactory = (final TableColumn<Person, Typ> param) -> new ComboBoxEditingCell();
+		final Callback<TableColumn<Person, Date>, TableCell<Person, Date>> dateCellFactory = (final TableColumn<Person, Date> param) -> new DateEditingCell();
 
 		final TableColumn<Person, String> firstNameCol = new TableColumn("Vorname");
 		firstNameCol.setMinWidth(100);
@@ -113,7 +113,12 @@ public class EditableTable extends Application
 			addEmail.clear();
 		});
 
-		this.hb.getChildren().addAll(addFirstName, addLastName, addEmail, addButton);
+		final Button showButton = new Button("Show");
+		showButton.setOnAction((final ActionEvent e) -> {
+			this.table.getItems().forEach(System.out::println);
+		});
+
+		this.hb.getChildren().addAll(addFirstName, addLastName, addEmail, addButton, showButton);
 		this.hb.setSpacing(3);
 
 		final VBox vbox = new VBox();
@@ -555,6 +560,10 @@ public class EditableTable extends Application
 			this.birthday.set(birthday);
 		}
 
+		@Override
+		public String toString()
+		{
+			return this.getFirstName() + this.getBirthday() + this.getTypObj().getTyp();
+		}
 	}
-
 }
