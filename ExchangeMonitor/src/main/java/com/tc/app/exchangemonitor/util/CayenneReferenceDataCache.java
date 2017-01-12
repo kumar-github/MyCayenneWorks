@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.apache.cayenne.query.ObjectSelect;
@@ -41,7 +39,6 @@ public class CayenneReferenceDataCache
 		fetchExternalTradeAccountReferenceData();
 		fetchExternalMappingReferenceData();
 
-		/*
 		fetchAccountsReferenceData();
 		fetchIctsUsersReferenceData();
 		fetchCountriesReferenceData();
@@ -49,7 +46,6 @@ public class CayenneReferenceDataCache
 		fetchPortfoliosReferenceData();
 		fetchTemplateTradesReferenceData();
 		fetchUomsReferenceData();
-		*/
 
 		/*
 		final Task task;
@@ -86,21 +82,21 @@ public class CayenneReferenceDataCache
 		*/
 
 		//final ExecutorService executorService = Executors.newFixedThreadPool(3);
-		final ExecutorService executorService = Executors.newCachedThreadPool(new DaemonThreadFactory());
+		//final ExecutorService executorService = Executors.newCachedThreadPool(new DaemonThreadFactory());
 
 		//@formatter:off
 
+		/*executorService.execute(TaskUtil.task(() -> { fetchPortfoliosReferenceData(); return null; }));
 		executorService.execute(TaskUtil.task(() -> { fetchAccountsReferenceData(); return null; }));
 		executorService.execute(TaskUtil.task(() -> { fetchIctsUsersReferenceData(); return null; }));
 		executorService.execute(TaskUtil.task(() -> { fetchCountriesReferenceData(); return null; }));
 		executorService.execute(TaskUtil.task(() -> { fetchCommoditiesReferenceData(); return null; }));
-		executorService.execute(TaskUtil.task(() -> { fetchPortfoliosReferenceData(); return null; }));
 		executorService.execute(TaskUtil.task(() -> { fetchTemplateTradesReferenceData(); return null; }));
-		executorService.execute(TaskUtil.task(() -> { fetchUomsReferenceData(); return null; }));
+		executorService.execute(TaskUtil.task(() -> { fetchUomsReferenceData(); return null; }));*/
 
 		//@formatter:on
 
-		executorService.shutdown();
+		//executorService.shutdown();
 
 		/* The below is not needed since we already loaded all the commodities and a currency is nothing but a commodity of type "C".
 		 * But still we are doing because we want to maintain a  seperate map for currencies which we use it directly at some situations instead of getting the commodities map and filtering it.
@@ -123,7 +119,7 @@ public class CayenneReferenceDataCache
 			final List<ExternalTradeSource> externalTradeSourceList = ObjectSelect.query(ExternalTradeSource.class).where(ExternalTradeSource.EXTERNAL_TRADE_SRC_NAME.ne("NonDefined")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} external trade sources.", (endTime - startTime), externalTradeSourceList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} external trade sources.", (endTime - startTime), externalTradeSourceList.size());
 
 			//Bye Bye loops... Welcome Lambdas
 			/*
@@ -157,7 +153,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<ExternalTradeState> externalTradeStateList = ObjectSelect.query(ExternalTradeState.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} external trade states.", (endTime - startTime), externalTradeStateList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} external trade states.", (endTime - startTime), externalTradeStateList.size());
 
 			externalTradeStateReferenceDataHashMap = externalTradeStateList.stream().collect(Collectors.toConcurrentMap(ExternalTradeState::getExternalTradeStateOid, theExternalTradeState -> theExternalTradeState));
 
@@ -179,7 +175,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<ExternalTradeStatus> externalTradeStatusList = ObjectSelect.query(ExternalTradeStatus.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} external trade statuses.", (endTime - startTime), externalTradeStatusList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} external trade statuses.", (endTime - startTime), externalTradeStatusList.size());
 
 			externalTradeStatusReferenceDataHashMap = externalTradeStatusList.stream().collect(Collectors.toConcurrentMap(ExternalTradeStatus::getExternalTradeStatusOid, theExternalTradeStatus -> theExternalTradeStatus));
 
@@ -201,7 +197,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<ExternalMapping> externalTradeAccountList = ObjectSelect.query(ExternalMapping.class).where(ExternalMapping.MAPPING_TYPE.eq("K")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} external trade accounts.", (endTime - startTime), externalTradeAccountList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} external trade accounts.", (endTime - startTime), externalTradeAccountList.size());
 
 			//externalTradeAccountReferenceDataHashMap = externalTradeAccountList.stream().collect(Collectors.toConcurrentMap(ExternalMapping::getExternalValue1, theExternalMapping -> theExternalMapping));
 			externalTradeAccountReferenceDataHashMap = externalTradeAccountList.stream().collect(Collectors.toConcurrentMap(ExternalMapping::getExternalValue1, theExternalMapping -> theExternalMapping, (theExistingMapping, theNewMapping) -> theExistingMapping));
@@ -223,7 +219,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			externalMappingReferenceDataList = ObjectSelect.query(ExternalMapping.class).prefetch(ExternalMapping.EXTERNAL_TRADE_SOURCE_O.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} external mappings.", (endTime - startTime), externalMappingReferenceDataList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} external mappings.", (endTime - startTime), externalMappingReferenceDataList.size());
 
 			if(IS_DEBUG_ENABLED)
 			{
@@ -243,7 +239,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Account> accountList = ObjectSelect.query(Account.class).where(Account.ACCT_STATUS.eq("A")).prefetch(Account.ACCOUNT_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} accounts.", (endTime - startTime), accountList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} accounts.", (endTime - startTime), accountList.size());
 
 			accountsReferenceDataHashMap = accountList.stream().collect(Collectors.toConcurrentMap(Account::getAccountNum, theAccount -> theAccount));
 
@@ -265,7 +261,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<IctsUser> ictsUsersList = ObjectSelect.query(IctsUser.class).where(IctsUser.USER_STATUS.eq("A")).prefetch(IctsUser.USER_JOB_TITLE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} icts users.", (endTime - startTime), ictsUsersList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} icts users.", (endTime - startTime), ictsUsersList.size());
 
 			ictsUsersReferenceDataHashMap = ictsUsersList.stream().collect(Collectors.toConcurrentMap(IctsUser::getUserInit, theIctsUser -> theIctsUser));
 
@@ -291,7 +287,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Country> countriesList = ObjectSelect.query(Country.class).where(Country.COUNTRY_STATUS.eq("A")).and(Country.ISO_COUNTRY_CODE.isNotNull()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} countries.", (endTime - startTime), countriesList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} countries.", (endTime - startTime), countriesList.size());
 
 			countriesReferenceDataHashMap = countriesList.stream().collect(Collectors.toConcurrentMap(Country::getCountryCode, theCountry -> theCountry));
 
@@ -319,7 +315,7 @@ public class CayenneReferenceDataCache
 			//final List<Commodity> commoditiesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final List<Commodity> commoditiesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).prefetch(Commodity.COMMODITY_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} commodities.", (endTime - startTime), commoditiesList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} commodities.", (endTime - startTime), commoditiesList.size());
 
 			commoditiesReferenceDataHashMap = commoditiesList.stream().collect(Collectors.toConcurrentMap(Commodity::getCmdtyCode, theCommodity -> theCommodity));
 
@@ -342,7 +338,7 @@ public class CayenneReferenceDataCache
 			final List<Commodity> currenciesList = ObjectSelect.query(Commodity.class).where(Commodity.CMDTY_STATUS.eq("A")).prefetch(Commodity.COMMODITY_TYPE.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			//final EJBQLQuery query = new EJBQLQuery("select commodity FROM Commodity commodity JOIN commodity.commodityType commodityType where commodityType = 'C'");
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} currencies.", (endTime - startTime), currenciesList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} currencies.", (endTime - startTime), currenciesList.size());
 
 			currenciesReferenceDataHashMap = currenciesList.stream().collect(Collectors.toConcurrentMap(Commodity::getCmdtyCode, theCommodity -> theCommodity));
 
@@ -365,7 +361,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Portfolio> portfoliosList = ObjectSelect.query(Portfolio.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} portfolios.", (endTime - startTime), portfoliosList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} portfolios.", (endTime - startTime), portfoliosList.size());
 
 			portfoliosReferenceDataHashMap = portfoliosList.stream().collect(Collectors.toConcurrentMap(Portfolio::getPortNum, thePortfolio -> thePortfolio));
 
@@ -393,7 +389,7 @@ public class CayenneReferenceDataCache
 			//final List<String> tradeNums = CayenneHelper.getCayenneServerRuntime().newContext().performQuery(queryToFetchTradeNums);
 			//tradeNums.forEach(System.out::println);
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} template trades.", (endTime - startTime), templateTradesList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} template trades.", (endTime - startTime), templateTradesList.size());
 
 			//templateTradesReferenceDataHashMap = templateTradesList.stream().collect(Collectors.toConcurrentMap(Trade::getTradeNum, theTrade -> theTrade));
 			templateTradesReferenceDataHashMap = undeletedTemplateTradesList.stream().collect(Collectors.toConcurrentMap(Trade::getTradeNum, theTrade -> theTrade));
@@ -417,7 +413,7 @@ public class CayenneReferenceDataCache
 			final long startTime = System.currentTimeMillis();
 			final List<Uom> uomsList = ObjectSelect.query(Uom.class).where(Uom.UOM_STATUS.eq("A")).select(CayenneHelper.getCayenneServerRuntime().newContext());
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to fetch {} uoms.", (endTime - startTime), uomsList.size());
+			LOGGER.debug("It took {} milli seconds to fetch {} uoms.", (endTime - startTime), uomsList.size());
 
 			uomsReferenceDataHashMap = uomsList.stream().collect(Collectors.toConcurrentMap(Uom::getUomCode, theUom -> theUom));
 

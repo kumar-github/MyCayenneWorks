@@ -21,9 +21,12 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+import javafx.util.converter.TimeStringConverter;
 
 public class MainApplicationLoadingScheduleTabController implements IMainApplicationMonitorTabController
 {
@@ -45,9 +48,13 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	private TableColumn<DummyLoadSchedule, Boolean> saveChangesTableColumn;
 
 	private final ObservableList<DummyLoadSchedule> loadSchedulesObservableList = FXCollections.observableArrayList();
+
+	/* Commenting the below cell factories as i will try to implement without a custom class. The implemented classes are still there for learning purpose. */
 	private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> dateCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new DateEditingCell();
-	private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> textCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new TextEditingCell();
-	private final Callback<TableColumn<DummyLoadSchedule, Boolean>, TableCell<DummyLoadSchedule, Boolean>> buttonCellFactory = (final TableColumn<DummyLoadSchedule, Boolean> param) -> new ButtonCell();
+	//private final Callback<TableColumn<DummyLoadSchedule, Date>, TableCell<DummyLoadSchedule, Date>> textCellFactory = (final TableColumn<DummyLoadSchedule, Date> param) -> new TextEditingCell();
+	//private final Callback<TableColumn<DummyLoadSchedule, Boolean>, TableCell<DummyLoadSchedule, Boolean>> buttonCellFactory = (final TableColumn<DummyLoadSchedule, Boolean> param) -> new ButtonCell();
+	//final Callback<TableColumn<DummyLoadSchedule, LoadScheduleStatus>, TableCell<DummyLoadSchedule, LoadScheduleStatus>> comboBoxCellFactory = (final TableColumn<DummyLoadSchedule, LoadScheduleStatus> param) -> new ComboBoxTableCell();
+
 	private final FetchLoadSchedulesService fetchLoadSchedulesService = new FetchLoadSchedulesService();
 
 	@Override
@@ -159,10 +166,8 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 
 	private void initializeExternalTradeTableView()
 	{
-		//this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("Off", "Load All", "Load By Time", "Load By Trade Date", "Load By Time and TradeDate"));
-		this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
-		/*
-		this.loadingStatusTableColumn.setOnEditCommit((event) -> {
+		//this.loadingStatusTableColumn.setCellFactory(this.comboBoxCellFactory);
+		/*this.loadingStatusTableColumn.setOnEditCommit((event) -> {
 			System.out.println(event.getNewValue());
 			final ObservableList<DummyLoadSchedule> items = event.getTableView().getItems();
 			System.out.println(items);
@@ -171,12 +176,15 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 			System.out.println(items.get(tablePosition.getRow()));
 			System.out.println(tablePosition.getColumn());
 			System.out.println(tablePosition.getTableColumn());
-		});
-		*/
+		});*/
 
-		//this.startTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(null));
-		this.startTimeTableColumn.setCellFactory(this.textCellFactory);
-		this.stopTimeTableColumn.setCellFactory(this.textCellFactory);
+		this.loadingStatusTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(LoadScheduleStatus.values()));
+		//this.loadingStatusTableColumn.setOnEditCommit(event -> this.handleLoadingStatusComboBoxSelectionChange(event));
+		//commented the above line and implemented as below. Since we are calling th esetOnEditComment method the default editCommit is skipped.
+		this.loadingStatusTableColumn.addEventHandler(TableColumn.<DummyLoadSchedule, LoadScheduleStatus>editCommitEvent(), event -> this.handleLoadingStatusComboBoxSelectionChange(event));
+
+		this.startTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(new TimeStringConverter("hh:mm")));
+		this.stopTimeTableColumn.setCellFactory(TextFieldTableCell.forTableColumn(new TimeStringConverter("hh:mm")));
 
 		this.tradeDateTableColumn.setCellFactory(this.dateCellFactory);
 
@@ -187,12 +195,6 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 	public void handleShowButtonClick()
 	{
 		this.showLoadSchedules();
-	}
-
-	@FXML
-	public void handleSaveButtonClick()
-	{
-		this.saveLoadSchedules();
 	}
 
 	private void showLoadSchedules()
@@ -227,8 +229,43 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 		return loadScheduleDataRows.stream().map(DummyLoadSchedule::new).collect(Collectors.toList());
 	}
 
-	private void saveLoadSchedules()
+	private void handleLoadingStatusComboBoxSelectionChange(final CellEditEvent<DummyLoadSchedule, LoadScheduleStatus> event)
 	{
-		this.loadingScheduleTableView.getItems().forEach(System.out::println);
+		//event.getTableView().getItems().get(event.getTablePosition().getRow()).setLoadingSchedule(event.getNewValue());
+		LOGGER.debug("Old Value {} New Value {}", event.getOldValue(), event.getNewValue());
+		LOGGER.debug("Selected Row {}", event.getRowValue());
+
+		if((event.getNewValue() == LoadScheduleStatus.O) || (event.getNewValue() == LoadScheduleStatus.L))
+		{
+			/* We are here bcoz user might have selected "Off" or "Load All"*/
+			event.getRowValue().setLoadingTimeFrom(null);
+			event.getRowValue().setLoadingTimeTo(null);
+			event.getRowValue().setTradeDateToLoad(null);
+			event.getRowValue().setLoadingDateTimezone(null);
+		}
+		else if(event.getNewValue() == LoadScheduleStatus.T)
+		{
+			/* We are here bcoz user selected "Load By Time" */
+			event.getRowValue().setTradeDateToLoad(null);
+			event.getRowValue().setLoadingTimeFrom(new Date());
+			event.getRowValue().setLoadingTimeTo(new Date());
+			event.getRowValue().setLoadingDateTimezone("GMT");
+		}
+		else if(event.getNewValue() == LoadScheduleStatus.D)
+		{
+			/* We are here bcoz user selected "Load By Date" */
+			event.getRowValue().setLoadingTimeFrom(null);
+			event.getRowValue().setLoadingTimeTo(null);
+			event.getRowValue().setTradeDateToLoad(new Date());
+			event.getRowValue().setLoadingDateTimezone(null);
+		}
+		else if(event.getNewValue() == LoadScheduleStatus.B)
+		{
+			/* We are here bcoz user selected "Load By Time & Trade Date" */
+			event.getRowValue().setLoadingTimeFrom(new Date());
+			event.getRowValue().setLoadingTimeTo(new Date());
+			event.getRowValue().setTradeDateToLoad(new Date());
+			event.getRowValue().setLoadingDateTimezone("GMT");
+		}
 	}
 }

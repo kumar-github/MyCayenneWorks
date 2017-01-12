@@ -45,7 +45,6 @@ public class CustomRowFactory<T> implements Callback<TableView<T>, TableRow<T>>
 
 	/* if we create the row factory through fxml and not through code then we can pass the menu items from the fxml itself */
 	private ContextMenu tableRowContextMenu;
-
 	public void setTableRowContextMenu(final ContextMenu tableRowContextMenu)
 	{
 		this.tableRowContextMenu = tableRowContextMenu;

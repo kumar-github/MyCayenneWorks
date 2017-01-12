@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import org.controlsfx.control.MaskerPane?>
+<?import javafx.scene.effect.DropShadow?>
+
+<StackPane  xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.ExchangeMonitorShellController">
+<children>
+<fx:include source="MainWindowView.fxml" />
+<MaskerPane text="Loading ReferenceData. Please Wait..." visible="true" fx:id="maskerPane">
+<effect><DropShadow /></effect>
+</MaskerPane>
+</children>
+</StackPane>

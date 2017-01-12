@@ -44,7 +44,7 @@ public class EditableTable extends Application
 
 	private final TableView<Person> table = new TableView<>();
 	private final ObservableList<Typ> typData = FXCollections.observableArrayList(new Typ("Hund"), new Typ("Fuchs"), new Typ("Esel"));
-	private final ObservableList<Person> data = FXCollections.observableArrayList(new Person("Jacob", this.typData.get(0), new Date()), new Person("Abcd", this.typData.get(0), null), new Person("Urs", this.typData.get(1), new Date()), new Person("Hans", this.typData.get(2), new Date()), new Person("Ueli", this.typData.get(2), new Date()));
+	private final ObservableList<Person> data = FXCollections.observableArrayList(new Person("Jacob", this.typData.get(0), new Date()), new Person("Abcd", null, null), new Person("Urs", this.typData.get(1), new Date()), new Person("Hans", this.typData.get(2), new Date()), new Person("Ueli", this.typData.get(2), new Date()));
 
 	final HBox hb = new HBox();
 
@@ -63,7 +63,7 @@ public class EditableTable extends Application
 		final Callback<TableColumn<Person, Typ>, TableCell<Person, Typ>> comboBoxCellFactory = (final TableColumn<Person, Typ> param) -> new ComboBoxEditingCell();
 		final Callback<TableColumn<Person, Date>, TableCell<Person, Date>> dateCellFactory = (final TableColumn<Person, Date> param) -> new DateEditingCell();
 
-		final TableColumn<Person, String> firstNameCol = new TableColumn("Vorname");
+		final TableColumn<Person, String> firstNameCol = new TableColumn("First Name");
 		firstNameCol.setMinWidth(100);
 		firstNameCol.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		firstNameCol.setCellFactory(cellFactory);
@@ -72,7 +72,7 @@ public class EditableTable extends Application
 
 		});
 
-		final TableColumn<Person, Typ> lastNameCol = new TableColumn("Lieblings Tier");
+		final TableColumn<Person, Typ> lastNameCol = new TableColumn("Type");
 		lastNameCol.setMinWidth(100);
 		lastNameCol.setCellValueFactory(cellData -> cellData.getValue().typObjProperty());
 		lastNameCol.setCellFactory(comboBoxCellFactory);
@@ -81,7 +81,7 @@ public class EditableTable extends Application
 
 		});
 
-		final TableColumn<Person, Date> emailCol = new TableColumn("Geburtstag");
+		final TableColumn<Person, Date> emailCol = new TableColumn("Birthday");
 		emailCol.setMinWidth(200);
 		emailCol.setCellValueFactory(cellData -> cellData.getValue().birthdayProperty());
 		emailCol.setCellFactory(dateCellFactory);

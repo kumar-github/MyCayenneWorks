@@ -68,7 +68,6 @@ public class DateEditingCell extends TableCell<DummyLoadSchedule, Date>
 		this.datePicker = new DatePicker(this.getDate());
 		this.datePicker.setMinWidth(this.getWidth() - (this.getGraphicTextGap() * 2));
 		this.datePicker.setOnAction((e) -> {
-			System.out.println("Committed: " + this.datePicker.getValue().toString());
 			this.commitEdit(Date.from(this.datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		});
 		//            datePicker.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {

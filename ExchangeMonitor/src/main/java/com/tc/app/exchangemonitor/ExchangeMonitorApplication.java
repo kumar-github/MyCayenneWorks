@@ -1,18 +1,23 @@
 package com.tc.app.exchangemonitor;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.sun.javafx.application.LauncherImpl;
+import com.tc.app.exchangemonitor.controller.ExchangeMonitorShellController;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
-import com.tc.app.exchangemonitor.view.java.MainWindowView;
+import com.tc.app.exchangemonitor.util.DaemonThreadFactory;
+import com.tc.app.exchangemonitor.util.TaskUtil;
+import com.tc.app.exchangemonitor.view.java.ExchangeMonitorShellView;
 import com.tc.framework.injection.Injector;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.application.Preloader;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -20,11 +25,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-@SuppressWarnings("restriction")
 public class ExchangeMonitorApplication extends Application
 {
 	//private Rectangle2D primaryMonitor = Screen.getPrimary().getVisualBounds();
 	private static final Logger LOGGER = LogManager.getLogger();
+	private final ExecutorService referenceDataExecutorService = Executors.newCachedThreadPool(new DaemonThreadFactory());
 
 	private Stage primaryStage = null;
 	private Scene primaryScene = null;
@@ -51,13 +56,40 @@ public class ExchangeMonitorApplication extends Application
 	public void init()
 	{
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
+
+		/* commented the below 2 lines which is loading the ReferenceData. Changed the logic to load the ReferenceData in a background thread instead of doing it in the JavaFX  thread. */
+		/*
 		CayenneHelper.initializeCayenneServerRuntime();
 		CayenneReferenceDataCache.fetchAllReferenceData();
+		 */
+
+		/* create a task which initialize the Cayenne Runtime and loads the referencedata, and give the task to an executor service which executes it in a background thread. */
+		//@formatter:off
+
+		final Task<Void> referenceDataTask = TaskUtil.task(() -> {
+			CayenneHelper.initializeCayenneServerRuntime();
+			CayenneReferenceDataCache.fetchAllReferenceData();
+			return null;
+		});
+
+		/* give a callback method to the task so that it will let us know once it is done with the task. */
+		referenceDataTask.setOnSucceeded(event -> this.enableUI());
+
+		/* its time to execute the task. */
+		this.referenceDataExecutorService.execute(referenceDataTask);
+
+		/* Nothing special. just shutdown the executor to avoid any memory leaks. The shutdown will be effective once all the tasks are completed. */
+		this.referenceDataExecutorService.shutdown();
+
+		//@formatter:on
+
+		/*
 		for(int i = 0; i < 1000; i++)
 		{
 			final double progress = (100 * i) / 1000;
 			LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(progress));
 		}
+		 */
 	}
 
 	@Override
@@ -124,10 +156,16 @@ public class ExchangeMonitorApplication extends Application
 		this.primaryStage.initStyle(StageStyle.TRANSPARENT);
 	}
 
+	private ExchangeMonitorShellController exchangeMonitorShellController = null;
 	private Scene createPrimaryScene()
 	{
-		final MainWindowView mainWindowView = new MainWindowView(this.primaryStage);
-		return mainWindowView.getScene();
+		//final MainWindowView mainWindowView = new MainWindowView(this.primaryStage);
+		//return mainWindowView.getScene();
+
+		final ExchangeMonitorShellView exchangeMonitorShellView = new ExchangeMonitorShellView(this.primaryStage);
+		/* Not a better way but no other go... */
+		this.exchangeMonitorShellController = (ExchangeMonitorShellController) exchangeMonitorShellView.getPresenter();
+		return exchangeMonitorShellView.getScene();
 	}
 
 	private void animateStageIfNeeded()
@@ -141,7 +179,6 @@ public class ExchangeMonitorApplication extends Application
 		this.primaryStage.showingProperty().addListener((observableValue, oldValue, newValue) -> {
 			if(newValue)
 			{
-				//final FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), this.primaryScene.getRoot());
 				final FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), this.primaryScene.getRoot());
 				fadeTransition.setToValue(1);
 				fadeTransition.play();
@@ -159,5 +196,10 @@ public class ExchangeMonitorApplication extends Application
 		LOGGER.info("Application Terminated.");
 		Platform.exit();
 		System.exit(0);
+	}
+
+	private void enableUI()
+	{
+		this.exchangeMonitorShellController.disableMaskerPane();
 	}
 }

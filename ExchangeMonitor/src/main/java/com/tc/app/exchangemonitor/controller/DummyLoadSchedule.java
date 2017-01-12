@@ -38,7 +38,16 @@ public class DummyLoadSchedule
 		this.externalTradeSourceName = aDataRow.get("externalTradeSourceName") != null ? (String) aDataRow.get("externalTradeSourceName") : null;
 		this.externalValue1 = aDataRow.get("externalValue1") != null ? (String) aDataRow.get("externalValue1") : null;
 
-		this.loadingSchedule = new SimpleObjectProperty<>(LoadScheduleStatus.valueOf(aDataRow.get("loadingSchedule") != null ? (String) aDataRow.get("loadingSchedule") : "NULL"));
+		//this.loadingSchedule = new SimpleObjectProperty<>(LoadScheduleStatus.valueOf(aDataRow.get("loadingSchedule") != null ? (String) aDataRow.get("loadingSchedule") : "NULL"));
+		if(aDataRow.get("loadingSchedule") != null)
+		{
+			this.loadingSchedule = new SimpleObjectProperty<>(LoadScheduleStatus.valueOf((String) aDataRow.get("loadingSchedule")));
+		}
+		else
+		{
+			this.loadingSchedule = new SimpleObjectProperty<>();
+		}
+
 		this.loadingTimeFrom = new SimpleObjectProperty<>(aDataRow.get("loadingTimeFrom") != null ? (Date) aDataRow.get("loadingTimeFrom") : null);
 		this.loadingTimeTo = new SimpleObjectProperty<>(aDataRow.get("loadingTimeTo") != null ? (Date) aDataRow.get("loadingTimeTo") : null);
 		this.tradeDateToLoad = new SimpleObjectProperty<>(aDataRow.get("tradeDateToLoad") != null ? (Date) aDataRow.get("tradeDateToLoad") : null);
@@ -186,7 +195,7 @@ public class DummyLoadSchedule
 	/* A handy enum to deal with the load schedule statuses. */
 	public enum LoadScheduleStatus
 	{
-		O("Off"), L("Load All"), T("Load By Time"), D("Load By Trade Date"), B("Load By Time & Trade Date"), NULL("");
+		O("Off"), L("Load All"), T("Load By Time"), D("Load By Trade Date"), B("Load By Time & Trade Date");
 
 		private final String label;
 		private LoadScheduleStatus(final String label)

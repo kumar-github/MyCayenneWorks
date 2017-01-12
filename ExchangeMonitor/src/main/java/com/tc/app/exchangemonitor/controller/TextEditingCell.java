@@ -95,7 +95,6 @@ public class TextEditingCell extends TableCell<DummyLoadSchedule, Date>
 		this.textField.focusedProperty().addListener((final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) -> {
 			if(!newValue)
 			{
-				System.out.println("Commiting " + this.textField.getText());
 				try
 				{
 					this.commitEdit(this.dateFormat.parse(this.textField.getText()));
@@ -110,7 +109,6 @@ public class TextEditingCell extends TableCell<DummyLoadSchedule, Date>
 
 	private String getString()
 	{
-		//return this.getItem() == null ? "" : this.getItem();
 		return this.getItem() != null ? this.getItem().getHours() + ":" + this.getItem().getMinutes() : null;
 	}
 }

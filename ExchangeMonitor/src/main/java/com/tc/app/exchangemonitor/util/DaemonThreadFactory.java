@@ -16,7 +16,7 @@ public class DaemonThreadFactory implements ThreadFactory
 
 	public DaemonThreadFactory()
 	{
-		this.threadName = "ReferenceDataFetchThread";
+		this.threadName = "ReferenceData Fetch Thread";
 	}
 
 	public DaemonThreadFactory(final String threadName)

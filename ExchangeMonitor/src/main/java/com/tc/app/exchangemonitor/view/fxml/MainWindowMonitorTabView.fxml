@@ -264,6 +264,8 @@
 	<children>
 		<TableView fx:id="externalTradesTableView" cache="true" tableMenuButtonVisible="true" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" focusTraversable="false">
 		<fx:script>externalTradesTableView.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);</fx:script>
+		<!--  <placeholder><Label text="Run Some Search To See Data Here."/></placeholder> -->
+		<placeholder><Label/></placeholder>
 		<!--<rowFactory><CustomRowFactory /></rowFactory>-->
 		<rowFactory>
 		<CustomRowFactory>
