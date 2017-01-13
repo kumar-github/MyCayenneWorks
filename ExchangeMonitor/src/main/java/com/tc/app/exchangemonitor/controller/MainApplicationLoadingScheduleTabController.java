@@ -189,6 +189,13 @@ public class MainApplicationLoadingScheduleTabController implements IMainApplica
 		this.tradeDateTableColumn.setCellFactory(this.dateCellFactory);
 
 		this.timezoneTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn("GMT", "EST", "IST"));
+
+		/*
+		this.startTimeTableColumn.setCellFactory(tc -> {
+			final TableCell<DummyLoadSchedule, Date> cell = new TextFieldTableCell<>();
+			cell.editableProperty().bind(Bindings.selectBoolean(cell.tableRowProperty(), "item", "newRecord"));
+			return cell;
+		});*/
 	}
 
 	@FXML

@@ -336,14 +336,14 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		this.endDateFilterKeyText.managedProperty().bind(this.endDateFilterKeyText.visibleProperty());
 		this.endDateFilterValueText.managedProperty().bind(this.endDateFilterValueText.visibleProperty());
 
-		this.externalTradesTableView.setItems(this.externalTradesSortedList);
-
 		this.startDateFilterValueText.textProperty().bind(this.startDateDatePicker.valueProperty().asString());
 		this.endDateFilterValueText.textProperty().bind(this.endDateDatePicker.valueProperty().asString());
 
 		this.startMonitorButton.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty());
 		this.pauseMonitorButton.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty().not());
 		this.stopMonitorButton.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty().not());
+
+		this.externalTradesTableView.setItems(this.externalTradesSortedList);
 
 		this.externalTradeTableViewDataFilterTextField.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty());
 
@@ -976,7 +976,7 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 
 	private boolean writeRecordsToExcelFile(final String fileName)
 	{
-		boolean writeStatus = false;
+		boolean writeStatus = true;
 
 		// SXSSFWorkbook anExcelWorkbook = new SXSSFWorkbook(100);
 		final SXSSFWorkbook anExcelWorkbook = new SXSSFWorkbook();

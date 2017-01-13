@@ -3,6 +3,8 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle user guide available at https://docs.gradle.org/3.1/userguide/tutorial_java_projects.html
 */
 
+ant.importBuild 'exe4j.xml'
+
 //Apply the java plugin to add support for Java related tasks
 apply plugin: 'java'
 
