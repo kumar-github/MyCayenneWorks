@@ -29,7 +29,6 @@ public class ExchangeMonitorApplication extends Application
 {
 	//private Rectangle2D primaryMonitor = Screen.getPrimary().getVisualBounds();
 	private static final Logger LOGGER = LogManager.getLogger();
-	private final ExecutorService referenceDataExecutorService = Executors.newCachedThreadPool(new DaemonThreadFactory());
 
 	private Stage primaryStage = null;
 	private Scene primaryScene = null;
@@ -37,8 +36,6 @@ public class ExchangeMonitorApplication extends Application
 	public ExchangeMonitorApplication()
 	{
 		LOGGER.debug("ExchangeMonitorApplication constructor called by ", Thread.currentThread().getName());
-		LOGGER.debug(() -> System.getProperties());
-		LOGGER.debug(() -> System.getenv());
 	}
 
 	private static long startTime;
@@ -56,40 +53,28 @@ public class ExchangeMonitorApplication extends Application
 	public void init()
 	{
 		LOGGER.debug("ExchangeMonitorApplication init called by ", Thread.currentThread().getName());
-
-		/* commented the below 2 lines which is loading the ReferenceData. Changed the logic to load the ReferenceData in a background thread instead of doing it in the JavaFX  thread. */
-		/*
-		CayenneHelper.initializeCayenneServerRuntime();
-		CayenneReferenceDataCache.fetchAllReferenceData();
-		 */
+		final ExecutorService referenceDataExecutorService = Executors.newCachedThreadPool(new DaemonThreadFactory());
 
 		/* create a task which initialize the Cayenne Runtime and loads the referencedata, and give the task to an executor service which executes it in a background thread. */
 		//@formatter:off
 
+		CayenneHelper.initializeCayenneServerRuntime();
 		final Task<Void> referenceDataTask = TaskUtil.task(() -> {
-			CayenneHelper.initializeCayenneServerRuntime();
 			CayenneReferenceDataCache.fetchAllReferenceData();
 			return null;
 		});
 
-		/* give a callback method to the task so that it will let us know once it is done with the task. */
-		referenceDataTask.setOnSucceeded(event -> this.enableUI());
-
-		/* its time to execute the task. */
-		this.referenceDataExecutorService.execute(referenceDataTask);
-
-		/* Nothing special. just shutdown the executor to avoid any memory leaks. The shutdown will be effective once all the tasks are completed. */
-		this.referenceDataExecutorService.shutdown();
-
 		//@formatter:on
 
-		/*
-		for(int i = 0; i < 1000; i++)
-		{
-			final double progress = (100 * i) / 1000;
-			LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(progress));
-		}
-		 */
+		/* give a callback method to the task so that it will let us know once it is done with the task. */
+		referenceDataTask.setOnSucceeded(event -> this.enableUI());
+		referenceDataTask.setOnFailed(event -> this.terminateApplication());
+
+		/* its time to execute the task. */
+		referenceDataExecutorService.execute(referenceDataTask);
+
+		/* Nothing special. just shutdown the executor to avoid any memory leaks. The shutdown will be effective once all the tasks are completed. */
+		referenceDataExecutorService.shutdown();
 	}
 
 	@Override
@@ -201,5 +186,11 @@ public class ExchangeMonitorApplication extends Application
 	private void enableUI()
 	{
 		this.exchangeMonitorShellController.disableMaskerPane();
+	}
+
+	private void terminateApplication()
+	{
+		Platform.exit();
+		System.exit(0);
 	}
 }
