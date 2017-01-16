@@ -176,7 +176,7 @@ public class ExternalMappingPortfoliosController implements Initializable
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		LOGGER.info("Stage Operation Completed.");
+		LOGGER.debug("Stage Operation Completed.");
 	}
 
 	private void showUpdatePortfoliosMappingView()
@@ -189,7 +189,7 @@ public class ExternalMappingPortfoliosController implements Initializable
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		LOGGER.info("Stage Operation Completed.");
+		LOGGER.debug("Stage Operation Completed.");
 	}
 
 	private void deleteSelectedMapping()

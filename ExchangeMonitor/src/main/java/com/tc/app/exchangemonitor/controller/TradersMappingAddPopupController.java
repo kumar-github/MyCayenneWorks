@@ -169,21 +169,6 @@ public class TradersMappingAddPopupController implements IGenericController
 				insertMappingQuery.param("transIdParam", CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U"));
 				insertMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());
 
-				/*
-				final ObjectContext context = CayenneHelper.getCayenneServerRuntime().newContext();
-				final ExternalTradeSource tempSource = SelectById.query(ExternalTradeSource.class, 1).selectOne(context);
-				final ExternalMapping newExternalMapping = context.newObject(ExternalMapping.class);
-				newExternalMapping.setOid(newNum);
-				newExternalMapping.setExternalTradeSourceO(tempSource);
-				newExternalMapping.setMappingType(TRADER_MAPPING_TYPE);
-				newExternalMapping.setExternalValue1(null);
-				newExternalMapping.setExternalValue2(null);
-				newExternalMapping.setExternalValue3(null);
-				newExternalMapping.setExternalValue4(null);
-				newExternalMapping.setAliasValue(ictsTrader);
-				newExternalMapping.setTransId(transid);
-				context.commitChanges();
-				 */
 				LOGGER.info("Mapping Saved Successfully.");
 				this.closePopup();
 				this.refreshExternalMappingTradersTableView();

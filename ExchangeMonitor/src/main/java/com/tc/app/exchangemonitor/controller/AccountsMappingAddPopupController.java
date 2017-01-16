@@ -170,7 +170,6 @@ public class AccountsMappingAddPopupController implements IGenericController
 
 	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
-		//return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
 		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 

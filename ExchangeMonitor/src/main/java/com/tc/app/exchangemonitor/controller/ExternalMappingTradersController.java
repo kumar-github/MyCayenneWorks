@@ -109,7 +109,6 @@ public class ExternalMappingTradersController implements IGenericController
 	public void initializeGUI()
 	{
 		this.fetchExternalMapping();
-		//this.fetchTradersExternalMapping();
 	}
 
 	@Override
@@ -126,16 +125,6 @@ public class ExternalMappingTradersController implements IGenericController
 	public void attachListeners()
 	{
 	}
-
-	/*
-	private void fetchTradersExternalMapping()
-	{
-		final String selectedExternalTradeSource = ((RadioButton)ExternalTradeSourceRadioCellForMappingsTab.toggleGroup.getSelectedToggle()).getText();
-		final Predicate<IExternalMappingEntity> predicate = ExternalMappingPredicates.getPredicateForExternalTradeSource(selectedExternalTradeSource);
-		this.externalMappingTradersObservableList.addAll(ExternalMappingPredicates.filterExternalMappings(ReferenceDataCache.fetchExternalMappings(), predicate.and(ExternalMappingPredicates.isTraderPredicate)));
-		LOGGER.info("Fetched Mappings Count : " + this.externalMappingTradersObservableList.size());
-	}
-	 */
 
 	private void fetchExternalMapping()
 	{
@@ -156,21 +145,8 @@ public class ExternalMappingTradersController implements IGenericController
 	@FXML
 	private void handleAddMappingButtonClick()
 	{
-		/*
-		final Dialog dialog = new Dialog<>();
-		final ButtonType loginButtonType = new ButtonType("Test", ButtonData.OK_DONE);
-		dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-
-		dialog.showAndWait();
-
-		final Alert alert = new Alert(AlertType.NONE);
-		alert.getDialogPane().getButtonTypes().add(loginButtonType);
-		alert.getDialogPane().setContent(new VBox(new TextField("welcome")));
-		alert.showAndWait();
-		 */
-
-		/* commented the below line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
 		//this.externalMappingTradersViewModel.isAddProperty().set(true);
+		/* commented the above line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
 		this.showAddTradersMappingView();
 	}
 
@@ -183,8 +159,8 @@ public class ExternalMappingTradersController implements IGenericController
 	@FXML
 	private void handleUpdateMappingButtonClick()
 	{
-		/* commented the below line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
 		//this.externalMappingTradersViewModel.isAddProperty().set(false);
+		/* commented the above line since we are not using it presently. Currently we have separate views for Add and Update Mappings. */
 		this.showUpdateTradersMappingView();
 	}
 
@@ -204,22 +180,7 @@ public class ExternalMappingTradersController implements IGenericController
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		LOGGER.info("Stage Operation Completed.");
-
-		//final Optional<String> x = tradersMappingAddPopup.showAndWait();
-		// Convert the result to a username-password-pair when the login button is clicked.
-		/*
-		tradersMappingAddPopup.setResultConverter(dialogButton -> {
-		    if (dialogButton == loginButtonType) {
-		        return new Pair<>(username.getText(), password.getText());
-		    }
-		    return null;
-		});
-		 */
-
-		/*x.ifPresent(data -> {
-			System.out.println(data);
-		});*/
+		LOGGER.debug("Stage Operation Completed.");
 	}
 
 	private void showUpdateTradersMappingView()
@@ -232,7 +193,7 @@ public class ExternalMappingTradersController implements IGenericController
 		tempStage.showAndWait();
 
 		/* We will come back here once the user pressed cancel or login. Do we need to do anything here?. */
-		LOGGER.info("Stage Operation Completed.");
+		LOGGER.debug("Stage Operation Completed.");
 	}
 
 	private void deleteSelectedMapping()
@@ -242,21 +203,6 @@ public class ExternalMappingTradersController implements IGenericController
 
 		try
 		{
-			/* Read the delete mapping query from datamap.xml file, set the paramters and keep it ready. */
-			/*final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
-			deleteMappingQuery.param("externalTradeSourceOidParam", externalTradeSourceOid);
-			deleteMappingQuery.param("mappingTypeParam", TRADER_MAPPING_TYPE);
-			deleteMappingQuery.param("externalValue1Param", selectedMappingToDelete.getExternalValue1());
-			deleteMappingQuery.param("externalValue2Param", null);
-			deleteMappingQuery.param("externalValue3Param", null);
-			deleteMappingQuery.param("externalValue4Param", null);
-			deleteMappingQuery.param("aliasValueParam", selectedMappingToDelete.getAliasValue());*/
-
-			/* Fire the gen_new_transaction SP first and immediately the delete query. */
-			/*CayenneReferenceDataFetchUtil.generateNewTransaction();
-			deleteMappingQuery.execute(CayenneHelper.getCayenneServerRuntime().newContext());*/
-
-			/* Commented the above logic, we don't need all these information to just delete a mapping. oid is enough. SHAME ON ME. WHY DID I WRITE THAT?  */
 			final MappedExec deleteMappingQuery = CayenneReferenceDataFetchUtil.getNonSelectQueryForName("DeleteMapping");
 			deleteMappingQuery.param("externalMappingOidParam", externalMappingOid);
 			CayenneReferenceDataFetchUtil.generateNewTransaction("ExchangeMonitor", "U");
