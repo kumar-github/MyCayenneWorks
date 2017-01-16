@@ -25,9 +25,6 @@
 			<ImageView cache="true" pickOnBounds="true" preserveRatio="true" visible="false" styleClass="mainWindowViewHomeImageViewStyle"/>
 			
 			<Region HBox.hgrow="ALWAYS" />
-			<!-- <Label prefHeight="25.0" text="${controller.APPLICATION_TITLE}"  styleClass="mainWindowTitleLabelStyle"/> -->
-			<!-- <Label alignment="CENTER" prefHeight="25.0" text="${controller.APPLICATION_TITLE}"  styleClass="mainWindowTitleLabelStyle"> -->
-			<!--  <Label alignment="CENTER" text="${controller.APPLICATION_TITLE}"  styleClass="mainWindowTitleLabelStyle"> -->
 			<Label alignment="CENTER" text="${controller.APPLICATION_TITLE_WITH_USERNAME}"  styleClass="mainWindowTitleLabelStyle">
 			<graphic><ImageView pickOnBounds="true" preserveRatio="true"><image><Image url="@/icons/user24.png" /></image></ImageView></graphic>
 			</Label>

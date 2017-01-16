@@ -21,7 +21,6 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.CheckListView?>
 <?import javafx.scene.control.ContextMenu?>
@@ -117,8 +116,7 @@
 	<BorderPane.margin><Insets bottom="5.0" left="2.0" right="0.0" top="5.0" /></BorderPane.margin>
 	<padding><Insets bottom="2.0" left="2.0" right="2.0" top="1.0" /></padding>
 	<children>
-		<TitledPane mnemonicParsing="true" text="_Monitor">
-		<font><Font name="System Bold" size="12.0" /></font>
+		<TitledPane mnemonicParsing="true" text="_Monitor" styleClass="titledPaneStyle">
 		<content>
 			<!--<AnchorPane> revert back if any problem-->
 			<AnchorPane minHeight="43.0" prefHeight="43.0">
@@ -147,10 +145,9 @@
 		</content>
 		</TitledPane>
 		
-		<TitledPane fx:id="actionTitledPane" expanded="false" mnemonicParsing="true" text="_Action">
-		<font><Font name="System Bold" size="12.0" />	</font>
+		<TitledPane fx:id="actionTitledPane" expanded="false" mnemonicParsing="true" text="_Action" styleClass="titledPaneStyle">
 		<content>
-			<VBox spacing="5.0">
+			<VBox spacing="5.0" styleClass="normalButtonStyle">
 			<children>
 				<Button maxWidth="1.7976931348623157E308" text="ReEnter Failed Trade"  onAction="#handleReEnterFailedTradeButtonClick" fx:id="reenterFailedTradeButton"/>
 				<Button maxWidth="1.7976931348623157E308" text="ReEnter All Failed Trades" onAction="#handleReEnterAllFailedTradesButtonClick" fx:id="reenterAllFailedTradesButton" />
@@ -166,14 +163,12 @@
 		<!--<Accordion VBox.vgrow="ALWAYS"> -->
 		<Accordion fx:id="queryFilterAccordion">
 		<panes>
-			<TitledPane alignment="CENTER" animated="false" collapsible="false" expanded="false" text="Query Filter">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane alignment="CENTER" animated="false" collapsible="false" expanded="false" text="Query Filter" styleClass="accordionHeaderStyle">
 			</TitledPane>
 			
-			<TitledPane fx:id="externalTradeSourcesTitledPane" mnemonicParsing="true" text="_Exchanges">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane fx:id="externalTradeSourcesTitledPane" mnemonicParsing="true" text="_Exchanges" styleClass="titledPaneStyle">
 			<content>
-				<VBox prefHeight="260.0" prefWidth="138.0">
+				<VBox prefHeight="260.0" prefWidth="138.0" styleClass="normalButtonStyle">
 				<children>
 					<CheckListView fx:id="externalTradeSourcesListView" focusTraversable="false" prefHeight="10.0" prefWidth="315.0" VBox.vgrow="ALWAYS">
 					<!--<cellFactory><ExternalTradeSourceCheckBoxCellFactory/></cellFactory>-->
@@ -185,10 +180,9 @@
 			<!--<opaqueInsets><Insets /></opaqueInsets> -->
 			</TitledPane>
 			
-			<TitledPane fx:id="externalTradeStatesTitledPane" mnemonicParsing="true" text="_Trade State">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane fx:id="externalTradeStatesTitledPane" mnemonicParsing="true" text="_Trade State" styleClass="titledPaneStyle">
 			<content>
-				<VBox prefHeight="100.0" prefWidth="138.0">
+				<VBox prefHeight="100.0" prefWidth="138.0" styleClass="normalButtonStyle">
 				<children>
 					<CheckListView fx:id="externalTradeStatesListView" focusTraversable="false" prefHeight="10.0" prefWidth="315.0" VBox.vgrow="ALWAYS" />
 				</children>
@@ -197,10 +191,9 @@
 			</content>
 			</TitledPane>
 			
-			<TitledPane fx:id="externalTradeStatusesTitledPane" mnemonicParsing="true" text="Trade _Status">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane fx:id="externalTradeStatusesTitledPane" mnemonicParsing="true" text="Trade _Status" styleClass="titledPaneStyle">
 			<content>
-				<VBox prefHeight="100.0" prefWidth="138.0">
+				<VBox prefHeight="100.0" prefWidth="138.0" styleClass="normalButtonStyle">
 				<children>
 					<CheckListView fx:id="externalTradeStatusesListView" focusTraversable="false" prefHeight="10.0" prefWidth="315.0" VBox.vgrow="ALWAYS" />
 				</children>
@@ -209,14 +202,13 @@
 			</content>
 			</TitledPane>
 			
-			<TitledPane fx:id="externalTradeAccountsTitledPane" layoutX="10.0" layoutY="122.0" mnemonicParsing="true" text="Trade _Account">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane fx:id="externalTradeAccountsTitledPane" layoutX="10.0" layoutY="122.0" mnemonicParsing="true" text="Trade _Account" styleClass="titledPaneStyle">
 			<opaqueInsets><Insets /></opaqueInsets>
 			<content>
-				<VBox prefHeight="500.0" prefWidth="138.0" spacing="1.0">
+				<VBox prefHeight="500.0" prefWidth="138.0" spacing="1.0" styleClass="normalButtonStyle">
 				<padding><Insets top="1.0" /></padding>
 				<children>
-					<TextField fx:id="externalTradeAccountsFilterTextField" promptText="Type To Filter">
+					<TextField fx:id="externalTradeAccountsFilterTextField" promptText="Type To Filter" style="-fx-font-family: 'Inconsolata'; -fx-font-weight: bold; -fx-font-size: 13">
 					<!-- below line commented. dont know what's the use. Let's check if there is any problem in alignment -->
 					<!--<VBox.margin><Insets /></VBox.margin> -->
 					</TextField>
@@ -237,10 +229,9 @@
 			</content>
 			</TitledPane>
 			
-			<TitledPane layoutX="10.0" layoutY="148.0" mnemonicParsing="true" text="_Date">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane layoutX="10.0" layoutY="148.0" mnemonicParsing="true" text="_Date" styleClass="titledPaneStyle">
 			<content>
-				<FlowPane prefHeight="71.0" prefWidth="150.0" vgap="5.0">
+				<FlowPane prefHeight="71.0" prefWidth="150.0" vgap="5.0" styleClass="normalButtonStyle">
 				<children>
 					<DatePicker fx:id="startDateDatePicker" editable="false" prefHeight="25.0" prefWidth="130.0" promptText="Start Date" />
 					<DatePicker fx:id="endDateDatePicker" editable="false" prefHeight="25.0" prefWidth="130.0" promptText="End Date" />
@@ -303,7 +294,6 @@
 		
 		<columns>
 			<TableColumn prefWidth="130.0" text="External Trade Oid">
-			<!-- <cellValueFactory><PropertyValueFactory property="oid"/></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="externalTradeOid"/></cellValueFactory>
 			</TableColumn>
 			
@@ -325,112 +315,86 @@
 			</TableColumn>
 			
 			<TableColumn prefWidth="95.0" text="Trade Status">
-			<!--  <cellValueFactory><PropertyValueFactory property="externalTradeStatusOid"/></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="externalTradeStatusO"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="85.0" text="Exchange">
-			<!-- <cellValueFactory><PropertyValueFactory property="externalTradeSourceOid"/></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="externalTradeSourceO"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="330.0" text="Commodity">
-			<!-- <cellValueFactory><CommodityCellValueFactory /></cellValueFactory> -->
-			<!--  <cellValueFactory><PropertyValueFactory property="_commodity"/></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_commodity"/></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="110.0" text="Trading Period">
-			<!-- <cellValueFactory><TradingPeriodCellValueFactory /></cellValueFactory> -->
-			<!--  <cellValueFactory><PropertyValueFactory property="_tradingPeriod" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_tradingPeriod" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Call Put">
-			<!-- <cellValueFactory><CallPutCellValueFactory /></cellValueFactory> -->
-			<!--  <cellValueFactory><PropertyValueFactory property="_callPut" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_callPut" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="Strike Price">
-			<!-- <cellValueFactory><StrikePriceCellValueFactory /></cellValueFactory> -->
-			<!--  <cellValueFactory><PropertyValueFactory property="_strikePrice" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_strikePrice" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Quantity">
-			<!-- <cellValueFactory><QuantityCellValueFactory /></cellValueFactory> -->
-			<!--  <cellValueFactory><PropertyValueFactory property="_quantity" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_quantity" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Price">
-			<!--  <cellValueFactory><PropertyValueFactory property="_price" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_price" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="260.0" text="Exchange Trade#">
-			<!--  <cellValueFactory><PropertyValueFactory property="_exchToolsTradeNum" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_exchToolsTradeNum" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="ICTS Trade#">
-			<!--  <cellValueFactory><PropertyValueFactory property="_ictsTradeNum" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_ictsTradeNum" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="80.0" text="ICTS Port#">
-			<!--  <cellValueFactory><PropertyValueFactory property="_ictsPortNum" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_ictsPortNum" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Buying Company">
-			<!--  <cellValueFactory><PropertyValueFactory property="_buyingCompany" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyingCompany" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Selling Company">
-			<!--  <cellValueFactory><PropertyValueFactory property="_sellingCompany" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_sellingCompany" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Buying Trader">
-			<!--  <cellValueFactory><PropertyValueFactory property="_buyingTrader" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyingTrader" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Selling Trader">
-			<!--  <cellValueFactory><PropertyValueFactory property="_sellingTrader" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_sellingTrader" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="160.0" text="Input Broker">
-			<!--  <cellValueFactory><PropertyValueFactory property="_inputBroker" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_inputBroker" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Buyer Clearing Broker">
-			<!--  <cellValueFactory><PropertyValueFactory property="_buyerClearingBroker" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyerClearingBroker" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Seller Clearing Broker">
-			<!--  <cellValueFactory><PropertyValueFactory property="_sellerClearingBroker" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_sellerClearingBroker" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="150.0" text="Account">
-			<!--  <cellValueFactory><PropertyValueFactory property="_buyerAccount" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_buyerAccount" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="75.0" text="Trade Type">
-			<!--  <cellValueFactory><PropertyValueFactory property="_tradeType" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_tradeType" /></cellValueFactory>
 			</TableColumn>
 			
 			<TableColumn prefWidth="400.0" text="Comment">
-			<!--  <cellValueFactory><PropertyValueFactory property="_comment" /></cellValueFactory> -->
 			<cellValueFactory><PropertyValueFactory property="_comment" /></cellValueFactory>
 			</TableColumn>
 		

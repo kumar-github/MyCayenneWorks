@@ -490,8 +490,6 @@ public class MainWindowController implements Initializable
 
 	public String getAPPLICATION_TITLE_WITH_USERNAME()
 	{
-		//return APPLICATION_TITLE_WITH_USERNAME;
-		//return System.getenv("username") + " @ " + getAPPLICATION_TITLE();
 		return String.join(" ", System.getenv("username"), "@", this.getAPPLICATION_TITLE());
 	}
 

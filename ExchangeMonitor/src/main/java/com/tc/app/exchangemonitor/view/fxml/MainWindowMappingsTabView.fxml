@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.text.Font?>
 
 <Tab text="Mappings" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.MainApplicationMappingsTabController">
 <content>
@@ -35,10 +34,9 @@
 	<BorderPane.margin><Insets bottom="5.0" left="2.0" right="0.0" top="5.0" /></BorderPane.margin>
 	<padding><Insets bottom="2.0" left="2.0" right="2.0" top="1.0" /></padding>
 	<children>
-		<TitledPane expanded="false" mnemonicParsing="true" text="_Exchanges">
-		<font><Font name="System Bold" size="12.0" />	</font>
+		<TitledPane expanded="false" mnemonicParsing="true" text="_Exchanges" styleClass="titledPaneStyle">
 		<content>
-			<VBox prefHeight="260.0" prefWidth="150.0">
+			<VBox prefHeight="260.0" prefWidth="150.0" styleClass="normalButtonStyle">
 			<children>
 				<CheckListView fx:id="externalTradeSourcesListView" focusTraversable="false" prefHeight="100.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
 			</children>
@@ -49,10 +47,9 @@
 		</TitledPane>
 		
 		<!--<TitledPane expanded="false" layoutX="12.0" layoutY="11.0" text="Mapping Category">-->
-		<TitledPane expanded="false" text="Mapping Category">
-		<font><Font name="System Bold" size="12.0" /></font>
+		<TitledPane expanded="false" text="Mapping Category" styleClass="titledPaneStyle">
 		<content>
-			<VBox spacing="5.0">
+			<VBox spacing="5.0" styleClass="normalButtonStyle">
 			<children>
 				<Button fx:id="tradersMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Traders"  onAction="#handleTradersMappingButtonClick" disable="true"/>
 				<Button fx:id="brokersMappingButton" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="_Brokers" onAction="#handleBrokersMappingButtonClick" disable="true"/>
@@ -72,7 +69,6 @@
 		
 		<!--
 		<TitledPane expanded="false" text="Action">
-		<font><Font name="System Bold" size="12.0" /></font>
 		<content>
 			<HBox spacing="3.0">
 			<children>
