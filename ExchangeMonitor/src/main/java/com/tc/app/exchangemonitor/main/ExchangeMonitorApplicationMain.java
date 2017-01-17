@@ -34,7 +34,7 @@ public class ExchangeMonitorApplicationMain
 		}
 		catch(final FileNotFoundException exception)
 		{
-			System.err.println("Properties file not found. Please check \"ExchangeMonitor.prop\" file exists in the current directory.");
+			System.err.println("Properties file not found. Please check if \"ExchangeMonitor.prop\" file exists in the current directory.");
 		}
 		catch(final IOException exception)
 		{

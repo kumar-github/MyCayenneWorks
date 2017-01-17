@@ -83,7 +83,7 @@ javafx
 	description = "Exchange Monitor. This application is used to monitor the deals coming from exchanges like NYMEX, ICE, etc."
 	
 	//Main class of application
-	mainClass 'com.tc.app.exchangemonitor.ExchangeMonitorApplication'
+	mainClass 'com.tc.app.exchangemonitor.main.ExchangeMonitorApplicationMain'
 	
 	//JVM arguments, system properties, application command line arguments
 	jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
