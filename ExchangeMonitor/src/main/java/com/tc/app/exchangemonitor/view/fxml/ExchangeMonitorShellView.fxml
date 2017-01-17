@@ -7,7 +7,8 @@
 <StackPane  xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.ExchangeMonitorShellController">
 <children>
 <fx:include source="MainWindowView.fxml" />
-<MaskerPane text="Loading ReferenceData. Please Wait..." visible="true" fx:id="maskerPane">
+<!--  <MaskerPane text="Loading ReferenceData. Please Wait..." visible="true" fx:id="maskerPane"> -->
+<MaskerPane text="Loading ReferenceData. Please Wait..." visible="true" fx:id="maskerPane" style="-fx-font-family: 'Coiny';-fx-font-size: 13px;">
 <effect><DropShadow /></effect>
 </MaskerPane>
 </children>

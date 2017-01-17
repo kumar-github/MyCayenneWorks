@@ -22,8 +22,6 @@ public class PreferencesController implements Initializable
 	@FXML
 	private CheckBox displayAccountsWithPermissionCheckBox;
 	@FXML
-	private CheckBox enableAnimationsCheckBox;
-	@FXML
 	private CheckBox enableRowColorsCheckBox;
 	@FXML
 	private CheckBox enableRowToolTipsCheckBox;
@@ -43,7 +41,6 @@ public class PreferencesController implements Initializable
 	private void syncPreferencesScreenWithRegistryData()
 	{
 		this.displayAccountsWithPermissionCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_DISPLAY_ACCOUNTS_WITH_PERMISSION, false));
-		this.enableAnimationsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ANIMATIONS, true));
 		this.enableRowColorsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ROW_COLORS, true));
 		this.enableRowToolTipsCheckBox.setSelected(PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.SHOULD_ENABLE_ROW_TOOLTIPS, true));
 	}
@@ -85,29 +82,6 @@ public class PreferencesController implements Initializable
 			{
 				PreferencesHelper.getUserPreferences().putBoolean(StaticConstantsHelper.SHOULD_DISPLAY_ACCOUNTS_WITH_PERMISSION, false);
 				LOGGER.info("Hereafter, All Accounts will be displayed.");
-			}
-		}
-		catch(final Exception exception)
-		{
-			exception.printStackTrace();
-		}
-	}
-
-	@FXML
-	public void handleEnableAnimationsCheckBoxClick(final ActionEvent event)
-	{
-		final CheckBox sourceCheckBox = ((CheckBox) event.getSource());
-		try
-		{
-			if(sourceCheckBox.isSelected())
-			{
-				PreferencesHelper.getUserPreferences().putBoolean(StaticConstantsHelper.SHOULD_ENABLE_ANIMATIONS, true);
-				LOGGER.info("Hereafter, All Animations will be enabled.");
-			}
-			else
-			{
-				PreferencesHelper.getUserPreferences().putBoolean(StaticConstantsHelper.SHOULD_ENABLE_ANIMATIONS, false);
-				LOGGER.info("Hereafter, All Animations will be disabled.");
 			}
 		}
 		catch(final Exception exception)

@@ -786,13 +786,17 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 	@FXML
 	private void handleReEnterFailedTradeButtonClick()
 	{
-		this.updateFailedExternalTrades(this.externalTradesTableView.getSelectionModel().getSelectedItems().filtered(anExternalTrade -> anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		//this.updateFailedExternalTrades(this.externalTradesTableView.getSelectionModel().getSelectedItems().filtered(anExternalTrade -> (anExternalTrade != null) && anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		final FilteredList<ExternalTrade> failedExternalTrades = this.externalTradesTableView.getSelectionModel().getSelectedItems().filtered(anExternalTrade -> (anExternalTrade != null) && anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed"));
+		this.updateFailedExternalTrades(failedExternalTrades);
 	}
 
 	@FXML
 	private void handleReEnterAllFailedTradesButtonClick()
 	{
-		this.updateFailedExternalTrades(this.externalTradesTableView.getItems().filtered(anExternalTrade -> anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		//this.updateFailedExternalTrades(this.externalTradesTableView.getItems().filtered(anExternalTrade -> anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		final FilteredList<ExternalTrade> failedExternalTrades = this.externalTradesTableView.getItems().filtered(anExternalTrade -> (anExternalTrade != null) && anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed"));
+		this.updateFailedExternalTrades(failedExternalTrades);
 	}
 
 	/*
@@ -942,7 +946,7 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 	private void updateFailedExternalTrades(final ObservableList<ExternalTrade> selectedItems)
 	{
 		final List<Integer> selectedExternalTradeOids = selectedItems.stream().map(ExternalTrade::getExternalTradeOid).collect(Collectors.toList());
-		LOGGER.debug(selectedExternalTradeOids);
+		LOGGER.debug("selectedExternalTradeOids {}", selectedExternalTradeOids);
 		try
 		{
 			CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> this.update(selectedExternalTradeOids));

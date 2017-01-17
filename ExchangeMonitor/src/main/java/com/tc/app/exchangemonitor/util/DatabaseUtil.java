@@ -15,22 +15,17 @@ public class DatabaseUtil
 	{
 		boolean isSuccess = false;
 		//String driver = "net.sourceforge.jtds.jdbc.Driver";
-		Connection connection = null;
-		try
+
+		/* If no username, password mentioned or username, password is null, then it will be treated as Windows Authentication. */
+		try(Connection connection = DriverManager.getConnection(url, username, password))
 		{
-			/* If no username, password mentioned or username, password is null, then it will be treated as Windows Authentication. */
-			connection = DriverManager.getConnection(url, username, password);
-			if(connection != null)
-			{
-				isSuccess = true;
-			}
+			isSuccess = true;
 		}
 		catch(final SQLException exception)
 		{
 			LOGGER.error(exception);
 			throw exception;
 		}
-
 		return isSuccess;
 	}
 }

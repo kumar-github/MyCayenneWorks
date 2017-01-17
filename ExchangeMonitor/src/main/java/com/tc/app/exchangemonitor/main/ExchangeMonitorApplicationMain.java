@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import com.sun.javafx.application.LauncherImpl;
 import com.tc.app.exchangemonitor.ExchangeMonitorApplication;
-import com.tc.app.exchangemonitor.preloader.ExchangeMonitionApplicationPreloader;
+import com.tc.app.exchangemonitor.util.PropertiesHelper;
 
 /**
  * @author Saravana Kumar M
@@ -20,19 +20,21 @@ public class ExchangeMonitorApplicationMain
 	{
 		setUserPropertiesAsSystemProperties(loadPropertiesFromPropertiesFileIfExists());
 		//System.out.println(java.lang.System.getProperty("java.library.path"));
-		LauncherImpl.launchApplication(ExchangeMonitorApplication.class, ExchangeMonitionApplicationPreloader.class, args);
+		//LauncherImpl.launchApplication(ExchangeMonitorApplication.class, ExchangeMonitionApplicationPreloader.class, args);
+		LauncherImpl.launchApplication(ExchangeMonitorApplication.class, args);
 	}
 
 	private static final Properties loadPropertiesFromPropertiesFileIfExists()
 	{
 		final Properties userProperties = new Properties();
+		//try(FileReader fileReadernew = new FileReader(new File(ExchangeMonitorApplicationMain.class.getClassLoader().getResource("ExchangeMonitor.prop").getFile())))
 		try(FileReader fileReader = new FileReader(new File("ExchangeMonitor.prop")))
 		{
 			userProperties.load(fileReader);
 		}
 		catch(final FileNotFoundException exception)
 		{
-			exception.printStackTrace();
+			System.err.println("Properties file not found. Please check \"ExchangeMonitor.prop\" file exists in the current directory.");
 		}
 		catch(final IOException exception)
 		{
@@ -43,7 +45,7 @@ public class ExchangeMonitorApplicationMain
 
 	private static final void setUserPropertiesAsSystemProperties(final Properties userProperties)
 	{
-		userProperties.forEach((key, value) -> System.setProperty(key.toString(), value.toString()));
-		//userProperties.forEach((key, value) -> PropertiesHelper.setUserProperty(key.toString(), value.toString()));
+		//userProperties.forEach((key, value) -> System.setProperty(key.toString(), value.toString()));
+		userProperties.forEach((key, value) -> PropertiesHelper.setAsSystemProperty(key.toString(), value.toString()));
 	}
 }
