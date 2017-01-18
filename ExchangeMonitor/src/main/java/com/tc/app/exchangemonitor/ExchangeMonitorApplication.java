@@ -241,8 +241,7 @@ public class ExchangeMonitorApplication extends Application
 	private void doActionAsPerKeyPressed(final KeyEvent keyEvent)
 	{
 		final KeyCombination controlWKeyCombination = new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN);
-		final KeyCombination altF4KeyCombination = new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN);
-		if(altF4KeyCombination.match(keyEvent) || controlWKeyCombination.match(keyEvent))
+		if(controlWKeyCombination.match(keyEvent))
 		{
 			/* don't close the stage by yourself, instead just raise a close request event and leave it. we will handle it somewhere. */
 			Platform.runLater(() -> {

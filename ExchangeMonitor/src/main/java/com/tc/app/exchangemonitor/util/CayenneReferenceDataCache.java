@@ -318,7 +318,14 @@ public class CayenneReferenceDataCache
 				portfoliosReferenceDataHashMap = new HashMap<>();
 
 				final long startTime = System.currentTimeMillis();
-				final List<Portfolio> portfoliosList = ObjectSelect.query(Portfolio.class).select(CayenneHelper.getCayenneServerRuntime().newContext());
+
+				//@formatter:off
+				final List<Portfolio> portfoliosList = ObjectSelect.query(Portfolio.class)
+																													 .where(Portfolio.PORT_LOCKED.eq((short) 0))
+																													 .and(Portfolio.PORT_TYPE.eq("R"))
+																													 .select(CayenneHelper.getCayenneServerRuntime().newContext());
+				//@formatter:on
+
 				final long endTime = System.currentTimeMillis();
 				LOGGER.debug("It took {} milli seconds to fetch {} portfolios.", (endTime - startTime), portfoliosList.size());
 

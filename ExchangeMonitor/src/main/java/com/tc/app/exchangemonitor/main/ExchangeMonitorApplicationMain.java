@@ -27,7 +27,7 @@ public class ExchangeMonitorApplicationMain
 	private static final Properties loadPropertiesFromPropertiesFileIfExists()
 	{
 		final Properties userProperties = new Properties();
-		//try(FileReader fileReadernew = new FileReader(new File(ExchangeMonitorApplicationMain.class.getClassLoader().getResource("ExchangeMonitor.prop").getFile())))
+		//try(FileReader fileReader = new FileReader(new File(ExchangeMonitorApplicationMain.class.getClassLoader().getResource("ExchangeMonitor.prop").getFile())))
 		try(FileReader fileReader = new FileReader(new File("ExchangeMonitor.prop")))
 		{
 			userProperties.load(fileReader);

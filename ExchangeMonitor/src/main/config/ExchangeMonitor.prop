@@ -1,3 +1,1 @@
 ConnectionUrl=jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22
-Username=ictspass
-Password=ictspass
