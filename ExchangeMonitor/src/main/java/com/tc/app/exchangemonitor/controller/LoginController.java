@@ -15,7 +15,6 @@ import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter.Change;
@@ -44,8 +43,7 @@ public class LoginController
 	private Text loginStatusTextField;
 	@FXML
 	private ComboBox<String> authenticationTypeComboBox;
-	@FXML
-	private CheckBox rememberMeCheckBox;
+
 	private LoginManager loginManager;
 
 	private final InvalidationListener authenticationTypeComboBoxSelectedItemListener = observable -> this.doThisWhenSelectionChanged();
@@ -86,8 +84,7 @@ public class LoginController
 	private void bind()
 	{
 		this.loginButton.disableProperty().bind(this.serverNamePortNumTextField.textProperty().isEmpty().or(this.databaseNameTextField.textProperty().isEmpty().or(this.usernameTextField.textProperty().isEmpty().or(this.passwordTextField.textProperty().isEmpty()))));
-
-		this.rememberMeCheckBox.disableProperty().bind(this.serverNamePortNumTextField.textProperty().isEmpty().or(this.databaseNameTextField.textProperty().isEmpty().or(this.usernameTextField.textProperty().isEmpty().or(this.passwordTextField.textProperty().isEmpty()))));
+		//this.rememberMeCheckBox.disableProperty().bind(this.serverNamePortNumTextField.textProperty().isEmpty().or(this.databaseNameTextField.textProperty().isEmpty().or(this.usernameTextField.textProperty().isEmpty().or(this.passwordTextField.textProperty().isEmpty()))));
 	}
 
 	private void addListeners()
@@ -134,6 +131,7 @@ public class LoginController
 	private void handleCancelButtonClick()
 	{
 		Platform.runLater(() -> {
+			this.cleanUpBindingsAndListeners();
 			Platform.exit();
 			System.exit(0);
 		});
@@ -170,14 +168,14 @@ public class LoginController
 
 	private boolean authorize() throws SQLException
 	{
-		final boolean isFirstTimeLogin = !PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.IS_AUTHENTICATED_USER, DEFAULT_BOOLEAN_VALUE);
+		//final boolean isFirstTimeLogin = !PreferencesHelper.getUserPreferences().getBoolean(StaticConstantsHelper.IS_AUTHENTICATED_USER, DEFAULT_BOOLEAN_VALUE);
 		boolean isAuthorized = DEFAULT_BOOLEAN_VALUE;
 
-		if(isFirstTimeLogin)
+		if(true)
 		{
 			/* no key in registry. so may be this is the first time login */
 			final boolean isWindowsAuthentication = this.authenticationTypeComboBox.getValue().equals("Windows Authentication") ? true : false;
-			final boolean shouldRemember = this.rememberMeCheckBox.isSelected();
+			//final boolean shouldRemember = this.rememberMeCheckBox.isSelected();
 			final String serverName = this.serverNamePortNumTextField.getText();
 			final String databaseName = this.databaseNameTextField.getText();
 			final String username = isWindowsAuthentication ? null : this.usernameTextField.getText();
@@ -191,43 +189,21 @@ public class LoginController
 				if(isAuthorized)
 				{
 					this.loginStatusTextField.setText("Login Success...");
-					//store the connection url in registry so that hibernate can pick this when creating session factory.
-					PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.CONNECTION_URL, this.connectionURL);
-					PropertiesHelper.setAsSystemProperty("CONNECTION_URL", this.connectionURL);
-
+					PropertiesHelper.setAsSystemProperty("ConnectionUrl", this.connectionURL);
 					if(username != null)
 					{
-						PropertiesHelper.setAsSystemProperty("USERNAME", username);
+						PropertiesHelper.setAsSystemProperty("Username", username);
 					}
 					if(password != null)
 					{
-						PropertiesHelper.setAsSystemProperty("PASSWORD", password);
+						PropertiesHelper.setAsSystemProperty("Password", password);
 					}
-				}
-				if(isAuthorized && shouldRemember)
-				{
-					this.rememberLoginCredentials();
+					this.cleanUpBindingsAndListeners();
 				}
 			}
 			catch(final SQLException exception)
 			{
 				this.loginStatusTextField.setText(exception.getMessage());
-			}
-		}
-		else
-		{
-			try
-			{
-				isAuthorized = DatabaseUtil.makeTestConnection(PreferencesHelper.getUserPreferences().get(StaticConstantsHelper.CONNECTION_URL, ""), null, null);
-				if(isAuthorized)
-				{
-					this.loginStatusTextField.setText("Login Success...");
-				}
-			}
-			catch(final SQLException exception)
-			{
-				this.loginStatusTextField.setText(exception.getMessage());
-				throw exception;
 			}
 		}
 		return isAuthorized;
@@ -257,17 +233,19 @@ public class LoginController
 		this.serverNamePortNumTextField.setText(newValue.toUpperCase());
 	}
 
-	private void rememberLoginCredentials()
+	private void cleanUpBindingsAndListeners()
 	{
-		PreferencesHelper.getUserPreferences().putBoolean(StaticConstantsHelper.IS_AUTHENTICATED_USER, true);
+		this.unbindAll();
+		this.removeAllListeners();
+	}
 
-		PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.CONNECTION_URL, this.connectionURL);
-		PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.SERVER_NAME, this.serverNamePortNumTextField.getText());
-		PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.DATABASE_NAME, this.databaseNameTextField.getText());
-		/*
-		PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.CONNECTION_URL, CryptoUtil.encrypt(connectionURL));
-		PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.SERVER_NAME, CryptoUtil.encrypt(serverNamePortNumTextField.getText()));
-		PreferencesHelper.getUserPreferences().put(StaticConstantsHelper.DATABASE_NAME, CryptoUtil.encrypt(databaseNameTextField.getText()));
-		 */
+	private void unbindAll()
+	{
+		this.loginButton.disableProperty().unbind();
+	}
+
+	private void removeAllListeners()
+	{
+		this.authenticationTypeComboBox.getSelectionModel().selectedItemProperty().removeListener(this.authenticationTypeComboBoxSelectedItemListener);
 	}
 }

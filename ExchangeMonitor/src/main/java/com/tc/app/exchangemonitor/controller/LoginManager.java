@@ -55,19 +55,4 @@ public class LoginManager
 			Logger.getLogger(LoginManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-
-	private void showMainView(final String sessionID)
-	{
-		try
-		{
-			final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("Mainview.fxml"));
-			this.scene.setRoot((Parent) loader.load());
-			//MainViewController controller = loader.<MainViewController>getController();
-			//controller.initSessionID(this, sessionID);
-		}
-		catch(final IOException ex)
-		{
-			Logger.getLogger(LoginManager.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
 }

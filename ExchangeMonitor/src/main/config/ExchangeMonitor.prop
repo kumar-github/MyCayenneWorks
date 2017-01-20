@@ -1,1 +1,5 @@
-ConnectionUrl=jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22
+#The below property will tell you whether to show the Login Screen or not. Allowed Values[true, false]
+#ShowLoginPanel=true
+ConnectionUrl=jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov224
+#log4j.configurationFile=e:\\ExchangeMonitor\\log4j2.xml
+#logDirectory=d:\\logs
