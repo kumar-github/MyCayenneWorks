@@ -313,7 +313,7 @@ public class ExchangeMonitorApplication extends Application
 	{
 		final Alert alert = new Alert(AlertType.NONE, null, ButtonType.OK);
 		final DialogPane dialogPane = alert.getDialogPane();
-		dialogPane.setStyle("-fx-border-style: dashed;-fx-border-radius: 1;-fx-border-color: lightblue;-fx-border-width: 2;-fx-font-family: 'Segoe UI';-fx-font-weight: BOLD;-fx-font-size: 12px");
+		dialogPane.setStyle("-fx-background-color: PALEGREEN;-fx-border-style: dashed;-fx-border-radius: 1;-fx-border-color: lightblue;-fx-border-width: 2;-fx-font-family: 'Segoe UI';-fx-font-weight: BOLD;-fx-font-size: 12px");
 		dialogPane.lookup(".content.label").setStyle("-fx-text-fill: RED");
 
 		//dialogPane.lookup(".content.label").setStyle("-fx-background-color: cadetblue; -fx-font-style: italic;");
