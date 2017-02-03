@@ -77,14 +77,16 @@ public class ExchangeMonitorShellView extends FXMLView
 		rotateTransition.setFromAngle(0);
 		rotateTransition.setByAngle(360);
 		rotateTransition.play();*/
-		final TranslateTransition tt = new TranslateTransition(Duration.seconds(2), this.primaryScene.getRoot());
+		final TranslateTransition tt = new TranslateTransition(Duration.seconds(1), this.primaryScene.getRoot());
 		tt.setOnFinished((final ActionEvent actionEvent) -> {
 			this.primaryStage.close();
 			Platform.exit();
 			System.exit(0);
 		});
-		tt.setFromX(100);
-		tt.setToX(1200);
+		//tt.setFromX(100);
+		//tt.setToX(1200);
+		tt.setFromY(100);
+		tt.setToY(1000);
 		//tt.setCycleCount(Timeline.INDEFINITE);
 		tt.play();
 	}

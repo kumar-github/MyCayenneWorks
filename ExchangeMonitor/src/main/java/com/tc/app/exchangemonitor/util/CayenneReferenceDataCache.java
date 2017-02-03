@@ -349,8 +349,14 @@ public class CayenneReferenceDataCache
 				templateTradesReferenceDataHashMap = new HashMap<>();
 
 				final long startTime = System.currentTimeMillis();
+
+				//@formatter:off
 				/* Actually we need to filter even the deleted trades but dont know how to do. We can go for query method to fetch the required trades. But leaving it for now. */
-				final List<Trade> templateTradesList = ObjectSelect.query(Trade.class).where(Trade.CONCLUSION_TYPE.eq("I")).prefetch(Trade.TRADE_STATUS.joint()).select(CayenneHelper.getCayenneServerRuntime().newContext());
+				final List<Trade> templateTradesList = ObjectSelect.query(Trade.class)
+																														  .where(Trade.CONCLUSION_TYPE.eq("I"))
+																														  .prefetch(Trade.TRADE_STATUS.joint())
+																														  .select(CayenneHelper.getCayenneServerRuntime().newContext());
+				//@formatter:on
 				final List<Trade> undeletedTemplateTradesList = templateTradesList.stream().filter((aTrade) -> !aTrade.getTradeStatus().getTradeStatusCode().trim().equals("DELETE")).collect(Collectors.toList());
 
 				//final EJBQLQuery queryToFetchTradeNums = new EJBQLQuery("select trade.trade_num FROM Trade trade where trade.copyType <> 'FULL'");

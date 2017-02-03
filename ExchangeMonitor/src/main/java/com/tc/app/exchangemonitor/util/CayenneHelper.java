@@ -46,7 +46,7 @@ public class CayenneHelper
 
 			//final Instant endTime = Instant.now();
 			final long endTime = System.currentTimeMillis();
-			LOGGER.info("It took {} milli seconds to create Cayenne Server Runtime.", (endTime - startTime));
+			LOGGER.debug("It took {} milli seconds to create Cayenne Server Runtime.", (endTime - startTime));
 		}
 		catch(final Throwable exception)
 		{
