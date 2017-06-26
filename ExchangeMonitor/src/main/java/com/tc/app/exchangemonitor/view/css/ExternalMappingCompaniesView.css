@@ -8,3 +8,9 @@
 {
 	-fx-alignment: BASELINE_CENTER;
 }
+
+.buttonStyle
+{
+	-fx-font-family: "Segoe UI semibold";
+	-fx-font-size: 13;
+}

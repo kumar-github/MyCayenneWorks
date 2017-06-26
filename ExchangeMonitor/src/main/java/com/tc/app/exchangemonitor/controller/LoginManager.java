@@ -12,9 +12,9 @@ import javafx.stage.Stage;
 /** Manages control flow for logins */
 public class LoginManager
 {
-	private Scene scene;
+	private final Scene scene;
 
-	public LoginManager(Scene scene)
+	public LoginManager(final Scene scene)
 	{
 		this.scene = scene;
 	}
@@ -27,7 +27,7 @@ public class LoginManager
 	public void authenticated()
 	{
 		//showMainView(sessionID);
-		((Stage) scene.getWindow()).close();
+		((Stage) this.scene.getWindow()).close();
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class LoginManager
 	 */
 	public void logout()
 	{
-		constructLoginScreen();
+		this.constructLoginScreen();
 	}
 
 	public void constructLoginScreen()
@@ -44,29 +44,13 @@ public class LoginManager
 		try
 		{
 			//FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tc/app/exchangemonitor/view/fxml/LoginView.fxml"));
+			final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/com/tc/app/exchangemonitor/view/fxml/LoginView.fxml"));
 
-			scene.setRoot((Parent) loader.load());
-			LoginController controller = loader.<LoginController>getController();
+			this.scene.setRoot((Parent) loader.load());
+			final LoginController controller = loader.<LoginController>getController();
 			controller.initManager(this);
 		}
-		catch(IOException ex)
-		{
-			Logger.getLogger(LoginManager.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	private void showMainView(String sessionID)
-	{
-		try
-		{
-			//FXMLLoader loader = new FXMLLoader(getClass().getResource("mainview.fxml"));
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Mainview.fxml"));
-			scene.setRoot((Parent) loader.load());
-			//MainViewController controller = loader.<MainViewController>getController();
-			//controller.initSessionID(this, sessionID);
-		}
-		catch(IOException ex)
+		catch(final IOException ex)
 		{
 			Logger.getLogger(LoginManager.class.getName()).log(Level.SEVERE, null, ex);
 		}

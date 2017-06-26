@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap http://cayenne.apache.org/schema/9/modelMap.xsd" project-version="9">
+
+	<!-- ======================================================= SQL QUERIES BEGINS ============================================================== -->
+	
+	<query name="IsAnythingChangedInDB" type="SQLTemplate">
+	<property name="cayenne.GenericSelectQuery.fetchingDataRows" value="true"/>
+	<sql>
+	<![CDATA[
+	SELECT MAX(trans_id) AS MaxTransID, COUNT(*) AS RecordCount FROM external_trade
+	]]>
+	</sql>
+	</query>
+	
+	<query name="UpdateExternalTradeStatus" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	UPDATE external_trade SET external_trade_status_oid = 1, trade_num = NULL, trans_id = #bind($transIdParam) WHERE oid IN (#bind($oidsParam)) AND external_trade_status_oid = 3
+	]]>
+	</sql>
+	</query>
+	
+	<query name="UpdateExternalCommentText" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	UPDATE external_comment SET comment_text = NULL, trans_id = #bind($transIdParam) WHERE oid IN (select external_comment_oid FROM external_trade WHERE external_comment_oid IS NOT NULL AND oid IN (#bind($oidsParam)))
+	]]>
+	</sql>
+	</query>
+	
+	<query name="InsertMapping" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	INSERT INTO external_mapping (oid, external_trade_source_oid, mapping_type, external_value1, external_value2, external_value3, external_value4, alias_value, trans_id) values (#bind($oidParam), #bind($externalTradeSourceOidParam), #bind($mappingTypeParam), #bind($externalValue1Param), #bind($externalValue2Param), #bind($externalValue3Param), #bind($externalValue4Param), #bind($aliasValueParam), #bind($transIdParam))
+	]]>
+	</sql>
+	</query>
+	
+	<!-- UPDATE external_mapping SET external_value1 = #bind($externalValue1Param), external_value2 = #bind($externalValue2Param), external_value3 = #bind($externalValue3Param), external_value4 = #bind($externalValue4Param), alias_value = #bind($aliasValueParam), trans_id = #bind($transIdParam) where oid = #bind($externalMappingOidParam) -->
+	<query name="UpdateMapping" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	UPDATE external_mapping SET alias_value = #bind($aliasValueParam), trans_id = #bind($transIdParam) WHERE oid = #bind($externalMappingOidParam)
+	]]>
+	</sql>
+	</query>
+	
+	<query name="UpdateAccountMapping" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	UPDATE external_mapping SET external_value1 = #bind($externalValue1Param), trans_id = #bind($transIdParam) WHERE oid = #bind($externalMappingOidParam)
+	]]>
+	</sql>
+	</query>
+	
+	<!-- DELETE FROM external_mapping WHERE external_trade_source_oid = #bind($externalTradeSourceOidParam) and mapping_type = #bind($mappingTypeParam) and external_value1 = #bind($externalValue1Param) and external_value2 = #bind($externalValue2Param) and external_value3 = #bind($externalValue3Param) and external_value4 = #bind($externalValue4Param) and alias_value = #bind($aliasValueParam) -->
+	<!-- DELETE FROM external_mapping WHERE external_trade_source_oid = #bind($externalTradeSourceOidParam) and mapping_type = #bind($mappingTypeParam) and external_value1 #bindEqual($externalValue1Param) and external_value2 #bindEqual($externalValue2Param) and external_value3 #bindEqual($externalValue3Param) and external_value4 #bindEqual($externalValue4Param) and alias_value = #bind($aliasValueParam) -->
+	<query name="DeleteMapping" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	DELETE FROM external_mapping WHERE oid = #bind($externalMappingOidParam)
+	]]>
+	</sql>
+	</query>
+	
+	<!--  SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (:externalTradeSourcesParam)) AND (et.external_trade_status_oid IN (:externalTradeStatusesParam)) AND (et.external_trade_state_oid IN (:externalTradeStatesParam)) AND (ett.buyer_account IN (:buyerAccountsParam)) AND (ett.creation_date >= (:startDate)) AND 	(ett.creation_date <= (:endDate)) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid -->
+	<query name="PositionWithBuyerAccount" type="SQLTemplate">
+	<property name="cayenne.GenericSelectQuery.fetchingDataRows" value="true"/>
+	SELECT ets.external_trade_state_name as externalTradeStateName, ett.creation_date as creationDate, et.entry_date as entryDate, ett.exch_tools_trade_num as exchToolsTradeNum, ett.commodity as commodity, ett.trading_period as tradingPeriod, ett.call_put as callPut, ett.strike_price as strikePrice, ett.quantity as quantity, ett.price as price, ett.input_action as inputAction, ett.input_company as inputCompany, ett.accepted_action as acceptedAction, ett.accepted_company as acceptedCompany, ett.buyer_account as buyerAccount FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid IN ($externalTradeSourcesParam)) AND (et.external_trade_status_oid IN ($externalTradeStatusesParam)) AND (et.external_trade_state_oid IN ($externalTradeStatesParam)) AND (ett.buyer_account IN ($buyerAccountsParam)) AND (ett.creation_date between ($startDateParam) AND ($endDateParam)) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid
+	<sql>
+	<![CDATA[
+	]]>
+	</sql>
+	</query>
+	
+	<!--  SELECT ets.external_trade_state_name as externalTradeStateName, ett.creation_date as creationDate, et.entry_date as entryDate, ett.exch_tools_trade_num as exchToolsTradeNum, ett.commodity as commodity, ett.trading_period as tradingPeriod, ett.call_put as callPut, ett.strike_price as strikePrice, ett.quantity as quantity, ett.price as price, ett.input_action as inputAction, ett.input_company as inputCompany, ett.accepted_action as acceptedAction, ett.accepted_company as acceptedCompany, ett.buyer_account as buyerAccount FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (:externalTradeSourcesParam)) AND (et.external_trade_status_oid IN (:externalTradeStatusesParam)) AND (et.external_trade_state_oid IN (:externalTradeStatesParam)) AND (ett.buyer_account NOT IN (:buyerAccountsParam)) AND (ett.creation_date >= (:startDate)) AND (ett.creation_date <= (:endDate)) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid -->
+	<!-- -SELECT et.* FROM external_trade et, exch_tools_trade ett,external_trade_state ets WHERE (et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid in (1)) AND (et.external_trade_status_oid IN (1, 2, 3, 4)) AND (et.external_trade_state_oid IN (1, 2, 3, 4)) AND (ett.buyer_account NOT IN ('TC123')) AND (ett.creation_date >= ('2016-01-01')) AND (ett.creation_date <= ('2016-12-21')) AND NOT EXISTS (SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid -->
+	<query name="PositionWithoutBuyerAccount" type="SQLTemplate">
+	<property name="cayenne.GenericSelectQuery.fetchingDataRows" value="true"/>
+	<sql>
+	<![CDATA[
+	SELECT
+	#result('ets.external_trade_state_name' 'String' 'externalTradeStateName' 'externalTradeStateName'), #result('ett.creation_date' 'java.util.Date' 'creationDate' 'creationDate'), #result('et.entry_date' 'java.util.Date' 'entryDate' 'entryDate'),
+	#result('ett.exch_tools_trade_num' 'String' 'exchToolsTradeNum' 'exchToolsTradeNum'), #result('ett.commodity' 'String' 'commodity' 'commodity'), #result('ett.trading_period' 'String' 'tradingPeriod' 'tradingPeriod'),
+	#result('ett.call_put' 'String' 'callPut' 'callPut'), #result('ett.strike_price' 'Double' 'strikePrice' 'strikePrice'), #result('ett.quantity' 'Double' 'quantity' 'quantity'), #result('ett.price' 'Double' 'price' 'price'),
+	#result('ett.input_action' 'String' 'inputAction' 'inputAction'), #result('ett.input_company' 'String' 'inputCompany' 'inputCompany'), #result('ett.accepted_action' 'String' 'acceptedAction' 'acceptedAction'),
+	#result('ett.accepted_company' 'String' 'acceptedCompany' 'acceptedCompany'), #result('ett.buyer_account' 'String' 'buyerAccount' 'buyerAccount')
+	FROM
+	external_trade et, exch_tools_trade ett,external_trade_state ets
+	WHERE
+	(et.external_trade_system_oid IN (1)) AND (et.external_trade_source_oid IN (#bind($externalTradeSourcesParam))) AND (et.external_trade_status_oid IN (#bind($externalTradeStatusesParam)))
+	AND
+	(et.external_trade_state_oid IN (#bind($externalTradeStatesParam))) AND (ett.creation_date between (#bind($startDateParam)) AND (#bind($endDateParam)))
+	AND
+	NOT EXISTS
+	(SELECT 1 FROM exch_tools_trade ett1 JOIN external_trade et1 ON et1.oid = ett1.external_trade_oid  JOIN external_trade_state ets1 ON et1.external_trade_state_oid = ets1.oid WHERE ett.commodity = ett1.commodity AND ett.exch_tools_trade_num  = ett1.exch_tools_trade_num AND ett.trading_period = ett1.trading_period AND ett.buyer_account = ett1.buyer_account AND convert(datetime,convert(varchar,ett.creation_date,109)) = convert(datetime,convert(varchar,ett1.creation_date,109)) AND ISNULL(ett.call_put,'NULL') = ISNULL(ett1.call_put,'NULL') AND ISNULL(ett.strike_price,0) = ISNULL(ett1.strike_price,0) AND (((ets1.external_trade_state_name = 'Update' or ets1.external_trade_state_name = 'Delete') AND (ets.external_trade_state_name = 'Add')) OR (ets1.external_trade_state_name = 'Delete' AND ets.external_trade_state_name = 'Update'))) AND ets.external_trade_state_name != 'Delete'  AND et.oid = ett.external_trade_oid AND et.external_trade_state_oid = ets.oid
+	]]>
+	</sql>
+	</query>
+	
+	<!--
+	SELECT tif.trade_num as tradeNum, tif.order_num as orderNum, tif.item_num as itemNum, tif.item_fill_num as itemFillNum, tif.fill_date as fillDate, ti.cmdty_code as cmdtyCode, ti.risk_mkt_code as riskMktCode, ti.trading_prd as tradingPrd, ti.p_s_ind as psInd, tif.fill_qty as fillQty, tif.fill_price as fillPrice, iu.user_first_name as firstName, iu.user_last_name as lastName, ti.real_port_num as realPortNum, p.port_full_name as portFullName, tifut.price_source_code as priceSourceCode, toexch.order_instr_code as orderInstrCode, toexch.order_price as orderPrice, ti.cmnt_num as cmntNum, tif.external_trade_num as externalTradeNum, cm.commkt_key as commktKey
+	FROM
+	trade_item_fill tif INNER JOIN trade_item ti ON tif.trade_num = ti.trade_num AND tif.order_num = ti.order_num AND tif.item_num = ti.item_num INNER JOIN trade t ON tif.trade_num = t.trade_num INNER JOIN trade_order tor ON tif.trade_num = tor.trade_num AND tif.order_num = tor.order_num INNER JOIN trade_item_fut tifut ON tif.trade_num = tifut.trade_num AND tif.order_num = tifut.order_num AND tif.item_num = tifut.item_num INNER JOIN trade_order_on_exch toexch ON tif.trade_num = toexch.trade_num AND tif.order_num = toexch.order_num INNER JOIN comment c ON ti.cmnt_num = c.cmnt_num INNER JOIN commodity_market cm ON ti.cmdty_code = cm.cmdty_code AND toexch.order_instr_code = cm.mkt_code left outer join icts_user iu ON iu.user_init = t.trader_init left outer join portfolio p ON p.port_num = ti.real_port_num where (tor.strip_summary_ind != 'Y' AND t.conclusion_type = 'C')
+	AND
+	(tif.fill_date between (#bind($startDateParam)) AND (#bind($endDateParam)))
+	AND
+	(UPPER(RTRIM(LTRIM(c.tiny_cmnt))) = 'NOT PRICED' OR UPPER(RTRIM(LTRIM(c.tiny_cmnt))) = 'NOTPRICED')
+	ORDER BY tif.fill_date DESC
+	-->
+	<!-- <query name="FetchTradeItemFills" type="SQLTemplate" root="obj-entity" root-name="FakeDummySettlePrice">-->
+	<query name="FetchTradeItemFills" type="SQLTemplate">
+	<property name="cayenne.GenericSelectQuery.fetchingDataRows" value="true"/>
+	<sql>
+	<![CDATA[
+	SELECT #result('tif.trade_num' 'Integer' 'tradeNum' 'tradeNum'), #result('tif.order_num' 'Short' 'orderNum' 'orderNum'), #result('tif.item_num' 'Short' 'itemNum' 'itemNum'), #result('tif.item_fill_num' 'Short' 'itemFillNum' 'itemFillNum'),
+	#result('tif.fill_date' 'java.util.Date' 'fillDate' 'fillDate'), #result('ti.cmdty_code' 'String' 'cmdtyCode' 'cmdtyCode'), #result('ti.risk_mkt_code' 'String' 'riskMktCode' 'riskMktCode'), #result('ti.trading_prd' 'String' 'tradingPrd' 'tradingPrd'),
+	#result('ti.p_s_ind' 'String' 'psInd' 'psInd'), #result('tif.fill_qty' 'Double' 'fillQty' 'fillQty'), #result('tif.fill_price' 'Double' 'fillPrice' 'fillPrice'), #result('iu.user_first_name' 'String' 'userFirstName' 'userFirstName'), 
+	#result('iu.user_last_name' 'String' 'userLastName' 'userLastName'), #result('ti.real_port_num' 'Integer' 'realPortNum' 'realPortNum'), #result('p.port_full_name' 'String' 'portFullName' 'portFullName'), 
+	#result('tifut.price_source_code' 'String' 'priceSourceCode' 'priceSourceCode'), #result('toexch.order_instr_code' 'String' 'orderInstrCode' 'orderInstrCode'), #result('toexch.order_price' 'Double' 'orderPrice' 'orderPrice'), 
+	#result('ti.cmnt_num' 'Integer' 'cmntNum' 'cmntNum'), #result('tif.external_trade_num' 'String' 'externalTradeNum' 'externalTradeNum'), #result('cm.commkt_key' 'Integer' 'commktKey' 'commktKey')
+	FROM
+	trade_item_fill tif INNER JOIN trade_item ti ON tif.trade_num = ti.trade_num AND tif.order_num = ti.order_num AND tif.item_num = ti.item_num INNER JOIN trade t ON tif.trade_num = t.trade_num INNER JOIN trade_order tor ON tif.trade_num = tor.trade_num AND tif.order_num = tor.order_num INNER JOIN trade_item_fut tifut ON tif.trade_num = tifut.trade_num AND tif.order_num = tifut.order_num AND tif.item_num = tifut.item_num INNER JOIN trade_order_on_exch toexch ON tif.trade_num = toexch.trade_num AND tif.order_num = toexch.order_num INNER JOIN comment c ON ti.cmnt_num = c.cmnt_num INNER JOIN commodity_market cm ON ti.cmdty_code = cm.cmdty_code AND toexch.order_instr_code = cm.mkt_code left outer join icts_user iu ON iu.user_init = t.trader_init left outer join portfolio p ON p.port_num = ti.real_port_num where (tor.strip_summary_ind != 'Y' AND t.conclusion_type = 'C')
+	AND
+	(tif.fill_date between (#bind($startDateParam)) AND (#bind($endDateParam)))
+	AND
+	(UPPER(RTRIM(LTRIM(c.tiny_cmnt))) = 'NOT PRICED' OR UPPER(RTRIM(LTRIM(c.tiny_cmnt))) = 'NOTPRICED')
+	ORDER BY tif.fill_date DESC
+	]]>
+	</sql>
+	</query>
+	
+	<query name="FindSettlementPrice" type="SQLTemplate" root="obj-entity" root-name="Price">
+	<sql>
+	<![CDATA[
+	SELECT * FROM price WHERE commkt_key = #bind($commktKeyParam) AND price_source_code = #bind($priceSourceCodeParam) AND trading_prd = #bind($tradingPrdParam) AND price_quote_date = #bind($priceQuoteDateParam)
+	]]>
+	</sql>
+	</query>
+	
+	<query name="FetchLoadSchedules" type="SQLTemplate">
+	<property name="cayenne.GenericSelectQuery.fetchingDataRows" value="true"/>
+	<sql>
+	<![CDATA[
+	SELECT DISTINCT #result('ets.external_trade_src_name', 'String', 'externalTradeSourceName', 'externalTradeSourceName'), #result('em.external_trade_source_oid', 'int', 'externalTradeSourceOid', 'externalTradeSourceOid'),
+	#result('em.external_value1', 'String', 'externalValue1', 'externalValue1'), 	#result('sch.loading_schedule', 'String', 'loadingSchedule', 'loadingSchedule'), #result('sch.loading_time_from', 'java.util.Date', 'loadingTimeFrom', 'loadingTimeFrom'),
+	#result('sch.loading_time_to', 'java.util.Date', 'loadingTimeTo', 'loadingTimeTo'), #result('sch.trade_date_to_load', 'java.util.Date', 'tradeDateToLoad', 'tradeDateToLoad'),
+	#result('sch.loading_date_timezone', 'String', 'loadingDateTimezone', 'loadingDateTimezone'), #result('trns.user_init', 'String', 'userInit', 'userInit'), #result('sch.oid', 'int', 'oid', 'oid')
+	FROM
+	external_mapping em LEFT OUTER JOIN ext_trade_loading_sched sch ON em.external_value1 = sch.buyer_seller_account LEFT OUTER JOIN icts_transaction trns ON sch.trans_id = trns.trans_id
+	LEFT OUTER JOIN icts_user iu ON em.alias_value = iu.user_init
+	LEFT OUTER JOIN external_trade_source ets ON em.external_trade_source_oid = ets.oid
+	WHERE
+	em.mapping_type = 'T' AND em.external_value1 IS NOT NULL AND iu.user_status = 'A' ORDER BY em.external_value1
+	]]>
+	</sql>
+	</query>
+	
+	<query name="InsertLoadSchedule" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	INSERT INTO ext_trade_loading_sched(oid, external_trade_source_oid, buyer_seller_account, loading_schedule, loading_time_from, loading_time_to, loading_date_timezone, trade_date_to_load, trans_id)
+	VALUES(#bind($oidParam), #bind($externalTradeSourceOidParam), #bind($buyerSellerAccountParam), #bind($loadingScheduleParam), #bind($loadingTimeFromParam), #bind($loadingTimeToParam), #bind($loadingDateTimezoneParam), #bind($tradeDateToLoadParam), #bind($transIdParam))
+	]]>
+	</sql>
+	</query>
+	
+	<query name="UpdateLoadSchedule" type="SQLTemplate">
+	<sql>
+	<![CDATA[
+	UPDATE ext_trade_loading_sched SET loading_schedule = #bind($loadingScheduleParam), loading_time_from = #bind($loadingTimeFromParam), loading_time_to = #bind($loadingTimeToParam), loading_date_timezone = #bind($loadingDateTimezoneParam), trade_date_to_load = #bind($tradeDateToLoadParam), trans_id = #bind($transIdParam) WHERE oid = #bind($oidParam)
+	]]>
+	</sql>
+	</query>
+	
+	<!-- ======================================================= SQL QUERIES ENDS ====================================================== -->
+	
+	<!-- =================================================== STORED PROCEDURES BEGINS =================================================== -->
+	
+	<procedure name="gen_new_transaction" returningValue="false">
+		<procedure-parameter name="app_name" type="VARCHAR" direction="in"/>
+		<procedure-parameter name="trans_type" type="CHAR" direction="in"/>
+		<!-- <procedure-parameter name="outParam" type="INTEGER" direction="out"/>-->
+	</procedure>
+	
+	<procedure name="get_new_num" returningValue="false">
+		<procedure-parameter name="key_name" type="VARCHAR" direction="in"/>
+		<procedure-parameter name="location_num" type="INTEGER" direction="in"/>
+	</procedure>
+	
+	<!-- =================================================== STORED PROCEDURES ENDS =================================================== -->
+
+</data-map>

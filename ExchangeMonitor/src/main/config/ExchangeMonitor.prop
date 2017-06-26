@@ -1,0 +1,8 @@
+#The below property will tell you whether to show the Login Screen or not. Allowed Values[true, false, TRUE, FALSE, True, False]
+ShowLoginPanel=true
+#The below property will tell you what db you should connect to.
+ConnectionUrl=jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22
+#The below property will tell you from where to pick the log4j configuration file. (log4j2.xml). If not set, the default log4j2.xml which is inside the jar will be used.
+#log4j.configurationFile=e:\\ExchangeMonitor\\log4j2.xml
+#The below property will tell you the location where log filles will be written. If not set, by default it goes to "ExchangeMonitorLogs" folder inside the current user
+#logDirectory=d:\\logs

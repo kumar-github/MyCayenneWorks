@@ -10,30 +10,24 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTrade;
 public interface IMainApplicationMonitorTabController extends IGenericController
 {
 	/* A function which returns the ExternalTradeSourceName for the given ExternalTrade  when called. */
-	//public final Function<IExternalTradeEntity, String> externalTradeSourceFunction = (anExternalTrade) -> {
 	public final Function<ExternalTrade, String> externalTradeSourceFunction = (anExternalTrade) -> {
-		//return anExternalTrade.getExternalTradeSourceOid().getExternalTradeSrcName().toLowerCase();
 		return anExternalTrade.getExternalTradeSourceO().getExternalTradeSrcName().toLowerCase();
 	};
 
 	/* A function which returns the ExternalTradeStateName for the given ExternalTrade  when called. */
 	public final Function<ExternalTrade, String> externalTradeStateFunction = (anExternalTrade) -> {
-		//return anExternalTrade.getExternalTradeStateOid().getExternalTradeStateName().toLowerCase();
 		return anExternalTrade.getExternalTradeStateO().getExternalTradeStateName().toLowerCase();
 	};
 
 	public final Function<ExternalTrade, String> externalTradeStatusFunction = (anExternalTrade) -> {
-		//return anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().toLowerCase();
 		return anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().toLowerCase();
 	};
 
 	public final Function<ExternalTrade, String> externalTradeCommodityFunction = (anExternalTrade) -> {
-		//return anExternalTrade.getExchToolsTrade().getCommodity().toLowerCase();
 		return anExternalTrade.getExternalTradeO1().getCommodity().toLowerCase();
 	};
 
 	public final List<Function<ExternalTrade, String>> externalTradeSearchablePropertiesList = Arrays.asList(
-	//(anExternalTrade) -> anExternalTrade.getOid().toString(),
 	(anExternalTrade) -> anExternalTrade.getExternalTradeOid().toString(),
 	externalTradeSourceFunction,
 	externalTradeStateFunction,
@@ -48,16 +42,12 @@ public interface IMainApplicationMonitorTabController extends IGenericController
 		if(filterText.isEmpty() || (filterText == null) || filterText.equals(""))
 			return true;
 
-		//if(anExternalTrade.getOid().toString().contains(filterText))
 		if(anExternalTrade.getExternalTradeOid().toString().contains(filterText))
 			return true;
-		//else if(anExternalTrade.getExternalTradeSourceOid().getExternalTradeSrcName().toLowerCase().contains(filterText))
 		else if(anExternalTrade.getExternalTradeSourceO().getExternalTradeSrcName().toLowerCase().contains(filterText))
 			return true;
-		//else if(anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().toLowerCase().contains(filterText))
 		else if(anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().toLowerCase().contains(filterText))
 			return true;
-		//else if(anExternalTrade.getExternalTradeStateOid().getExternalTradeStateName().toLowerCase().contains(filterText))
 		else if(anExternalTrade.getExternalTradeStateO().getExternalTradeStateName().toLowerCase().contains(filterText))
 			return true;
 
@@ -71,16 +61,12 @@ public interface IMainApplicationMonitorTabController extends IGenericController
 
 			if(filterText.isEmpty() || (filterText == null) || filterText.equals(""))
 				return true;
-			//if(anExternalTrade.getOid().toString().contains(filterText))
 			if(anExternalTrade.getExternalTradeOid().toString().contains(filterText))
 				return true;
-			//else if(anExternalTrade.getExternalTradeSourceOid().getExternalTradeSrcName().toLowerCase().contains(filterText))
 			else if(anExternalTrade.getExternalTradeSourceO().getExternalTradeSrcName().toLowerCase().contains(filterText))
 				return true;
-			//else if(anExternalTrade.getExternalTradeStatusOid().getExternalTradeStatusName().toLowerCase().contains(filterText))
 			else if(anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().toLowerCase().contains(filterText))
 				return true;
-			//else if(anExternalTrade.getExternalTradeStateOid().getExternalTradeStateName().toLowerCase().contains(filterText))
 			else if(anExternalTrade.getExternalTradeStateO().getExternalTradeStateName().toLowerCase().contains(filterText))
 				return true;
 
@@ -88,7 +74,6 @@ public interface IMainApplicationMonitorTabController extends IGenericController
 		};
 	}
 
-	//default public Predicate<IExternalTradeEntity> externalTradesTableViewFilterPredicate(String filterText)
 	default public Predicate<ExternalTrade> externalTradesTableViewFilterPredicate(final String filterText)
 	{
 		return (anExternalTrade) -> {

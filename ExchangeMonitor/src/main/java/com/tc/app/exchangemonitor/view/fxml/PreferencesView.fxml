@@ -8,7 +8,6 @@
 <children>
 		<CheckBox fx:id="resetCredentialsCheckBox" onAction="#handleResetCredentialsCheckBoxClick" text="Reset Credentials" />
 		<CheckBox fx:id="displayAccountsWithPermissionCheckBox" onAction="#handleDisplayAccountsWithPermissionCheckBoxClick" text="Display Accounts With Permission" />
-		<CheckBox fx:id="enableAnimationsCheckBox" onAction="#handleEnableAnimationsCheckBoxClick" text="Enable Animations" />
 		<CheckBox fx:id="enableRowColorsCheckBox" onAction="#handleEnableRowColorsCheckBoxClick" text="Enable Row Colors" />
 		<CheckBox fx:id="enableRowToolTipsCheckBox" onAction="#handleEnableRowToolTipsCheckBoxClick" text="Enable Row ToolTips" />
 		<CheckBox fx:id="enableRowContextMenuCheckBox" onAction="#handleEnableRowContextMenuCheckBoxClick" text="Enable Row Context Menu" />

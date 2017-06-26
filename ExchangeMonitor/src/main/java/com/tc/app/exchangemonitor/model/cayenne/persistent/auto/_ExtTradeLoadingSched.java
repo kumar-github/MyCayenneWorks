@@ -15,98 +15,96 @@ import com.tc.app.exchangemonitor.model.cayenne.persistent.ExternalTradeSource;
  */
 public abstract class _ExtTradeLoadingSched extends CayenneDataObject
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String OID_PK_COLUMN = "oid";
 
-	public static final Property<String> BUYER_SELLER_ACCOUNT = new Property<String>("buyerSellerAccount");
-	public static final Property<String> LOADING_DATE_TIMEZONE = new Property<String>("loadingDateTimezone");
-	public static final Property<String> LOADING_SCHEDULE = new Property<String>("loadingSchedule");
-	public static final Property<Date> LOADING_TIME_FROM = new Property<Date>("loadingTimeFrom");
-	public static final Property<Date> LOADING_TIME_TO = new Property<Date>("loadingTimeTo");
-	public static final Property<Date> TRADE_DATE_TO_LOAD = new Property<Date>("tradeDateToLoad");
-	public static final Property<Integer> TRANS_ID = new Property<Integer>("transId");
-	public static final Property<ExternalTradeSource> EXTERNAL_TRADE_SOURCE_O = new Property<ExternalTradeSource>("externalTradeSourceO");
+	public static final Property<String> BUYER_SELLER_ACCOUNT = new Property<>("buyerSellerAccount");
+	public static final Property<String> LOADING_DATE_TIMEZONE = new Property<>("loadingDateTimezone");
+	public static final Property<String> LOADING_SCHEDULE = new Property<>("loadingSchedule");
+	public static final Property<Date> LOADING_TIME_FROM = new Property<>("loadingTimeFrom");
+	public static final Property<Date> LOADING_TIME_TO = new Property<>("loadingTimeTo");
+	public static final Property<Date> TRADE_DATE_TO_LOAD = new Property<>("tradeDateToLoad");
+	public static final Property<Integer> TRANS_ID = new Property<>("transId");
+	public static final Property<ExternalTradeSource> EXTERNAL_TRADE_SOURCE_O = new Property<>("externalTradeSourceO");
 
-	public void setBuyerSellerAccount(String buyerSellerAccount)
+	public void setBuyerSellerAccount(final String buyerSellerAccount)
 	{
-		writeProperty("buyerSellerAccount", buyerSellerAccount);
+		this.writeProperty("buyerSellerAccount", buyerSellerAccount);
 	}
 
 	public String getBuyerSellerAccount()
 	{
-		return (String) readProperty("buyerSellerAccount");
+		return (String) this.readProperty("buyerSellerAccount");
 	}
 
-	public void setLoadingDateTimezone(String loadingDateTimezone)
+	public void setLoadingDateTimezone(final String loadingDateTimezone)
 	{
-		writeProperty("loadingDateTimezone", loadingDateTimezone);
+		this.writeProperty("loadingDateTimezone", loadingDateTimezone);
 	}
 
 	public String getLoadingDateTimezone()
 	{
-		return (String) readProperty("loadingDateTimezone");
+		return (String) this.readProperty("loadingDateTimezone");
 	}
 
-	public void setLoadingSchedule(String loadingSchedule)
+	public void setLoadingSchedule(final String loadingSchedule)
 	{
-		writeProperty("loadingSchedule", loadingSchedule);
+		this.writeProperty("loadingSchedule", loadingSchedule);
 	}
 
 	public String getLoadingSchedule()
 	{
-		return (String) readProperty("loadingSchedule");
+		return (String) this.readProperty("loadingSchedule");
 	}
 
-	public void setLoadingTimeFrom(Date loadingTimeFrom)
+	public void setLoadingTimeFrom(final Date loadingTimeFrom)
 	{
-		writeProperty("loadingTimeFrom", loadingTimeFrom);
+		this.writeProperty("loadingTimeFrom", loadingTimeFrom);
 	}
 
 	public Date getLoadingTimeFrom()
 	{
-		return (Date) readProperty("loadingTimeFrom");
+		return (Date) this.readProperty("loadingTimeFrom");
 	}
 
-	public void setLoadingTimeTo(Date loadingTimeTo)
+	public void setLoadingTimeTo(final Date loadingTimeTo)
 	{
-		writeProperty("loadingTimeTo", loadingTimeTo);
+		this.writeProperty("loadingTimeTo", loadingTimeTo);
 	}
 
 	public Date getLoadingTimeTo()
 	{
-		return (Date) readProperty("loadingTimeTo");
+		return (Date) this.readProperty("loadingTimeTo");
 	}
 
-	public void setTradeDateToLoad(Date tradeDateToLoad)
+	public void setTradeDateToLoad(final Date tradeDateToLoad)
 	{
-		writeProperty("tradeDateToLoad", tradeDateToLoad);
+		this.writeProperty("tradeDateToLoad", tradeDateToLoad);
 	}
 
 	public Date getTradeDateToLoad()
 	{
-		return (Date) readProperty("tradeDateToLoad");
+		return (Date) this.readProperty("tradeDateToLoad");
 	}
 
-	public void setTransId(Integer transId)
+	public void setTransId(final Integer transId)
 	{
-		writeProperty("transId", transId);
+		this.writeProperty("transId", transId);
 	}
 
 	public Integer getTransId()
 	{
-		return (Integer) readProperty("transId");
+		return (Integer) this.readProperty("transId");
 	}
 
-	public void setExternalTradeSourceO(ExternalTradeSource externalTradeSourceO)
+	public void setExternalTradeSourceO(final ExternalTradeSource externalTradeSourceO)
 	{
-		setToOneTarget("externalTradeSourceO", externalTradeSourceO, true);
+		this.setToOneTarget("externalTradeSourceO", externalTradeSourceO, true);
 	}
 
 	public ExternalTradeSource getExternalTradeSourceO()
 	{
-		return (ExternalTradeSource) readProperty("externalTradeSourceO");
+		return (ExternalTradeSource) this.readProperty("externalTradeSourceO");
 	}
-
 }

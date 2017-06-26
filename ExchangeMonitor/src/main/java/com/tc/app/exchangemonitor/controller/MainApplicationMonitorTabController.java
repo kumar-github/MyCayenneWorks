@@ -336,14 +336,14 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 		this.endDateFilterKeyText.managedProperty().bind(this.endDateFilterKeyText.visibleProperty());
 		this.endDateFilterValueText.managedProperty().bind(this.endDateFilterValueText.visibleProperty());
 
-		this.externalTradesTableView.setItems(this.externalTradesSortedList);
-
 		this.startDateFilterValueText.textProperty().bind(this.startDateDatePicker.valueProperty().asString());
 		this.endDateFilterValueText.textProperty().bind(this.endDateDatePicker.valueProperty().asString());
 
 		this.startMonitorButton.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty());
 		this.pauseMonitorButton.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty().not());
 		this.stopMonitorButton.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty().not());
+
+		this.externalTradesTableView.setItems(this.externalTradesSortedList);
 
 		this.externalTradeTableViewDataFilterTextField.disableProperty().bind(this.fetchExternalTradesScheduledService.runningProperty());
 
@@ -786,13 +786,17 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 	@FXML
 	private void handleReEnterFailedTradeButtonClick()
 	{
-		this.updateFailedExternalTrades(this.externalTradesTableView.getSelectionModel().getSelectedItems().filtered(anExternalTrade -> anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		//this.updateFailedExternalTrades(this.externalTradesTableView.getSelectionModel().getSelectedItems().filtered(anExternalTrade -> (anExternalTrade != null) && anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		final FilteredList<ExternalTrade> failedExternalTrades = this.externalTradesTableView.getSelectionModel().getSelectedItems().filtered(anExternalTrade -> (anExternalTrade != null) && anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed"));
+		this.updateFailedExternalTrades(failedExternalTrades);
 	}
 
 	@FXML
 	private void handleReEnterAllFailedTradesButtonClick()
 	{
-		this.updateFailedExternalTrades(this.externalTradesTableView.getItems().filtered(anExternalTrade -> anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		//this.updateFailedExternalTrades(this.externalTradesTableView.getItems().filtered(anExternalTrade -> anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed")));
+		final FilteredList<ExternalTrade> failedExternalTrades = this.externalTradesTableView.getItems().filtered(anExternalTrade -> (anExternalTrade != null) && anExternalTrade.getExternalTradeStatusO().getExternalTradeStatusName().equals("Failed"));
+		this.updateFailedExternalTrades(failedExternalTrades);
 	}
 
 	/*
@@ -942,7 +946,7 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 	private void updateFailedExternalTrades(final ObservableList<ExternalTrade> selectedItems)
 	{
 		final List<Integer> selectedExternalTradeOids = selectedItems.stream().map(ExternalTrade::getExternalTradeOid).collect(Collectors.toList());
-		LOGGER.debug(selectedExternalTradeOids);
+		LOGGER.debug("selectedExternalTradeOids {}", selectedExternalTradeOids);
 		try
 		{
 			CayenneHelper.getCayenneServerRuntime().performInTransaction(() -> this.update(selectedExternalTradeOids));
@@ -976,7 +980,7 @@ public class MainApplicationMonitorTabController implements IMainApplicationMoni
 
 	private boolean writeRecordsToExcelFile(final String fileName)
 	{
-		boolean writeStatus = false;
+		boolean writeStatus = true;
 
 		// SXSSFWorkbook anExcelWorkbook = new SXSSFWorkbook(100);
 		final SXSSFWorkbook anExcelWorkbook = new SXSSFWorkbook();

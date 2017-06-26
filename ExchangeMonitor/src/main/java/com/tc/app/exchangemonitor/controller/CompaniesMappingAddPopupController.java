@@ -19,7 +19,6 @@ import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
 import com.tc.app.exchangemonitor.viewmodel.ExternalMappingCompaniesViewModel;
 
 import javafx.application.Platform;
@@ -164,20 +163,6 @@ public class CompaniesMappingAddPopupController implements IGenericController
 		this.observableCompanyCountriesList.clear();
 		this.observableCompanyCountriesList.addAll(CayenneReferenceDataCache.loadAllActiveCountries().values());
 		LOGGER.debug("Countries Count : {}", this.observableCompanyCountriesList.size());
-
-		/*
-		final Session session = HibernateUtil.beginTransaction();
-		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Country.class);
-		criteria.add(Restrictions.isNotNull("isoCountryCode"));
-		criteria.setProjection(Projections.groupProperty("isoCountryCode"));
-		criteria.setProjection(Projections.groupProperty("countryName"));
-		this.observableCompanyCountriesList.clear();
-		final long startTime = System.currentTimeMillis();
-		this.observableCompanyCountriesList.addAll(criteria.list());
-		final long endTime = System.currentTimeMillis();
-		session.close();
-		LOGGER.info("It took " + (endTime - startTime) + " millsecs to fetch " + this.observableCompanyCountriesList.size() + " Countries.");
-		 */
 	}
 
 	private void fetchCompanies()
@@ -185,19 +170,6 @@ public class CompaniesMappingAddPopupController implements IGenericController
 		this.observableIctsCompaniesList.clear();
 		this.observableIctsCompaniesList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
 		LOGGER.debug("Companies Count : " + this.observableIctsCompaniesList.size());
-
-		/*
-		final Session session = HibernateUtil.beginTransaction();
-		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Account.class);
-		criteria.add(Restrictions.eq("acctStatus", 'A'));
-		criteria.setFetchMode("acctTypeCode", FetchMode.JOIN);
-		this.observableIctsCompaniesList.clear();
-		final long startTime = System.currentTimeMillis();
-		this.observableIctsCompaniesList.addAll(criteria.list());
-		final long endTime = System.currentTimeMillis();
-		session.close();
-		LOGGER.info("It took " + (endTime - startTime) + " millsecs to fetch " + this.observableIctsCompaniesList.size() + " Companies.");
-		 */
 	}
 
 	@FXML
@@ -270,7 +242,7 @@ public class CompaniesMappingAddPopupController implements IGenericController
 
 	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
-		return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
+		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 
 	private void refreshExternalMappingCompaniesTableView()

@@ -12,6 +12,7 @@ import org.controlsfx.control.PopOver.ArrowLocation;
 import org.controlsfx.control.StatusBar;
 
 import com.tc.app.exchangemonitor.util.ApplicationHelper;
+import com.tc.app.exchangemonitor.util.PropertiesHelper;
 import com.tc.app.exchangemonitor.view.java.PreferencesView;
 
 import javafx.application.Platform;
@@ -98,7 +99,6 @@ public class MainWindowController implements Initializable
 
 	@Inject
 	private String APPLICATION_TITLE;
-
 
 
 	/**
@@ -488,11 +488,14 @@ public class MainWindowController implements Initializable
 		return this.APPLICATION_TITLE;
 	}
 
-	public String getAPPLICATION_TITLE_WITH_USERNAME()
+	public String getAPPLICATION_TITLE_WITH_USERNAME_AND_DBNAME()
 	{
-		//return APPLICATION_TITLE_WITH_USERNAME;
-		//return System.getenv("username") + " @ " + getAPPLICATION_TITLE();
-		return String.join(" ", System.getenv("username"), "@", this.getAPPLICATION_TITLE());
+		return String.join(" ", System.getenv("username"), "@", this.getAPPLICATION_TITLE(), "On", getDBName());
+	}
+
+	private static String getDBName()
+	{
+		return PropertiesHelper.getSystemProperty("ConnectionUrl").substring(PropertiesHelper.getSystemProperty("ConnectionUrl").lastIndexOf("=") + 1);
 	}
 
 	/**

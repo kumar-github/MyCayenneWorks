@@ -2,10 +2,12 @@
 <domain project-version="9">
 	<property name="cayenne.DataDomain.validatingObjectsOnCommit"/>
 	
-	<map name="ExchangeMonitorDataMap"/>
+	<map name="ExchangeMonitorCayenneDataMap"/>
+	<map name="ExchangeMonitorCayenneMappedQueries"/>
 	
+	<!--
 	<node name="ExchangeMonitorDataNode" factory="org.apache.cayenne.configuration.server.XMLPoolingDataSourceFactory" schema-update-strategy="org.apache.cayenne.access.dbsync.SkipSchemaUpdateStrategy">
-		<map-ref name="ExchangeMonitorDataMap"/>
+		<map-ref name="ExchangeMonitorCayenneDataMap"/>
 			<data-source>
 				<driver value="net.sourceforge.jtds.jdbc.Driver"/>
 				<url value="jdbc:jtds:sqlserver://HYDDB07:1460;databaseName=QA_30_trade_nov22"/>
@@ -13,4 +15,5 @@
 				<login userName="ictspass" password="ictspass"/>
 			</data-source>
 		</node>
+		-->
 </domain>

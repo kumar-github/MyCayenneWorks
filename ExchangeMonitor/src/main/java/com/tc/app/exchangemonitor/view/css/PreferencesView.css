@@ -27,9 +27,13 @@ VBox
 
 .check-box
 {
+	/*
 	-fx-border-color: lightblue;
 	-fx-border-insets: -5;
 	-fx-border-radius: 5;
 	-fx-border-style: dotted;
 	-fx-border-width: 2;
+	*/
+	-fx-font-family: "Segoe UI semibold";
+	-fx-font-size: 12px;
 }

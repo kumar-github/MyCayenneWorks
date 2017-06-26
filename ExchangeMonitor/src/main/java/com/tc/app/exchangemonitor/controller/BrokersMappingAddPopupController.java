@@ -18,7 +18,6 @@ import com.tc.app.exchangemonitor.util.ApplicationHelper;
 import com.tc.app.exchangemonitor.util.CayenneHelper;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataCache;
 import com.tc.app.exchangemonitor.util.CayenneReferenceDataFetchUtil;
-import com.tc.app.exchangemonitor.util.ReferenceDataCache;
 import com.tc.app.exchangemonitor.viewmodel.ExternalMappingBrokersViewModel;
 
 import javafx.application.Platform;
@@ -170,29 +169,6 @@ public class BrokersMappingAddPopupController implements IGenericController
 		this.observableBrokersList.clear();
 		this.observableBrokersList.addAll(CayenneReferenceDataCache.loadAllActiveAccounts().values());
 		LOGGER.debug("Brokers Count : {}", this.observableBrokersList.size());
-		/*
-		final Session session = HibernateUtil.beginTransaction();
-		final Criteria criteria = session.createCriteria(com.tc.app.exchangemonitor.model.Account.class);
-		criteria.add(Restrictions.eq("acctStatus", 'A'));
-		//criteria.setFetchMode("acctTypeCode", FetchMode.JOIN).createAlias("acctTypeCode", "acctTypeCodeAlias").add(Restrictions.in("acctTypeCodeAlias.acctTypeCode", "EXCHBRKR", "FLRBRKR"));
-		criteria.setFetchMode("acctTypeCode", FetchMode.JOIN);
-		final long startTime = System.currentTimeMillis();
-		this.observableBrokersList.clear();
-		//this.observableBrokersList.addAll(criteria.list());
-		final List<Account> ictsBrokers = criteria.list();
-		this.observableBrokersList.addAll(ictsBrokers);
-		final long endTime = System.currentTimeMillis();
-		session.close();
-		LOGGER.info("It took " + (endTime - startTime) + " millsecs to fetch " + this.observableBrokersList.size() + " Brokers.");
-		 */
-
-		/* The below code added to solve "org.hibernate.LazyInitializationException: could not initialize proxy - no Session"
-		 * 3 ways to solve the problem.
-		 * solution1: add the below property and set the value to true
-		 * solution2: change the fetch type from LAZY to EAGER for the particular property. In our case it is acctTypeCode from Account class.
-		 * solution3: otherwise once the main object(Account) is fetched, loop through each object and call Hibernate.initialize(accountObject.getAcctTypeCode)
-		 */
-		//ictsBrokers.stream().forEach((aBroker) -> Hibernate.initialize(aBroker.getAcctTypeCode()));
 	}
 
 	@FXML
@@ -265,7 +241,7 @@ public class BrokersMappingAddPopupController implements IGenericController
 
 	private Integer getOidForExternalSourceName(final String externalTradeSourceName)
 	{
-		return ReferenceDataCache.fetchExternalTradeSources().get(externalTradeSourceName).getOid();
+		return CayenneReferenceDataCache.loadExternalTradeSources().get(externalTradeSourceName).getExternalTradeSourceOid();
 	}
 
 	private void refreshExternalMappingTradersTableView()

@@ -99,7 +99,8 @@ public class DummyPosition
 
 		if(IS_DEBUG_ENABLED)
 		{
-			LOGGER.debug("A Position object constructed : {}", this.externalTradeStateName + "," + this.creationDate + "," + this.entryDate + "," + this.exchToolsTradeNum + "," + this.commodity + "," + this.tradingPeriod + "," + this.callPut + "," + this.strikePrice + "," + this.quantity + "," + this.price + "," + this.inputAction + "," + this.inputCompany + "," + this.acceptedAction + "," + this.acceptedCompany + "," + this.buyerAccount);
+			//LOGGER.debug("A Position object constructed : {}", this.externalTradeStateName + "," + this.creationDate + "," + this.entryDate + "," + this.exchToolsTradeNum + "," + this.commodity + "," + this.tradingPeriod + "," + this.callPut + "," + this.strikePrice + "," + this.quantity + "," + this.price + "," + this.inputAction + "," + this.inputCompany + "," + this.acceptedAction + "," + this.acceptedCompany + "," + this.buyerAccount);
+			LOGGER.debug("A Position object constructed : {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", this.externalTradeStateName, this.creationDate, this.entryDate, this.exchToolsTradeNum, this.commodity, this.tradingPeriod, this.callPut, this.strikePrice, this.quantity, this.price, this.inputAction, this.inputCompany, this.acceptedAction, this.acceptedCompany, this.buyerAccount);
 		}
 	}
 

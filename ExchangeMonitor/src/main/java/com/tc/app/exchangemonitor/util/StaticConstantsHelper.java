@@ -7,7 +7,6 @@ public interface StaticConstantsHelper
 	public static final String CONNECTION_URL = "connectionURL";
 	public static final String SERVER_NAME = "serverName";
 	public static final String DATABASE_NAME = "databaseName";
-	public static final String HIBERNATE_CONNECTION_URL_KEY = "hibernate.connection.url";
 
 	public static final String SHOULD_DISPLAY_ACCOUNTS_WITH_PERMISSION = "ShouldDisplayAccountsWithPermission";
 	public static final String SHOULD_ENABLE_ROW_COLORS = "ShouldEnableRowColors";

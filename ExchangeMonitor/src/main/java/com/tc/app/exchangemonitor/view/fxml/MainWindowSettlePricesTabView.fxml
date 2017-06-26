@@ -19,7 +19,6 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
@@ -27,7 +26,6 @@
 <?import com.tc.app.exchangemonitor.controller.TradeItemFillDateCellValueFactory?>
 
 <Tab text="Settle Prices" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.MainApplicationSettlePricesTabController">
-
 <content>
 	<BorderPane prefHeight="200.0" prefWidth="200.0">
 	<top>
@@ -52,8 +50,7 @@
 	<BorderPane.margin><Insets bottom="5.0" left="2.0" right="0.0" top="5.0" /></BorderPane.margin>
 	<padding><Insets bottom="2.0" left="2.0" right="2.0" top="1.0" /></padding>
 	<children>
-		<TitledPane mnemonicParsing="true" text="_Monitor">
-		<font><Font name="System Bold" size="12.0" /></font>
+		<TitledPane mnemonicParsing="true" text="_Monitor" styleClass="titledPaneStyle">
 		<content>
 			<AnchorPane minHeight="43.0" prefHeight="43.0">
 			<children>
@@ -76,8 +73,8 @@
 		</content>
 		</TitledPane>
 		
+		<!--
 		<TitledPane fx:id="actionTitledPane" expanded="false" mnemonicParsing="true" text="_Action">
-		<font><Font name="System Bold" size="12.0" />	</font>
 		<content>
 			<VBox spacing="5.0">
 			<children>
@@ -87,17 +84,16 @@
 			</VBox>
 		</content>
 		</TitledPane>
+		-->
 		
 		<Accordion fx:id="queryFilterAccordion">
 		<panes>
-			<TitledPane alignment="CENTER" animated="false" collapsible="false" expanded="false" text="Query Filter">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane alignment="CENTER" animated="false" collapsible="false" text="Query Filter" styleClass="accordionHeaderStyle">
 			</TitledPane>
 			
-			<TitledPane layoutX="10.0" layoutY="148.0" mnemonicParsing="true" text="_Date">
-			<font><Font name="System Bold" size="12.0" /></font>
+			<TitledPane layoutX="10.0" layoutY="148.0" mnemonicParsing="true" text="_Date" expanded="true" styleClass="titledPaneStyle">
 			<content>
-				<FlowPane prefHeight="71.0" prefWidth="150.0" vgap="5.0">
+				<FlowPane prefHeight="71.0" prefWidth="150.0" vgap="5.0" styleClass="normalButtonStyle">
 				<children>
 					<DatePicker fx:id="startDateDatePicker" editable="false" prefHeight="25.0" prefWidth="130.0" promptText="Start Date" />
 					<DatePicker fx:id="endDateDatePicker" editable="false" prefHeight="25.0" prefWidth="130.0" promptText="End Date" />
@@ -107,6 +103,17 @@
 			</TitledPane>
 		</panes>
 		</Accordion>
+		
+		<TitledPane fx:id="actionTitledPane" expanded="true" mnemonicParsing="true" text="_Action" styleClass="titledPaneStyle">
+		<content>
+			<VBox spacing="5.0" styleClass="normalButtonStyle">
+			<children>
+				<Button maxWidth="1.7976931348623157E308" text="Update Settle Prices" onAction="#handleUpdateSettlePriceButtonClick"/>
+			</children>
+			<padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding>
+			</VBox>
+		</content>
+		</TitledPane>
 		
 		<TextField fx:id="settlePricesTableViewDataFilterTextField" styleClass="settlePricesTableViewDataFilterTextFieldStyle" promptText="Type To Filter Table Data" />
 		<Label labelFor="$settlePricesTableViewDataFilterTextField" mnemonicParsing="true" text="_F" visible="false" />
@@ -143,7 +150,7 @@
 			<cellValueFactory><PropertyValueFactory property="riskMktCode"/></cellValueFactory>
 			</TableColumn>
 			
-			<TableColumn prefWidth="100.0" text="Trading Period">
+			<TableColumn prefWidth="140.0" text="Trading Period">
 			<cellValueFactory><PropertyValueFactory property="tradingPrd" /></cellValueFactory>
 			</TableColumn>
 			

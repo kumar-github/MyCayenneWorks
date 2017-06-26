@@ -13,6 +13,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane fx:id="mainWindowBorderPane" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.MainWindowController">
 <top>
@@ -24,10 +25,7 @@
 			<ImageView cache="true" pickOnBounds="true" preserveRatio="true" visible="false" styleClass="mainWindowViewHomeImageViewStyle"/>
 			
 			<Region HBox.hgrow="ALWAYS" />
-			<!-- <Label prefHeight="25.0" text="${controller.APPLICATION_TITLE}"  styleClass="mainWindowTitleLabelStyle"/> -->
-			<!-- <Label alignment="CENTER" prefHeight="25.0" text="${controller.APPLICATION_TITLE}"  styleClass="mainWindowTitleLabelStyle"> -->
-			<!--  <Label alignment="CENTER" text="${controller.APPLICATION_TITLE}"  styleClass="mainWindowTitleLabelStyle"> -->
-			<Label alignment="CENTER" text="${controller.APPLICATION_TITLE_WITH_USERNAME}"  styleClass="mainWindowTitleLabelStyle">
+			<Label alignment="CENTER" text="${controller.APPLICATION_TITLE_WITH_USERNAME_AND_DBNAME}"  styleClass="mainWindowTitleLabelStyle">
 			<graphic><ImageView pickOnBounds="true" preserveRatio="true"><image><Image url="@/icons/user24.png" /></image></ImageView></graphic>
 			</Label>
 			<Region HBox.hgrow="ALWAYS" />

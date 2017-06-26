@@ -6,11 +6,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" prefHeight="271.0" prefWidth="397.0" spacing="30.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.PreloaderController">
+<VBox alignment="TOP_CENTER" prefHeight="250.0" prefWidth="400.0" spacing="30.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tc.app.exchangemonitor.controller.PreloaderController">
 <children>
 	<Label text="Exchange Monitor" />
 	<ImageView pickOnBounds="true" preserveRatio="true"><image><Image url="@/icons/1.gif" /></image></ImageView>
-	<Label alignment="TOP_RIGHT" contentDisplay="RIGHT" graphicTextGap="0.0" text="Loading. Please Wait">
+	<Label alignment="TOP_RIGHT" contentDisplay="RIGHT" text="Loading. Please Wait">
 	<graphic><ImageView pickOnBounds="true" preserveRatio="true"><image><Image url="@/icons/30.gif" /></image></ImageView></graphic>
 	</Label>
    </children>
